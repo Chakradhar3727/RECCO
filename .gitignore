@@ -1,0 +1,56 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# PWA files (generated)
+public/sw.js
+public/workbox-*.js
+public/swe-worker-*.js
+public/sw.js.map
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Hardhat (P8: Windows path-length safe)
+contracts/cache/
+contracts/artifacts/
+contracts/typechain-types/
+
+# Supabase
+supabase/.temp/
