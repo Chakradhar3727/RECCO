@@ -8,11 +8,10 @@ import "@nomicfoundation/hardhat-toolbox";
 const config: HardhatUserConfig = {
     solidity: "0.8.24",
     paths: {
-        // Keep paths short to avoid Windows MAX_PATH (260 char) issues
-        sources: "./contracts/src",
-        tests: "./contracts/test",
-        cache: "./contracts/cache",
-        artifacts: "./contracts/artifacts",
+        sources: "./src",
+        tests: "./test",
+        cache: "./cache",
+        artifacts: "./artifacts",
     },
     networks: {
         amoy: {

@@ -9,6 +9,7 @@
 # next.js
 /.next/
 /out/
+apps/web/.next/
 
 # production
 /build
@@ -33,10 +34,10 @@ yarn-error.log*
 next-env.d.ts
 
 # PWA files (generated)
-public/sw.js
-public/workbox-*.js
-public/swe-worker-*.js
-public/sw.js.map
+apps/web/public/sw.js
+apps/web/public/workbox-*.js
+apps/web/public/swe-worker-*.js
+apps/web/public/sw.js.map
 
 # IDE
 .idea/
@@ -47,10 +48,17 @@ public/sw.js.map
 Thumbs.db
 Desktop.ini
 
-# Hardhat (P8: Windows path-length safe)
-contracts/cache/
-contracts/artifacts/
-contracts/typechain-types/
+# Turborepo
+.turbo/
+
+# Hardhat (packages/contracts)
+packages/contracts/cache/
+packages/contracts/artifacts/
+packages/contracts/typechain-types/
 
 # Supabase
-supabase/.temp/
+packages/db/supabase/.temp/
+
+# Package build output
+packages/*/dist/
+

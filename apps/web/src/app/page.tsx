@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
     ShieldCheck,
     Truck,
@@ -56,9 +57,16 @@ export default function Home() {
         <main className="min-h-screen bg-white">
             {/* Header */}
             <header className="p-6 border-b">
-                <div className="max-w-7xl mx-auto flex flex-col items-start gap-2">
-                    <h1 className="text-4xl font-bold text-recco-green-700 tracking-tight">RECCO</h1>
-                    <p className="text-recco-navy-900 font-medium">Technology as the supply chain.</p>
+                <div className="max-w-7xl mx-auto flex flex-col items-start gap-0">
+                    <Image
+                        src="/logo.png"
+                        alt="RECCO"
+                        width={400}
+                        height={128}
+                        className="h-32 w-auto"
+                        priority
+                    />
+                    <p className="-mt-4 text-recco-navy-900 font-medium">Turning Trash into Treasure</p>
                 </div>
             </header>
 
