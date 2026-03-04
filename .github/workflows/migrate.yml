@@ -1,0 +1,38 @@
+name: Migrate Database
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/db/supabase/migrations/**'
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Apply migrations
+        run: supabase db push --db-url "$DATABASE_URL"
+        env:
+          DATABASE_URL: ${{ secrets['DATABASE_URL'] }}
+        working-directory: packages/db
+
+      - name: Generate TypeScript types
+        run: |
+          supabase gen types typescript --db-url "$DATABASE_URL" > src/types.ts
+        env:
+          DATABASE_URL: ${{ secrets['DATABASE_URL'] }}
+        working-directory: packages/db
+
+      - name: Commit updated types (if changed)
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: auto-generate Supabase types after migration'
+          file_pattern: 'packages/db/src/types.ts'

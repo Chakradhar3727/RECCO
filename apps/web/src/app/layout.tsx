@@ -8,6 +8,12 @@ export const metadata: Metadata = {
     title: "RECCO | EPR SaaS Platform",
     description: "Technology as the supply chain. Trust without paperwork.",
     manifest: "/manifest.json",
+    // P9: Prevent Android Chrome from auto-linking numeric sequences (OTPs, PINs)
+    formatDetection: {
+        telephone: false,
+        email: false,
+        address: false,
+    },
 };
 
 export const viewport: Viewport = {
@@ -15,6 +21,8 @@ export const viewport: Viewport = {
     width: "device-width",
     initialScale: 1,
     maximumScale: 1,
+    userScalable: false, // P9: Prevent zoom on Android Chrome input focus
+    interactiveWidget: "resizes-content", // P9: Android Chrome virtual keyboard resizes content, not viewport
 };
 
 export default function RootLayout({
@@ -28,3 +36,4 @@ export default function RootLayout({
         </html>
     );
 }
+

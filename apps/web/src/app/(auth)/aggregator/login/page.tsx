@@ -1,66 +1,163 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { Truck, Eye, EyeOff, Loader2 } from "lucide-react";
+import React, { useState, useCallback } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { OtpPinInput } from "@/components/shared/otp-pin-input";
+import { verifyAggregatorPin, sendAggregatorOtp } from "./actions";
 
-export default function AggregatorLoginPage() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+type View = "login" | "forgot-pin" | "lockout";
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setError("");
-        setTimeout(() => {
-            setError("Authentication not yet configured. Coming in Phase 1.");
-            setLoading(false);
+function LockoutScreen({ minutes }: { minutes: number }) {
+    const [remaining, setRemaining] = React.useState(minutes * 60);
+
+    React.useEffect(() => {
+        const timer = setInterval(() => {
+            setRemaining((prev) => {
+                if (prev <= 1) { clearInterval(timer); window.location.reload(); return 0; }
+                return prev - 1;
+            });
         }, 1000);
-    };
+        return () => clearInterval(timer);
+    }, []);
+
+    const mins = Math.floor(remaining / 60);
+    const secs = remaining % 60;
 
     return (
-        <div className="space-y-6">
-            <div className="text-center space-y-2">
-                <div className="inline-flex p-4 rounded-2xl bg-recco-green-700 text-white shadow-lg">
-                    <Truck size={32} />
-                </div>
-                <h1 className="text-2xl font-bold text-recco-navy-900">Aggregator Login</h1>
-                <p className="text-recco-navy-900/60 text-sm">Waste Collector - Track collections & create batches</p>
+        <div className="flex flex-col items-center gap-6 py-8">
+            <div className="w-20 h-20 rounded-full bg-orange-100 flex items-center justify-center">
+                <svg className="w-10 h-10 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
             </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <label htmlFor="aggregator-email" className="block text-sm font-medium text-recco-navy-900 mb-1">Email Address</label>
-                    <input id="aggregator-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-3 rounded-xl border-2 border-recco-gray-50 bg-white focus:border-recco-green-700 focus:ring-0 outline-none transition-colors text-recco-navy-900" placeholder="you@company.com" required />
-                </div>
-
-                <div>
-                    <label htmlFor="aggregator-password" className="block text-sm font-medium text-recco-navy-900 mb-1">Password</label>
-                    <div className="relative">
-                        <input id="aggregator-password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-4 py-3 rounded-xl border-2 border-recco-gray-50 bg-white focus:border-recco-green-700 focus:ring-0 outline-none transition-colors text-recco-navy-900 pr-12" placeholder="" required />
-                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-recco-navy-900/40 hover:text-recco-navy-900 transition-colors">
-                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                        </button>
-                    </div>
-                </div>
-
-                {error && <div className="p-3 rounded-xl bg-recco-red-700/10 text-recco-red-700 text-sm">{error}</div>}
-
-                <button type="submit" disabled={loading} className="w-full py-3 px-4 rounded-xl bg-recco-green-700 text-white font-semibold hover:bg-recco-green-700/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-                    {loading && <Loader2 size={18} className="animate-spin" />}
-                    {loading ? "Signing in..." : "Sign In as Aggregator"}
-                </button>
-            </form>
-
-            <p className="text-center text-sm text-recco-navy-900/50">
-                Don&apos;t have an account?{" "}
-                <Link href="/auth/aggregator/register" className="text-recco-green-700 font-medium hover:underline">Register</Link>
-                {" "}&middot;{" "}
-                <Link href="/" className="text-recco-navy-900/50 hover:underline">Back to portals</Link>
+            <h2 className="text-xl font-bold text-orange-700">PIN Locked</h2>
+            <p className="text-recco-gray-600 text-center max-w-sm">
+                Too many incorrect PIN attempts. Please wait before trying again.
             </p>
+            <div className="text-3xl font-mono font-bold text-orange-600 tabular-nums">
+                {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
+            </div>
+        </div>
+    );
+}
+
+export default function AggregatorLoginPage() {
+    const router = useRouter();
+    const [view, setView] = useState<View>("login");
+    const [email, setEmail] = useState("");
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [lockoutMinutes, setLockoutMinutes] = useState(0);
+
+    const handlePinComplete = useCallback(
+        async (pin: string) => {
+            if (!email) { setError("Please enter your email or User ID first."); return; }
+            setError(null);
+            setLoading(true);
+
+            const result = await verifyAggregatorPin(email, pin);
+            setLoading(false);
+
+            if (result.success) {
+                router.push("/aggregator/dashboard");
+            } else if (result.step === "lockout") {
+                setLockoutMinutes(result.lockoutMinutes || 30);
+                setView("lockout");
+            } else {
+                setError(result.error || "Invalid PIN");
+            }
+        },
+        [email, router]
+    );
+
+    const handleForgotPin = useCallback(async () => {
+        if (!email) { setError("Please enter your email first."); return; }
+        setLoading(true);
+        const result = await sendAggregatorOtp(email);
+        setLoading(false);
+        if (result.success) {
+            router.push(`/aggregator/forgot-pin?email=${encodeURIComponent(email)}`);
+        } else {
+            setError(result.error || "Failed to send OTP");
+        }
+    }, [email, router]);
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-recco-gray-50 via-white to-recco-green-50 flex items-center justify-center p-4">
+            <div className="w-full max-w-md">
+                {/* Header */}
+                <div className="text-center mb-8">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-recco-green-700 flex items-center justify-center shadow-lg">
+                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                    </div>
+                    <h1 className="text-2xl font-bold text-recco-gray-900">Aggregator Login</h1>
+                    <p className="text-recco-gray-500 mt-1">Waste Collector — Track collections & create batches</p>
+                </div>
+
+                {/* Card */}
+                <div className="bg-white rounded-2xl shadow-xl border border-recco-gray-200 p-8">
+                    {view === "lockout" && <LockoutScreen minutes={lockoutMinutes} />}
+
+                    {view === "login" && (
+                        <div className="space-y-5">
+                            <div>
+                                <label htmlFor="agg-email" className="block text-sm font-medium text-recco-gray-700 mb-1.5">
+                                    Email or User ID
+                                </label>
+                                <input
+                                    id="agg-email"
+                                    type="text"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="email@example.com or AGG-XXXXX-XXXXXX"
+                                    autoFocus
+                                    disabled={loading}
+                                    className="w-full px-4 py-3 border-2 border-recco-gray-200 rounded-xl text-recco-gray-900 placeholder-recco-gray-400 focus:outline-none focus:border-recco-green-500 focus:ring-2 focus:ring-recco-green-100 transition-all disabled:opacity-50"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-recco-gray-700 mb-3">
+                                    Enter 4-digit PIN
+                                </label>
+                                <OtpPinInput
+                                    length={4}
+                                    onComplete={handlePinComplete}
+                                    error={error || undefined}
+                                    disabled={loading || !email}
+                                    isOtp={false}
+                                />
+                            </div>
+
+                            <div className="flex items-center justify-between pt-2">
+                                <button
+                                    onClick={handleForgotPin}
+                                    disabled={loading}
+                                    className="text-sm text-recco-green-700 hover:text-recco-green-800 font-medium transition-colors"
+                                >
+                                    Forgot PIN?
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Footer */}
+                <div className="text-center mt-6 space-x-3">
+                    <span className="text-sm text-recco-gray-500">
+                        Don&apos;t have an account?
+                    </span>
+                    <a href="/aggregator/register" className="text-sm text-recco-green-700 hover:text-recco-green-800 font-medium transition-colors">
+                        Register
+                    </a>
+                    <span className="text-sm text-recco-gray-400">·</span>
+                    <a href="/" className="text-sm text-recco-gray-500 hover:text-recco-green-700 transition-colors">
+                        Back to portals
+                    </a>
+                </div>
+            </div>
         </div>
     );
 }

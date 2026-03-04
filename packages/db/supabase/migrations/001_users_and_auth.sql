@@ -24,3 +24,15 @@ CREATE TABLE admin_sessions (
 -- Enable RLS
 ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE admin_sessions ENABLE ROW LEVEL SECURITY;
+
+CREATE TABLE admin_lockouts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  admin_email TEXT NOT NULL,
+  failed_attempts INT DEFAULT 0,
+  lockout_until TIMESTAMPTZ,
+  last_attempt_at TIMESTAMPTZ DEFAULT now(),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- RLS: Admin service role only — no anon access
+ALTER TABLE admin_lockouts ENABLE ROW LEVEL SECURITY;

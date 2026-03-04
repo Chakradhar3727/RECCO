@@ -1,74 +1,233 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { Truck, Eye, EyeOff, Loader2 } from "lucide-react";
+import React, { useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { OtpPinInput } from "@/components/shared/otp-pin-input";
+import {
+    sendAggregatorOtp,
+    verifyAggregatorOtp,
+    completeAggregatorRegistration,
+} from "../login/actions";
+
+type Step = "email" | "otp" | "details" | "success";
 
 export default function AggregatorRegisterPage() {
-    const [formData, setFormData] = useState({ fullName: "", email: "", phone: "", password: "", confirmPassword: "" });
-    const [showPassword, setShowPassword] = useState(false);
+    const router = useRouter();
+    const [step, setStep] = useState<Step>("email");
+    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
+    const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+    const [generatedUserId, setGeneratedUserId] = useState("");
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (formData.password !== formData.confirmPassword) { setError("Passwords do not match"); return; }
-        setLoading(true);
-        setError("");
-        setTimeout(() => { setError("Registration not yet configured. Coming in Phase 1."); setLoading(false); }, 1000);
-    };
+    // ── Step 1: Email → Send OTP ────────────────────────────────────
+    const handleEmailSubmit = useCallback(
+        async (e: React.FormEvent) => {
+            e.preventDefault();
+            setError(null);
+            setLoading(true);
+            const result = await sendAggregatorOtp(email);
+            setLoading(false);
+            if (result.success) setStep("otp");
+            else setError(result.error || "Failed to send OTP");
+        },
+        [email]
+    );
+
+    // ── Step 2: Verify OTP ──────────────────────────────────────────
+    const handleOtpComplete = useCallback(
+        async (otp: string) => {
+            setError(null);
+            setLoading(true);
+            const result = await verifyAggregatorOtp(email, otp);
+            setLoading(false);
+            if (result.success) setStep("details");
+            else setError(result.error || "Invalid OTP");
+        },
+        [email]
+    );
+
+    // ── Step 3: Name + PIN → Complete Registration ──────────────────
+    const handlePinComplete = useCallback(
+        async (pin: string) => {
+            if (!name.trim()) { setError("Please enter your name."); return; }
+            setError(null);
+            setLoading(true);
+            const result = await completeAggregatorRegistration(email, name, pin);
+            setLoading(false);
+            if (result.success) {
+                setGeneratedUserId(result.userId || "");
+                setStep("success");
+            } else {
+                setError(result.error || "Registration failed");
+            }
+        },
+        [email, name]
+    );
 
     return (
-        <div className="space-y-6">
-            <div className="text-center space-y-2">
-                <div className="inline-flex p-4 rounded-2xl bg-recco-green-700 text-white shadow-lg">
-                    <Truck size={32} />
-                </div>
-                <h1 className="text-2xl font-bold text-recco-navy-900">Aggregator Registration</h1>
-                <p className="text-recco-navy-900/60 text-sm">Waste Collector - Track collections & create batches</p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <label htmlFor="aggregator-name" className="block text-sm font-medium text-recco-navy-900 mb-1">Full Name</label>
-                    <input id="aggregator-name" type="text" value={formData.fullName} onChange={(e) => setFormData({...formData, fullName: e.target.value})} className="w-full px-4 py-3 rounded-xl border-2 border-recco-gray-50 bg-white focus:border-recco-green-700 focus:ring-0 outline-none transition-colors text-recco-navy-900" placeholder="Full name" required />
-                </div>
-                <div>
-                    <label htmlFor="aggregator-reg-email" className="block text-sm font-medium text-recco-navy-900 mb-1">Email Address</label>
-                    <input id="aggregator-reg-email" type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full px-4 py-3 rounded-xl border-2 border-recco-gray-50 bg-white focus:border-recco-green-700 focus:ring-0 outline-none transition-colors text-recco-navy-900" placeholder="you@company.com" required />
-                </div>
-                <div>
-                    <label htmlFor="aggregator-phone" className="block text-sm font-medium text-recco-navy-900 mb-1">Phone Number</label>
-                    <input id="aggregator-phone" type="tel" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="w-full px-4 py-3 rounded-xl border-2 border-recco-gray-50 bg-white focus:border-recco-green-700 focus:ring-0 outline-none transition-colors text-recco-navy-900" placeholder="+91 98765 43210" required />
-                </div>
-                <div>
-                    <label htmlFor="aggregator-reg-pass" className="block text-sm font-medium text-recco-navy-900 mb-1">Password</label>
-                    <div className="relative">
-                        <input id="aggregator-reg-pass" type={showPassword ? "text" : "password"} value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} className="w-full px-4 py-3 rounded-xl border-2 border-recco-gray-50 bg-white focus:border-recco-green-700 focus:ring-0 outline-none transition-colors text-recco-navy-900 pr-12" placeholder="" required minLength={8} />
-                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-recco-navy-900/40 hover:text-recco-navy-900 transition-colors">
-                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                        </button>
+        <div className="min-h-screen bg-gradient-to-br from-recco-gray-50 via-white to-recco-green-50 flex items-center justify-center p-4">
+            <div className="w-full max-w-md">
+                {/* Header */}
+                <div className="text-center mb-8">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-recco-green-700 flex items-center justify-center shadow-lg">
+                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                        </svg>
                     </div>
-                </div>
-                <div>
-                    <label htmlFor="aggregator-reg-confirm" className="block text-sm font-medium text-recco-navy-900 mb-1">Confirm Password</label>
-                    <input id="aggregator-reg-confirm" type="password" value={formData.confirmPassword} onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})} className="w-full px-4 py-3 rounded-xl border-2 border-recco-gray-50 bg-white focus:border-recco-green-700 focus:ring-0 outline-none transition-colors text-recco-navy-900" placeholder="" required minLength={8} />
+                    <h1 className="text-2xl font-bold text-recco-gray-900">Aggregator Registration</h1>
+                    <p className="text-recco-gray-500 mt-1">Create your waste collector account</p>
                 </div>
 
-                {error && <div className="p-3 rounded-xl bg-recco-red-700/10 text-recco-red-700 text-sm">{error}</div>}
+                {/* Card */}
+                <div className="bg-white rounded-2xl shadow-xl border border-recco-gray-200 p-8">
+                    {/* Progress indicator */}
+                    {step !== "success" && (
+                        <div className="flex mb-6 gap-1">
+                            {["email", "otp", "details"].map((s, i) => (
+                                <div
+                                    key={s}
+                                    className={`h-1.5 flex-1 rounded-full transition-all ${["email", "otp", "details"].indexOf(step) >= i
+                                        ? "bg-recco-green-500"
+                                        : "bg-recco-gray-200"
+                                        }`}
+                                />
+                            ))}
+                        </div>
+                    )}
 
-                <button type="submit" disabled={loading} className="w-full py-3 px-4 rounded-xl bg-recco-green-700 text-white font-semibold hover:bg-recco-green-700/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-                    {loading && <Loader2 size={18} className="animate-spin" />}
-                    {loading ? "Creating account..." : "Register as Aggregator"}
-                </button>
-            </form>
+                    {/* Step 1: Email */}
+                    {step === "email" && (
+                        <form onSubmit={handleEmailSubmit} className="space-y-5">
+                            <div>
+                                <h2 className="text-lg font-semibold text-recco-gray-800 mb-1">Step 1 of 3</h2>
+                                <p className="text-sm text-recco-gray-500">Enter your email to receive a verification code</p>
+                            </div>
+                            <div>
+                                <label htmlFor="reg-email" className="block text-sm font-medium text-recco-gray-700 mb-1.5">
+                                    Email Address
+                                </label>
+                                <input
+                                    id="reg-email"
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="you@company.com"
+                                    required
+                                    autoFocus
+                                    disabled={loading}
+                                    className="w-full px-4 py-3 border-2 border-recco-gray-200 rounded-xl text-recco-gray-900 placeholder-recco-gray-400 focus:outline-none focus:border-recco-green-500 focus:ring-2 focus:ring-recco-green-100 transition-all disabled:opacity-50"
+                                />
+                            </div>
+                            {error && <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700">{error}</div>}
+                            <button
+                                type="submit"
+                                disabled={loading || !email}
+                                className="w-full py-3 px-4 bg-recco-green-700 text-white font-semibold rounded-xl hover:bg-recco-green-800 focus:outline-none focus:ring-2 focus:ring-recco-green-500 focus:ring-offset-2 transition-all disabled:opacity-50"
+                            >
+                                {loading ? "Sending OTP..." : "Send Verification Code"}
+                            </button>
+                        </form>
+                    )}
 
-            <p className="text-center text-sm text-recco-navy-900/50">
-                Already have an account?{" "}
-                <Link href="/auth/aggregator/login" className="text-recco-green-700 font-medium hover:underline">Sign in</Link>
-                {" "}&middot;{" "}
-                <Link href="/" className="text-recco-navy-900/50 hover:underline">Back to portals</Link>
-            </p>
+                    {/* Step 2: OTP */}
+                    {step === "otp" && (
+                        <div className="space-y-6">
+                            <div>
+                                <h2 className="text-lg font-semibold text-recco-gray-800 mb-1">Step 2 of 3</h2>
+                                <p className="text-sm text-recco-gray-500">Enter the 8-digit code sent to <strong>{email}</strong></p>
+                            </div>
+                            <OtpPinInput
+                                length={8}
+                                onComplete={handleOtpComplete}
+                                error={error || undefined}
+                                disabled={loading}
+                                label="Verification Code"
+                                isOtp={true}
+                            />
+                            <button
+                                onClick={() => { setStep("email"); setError(null); }}
+                                className="w-full py-3 text-recco-gray-600 font-medium rounded-xl border-2 border-recco-gray-200 hover:bg-recco-gray-50 transition-all"
+                            >
+                                Back
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Step 3: Name + PIN */}
+                    {step === "details" && (
+                        <div className="space-y-5">
+                            <div>
+                                <h2 className="text-lg font-semibold text-recco-gray-800 mb-1">Step 3 of 3</h2>
+                                <p className="text-sm text-recco-gray-500">Set your name and 4-digit PIN</p>
+                            </div>
+                            <div>
+                                <label htmlFor="reg-name" className="block text-sm font-medium text-recco-gray-700 mb-1.5">
+                                    Full Name
+                                </label>
+                                <input
+                                    id="reg-name"
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    placeholder="Your full name"
+                                    required
+                                    autoFocus
+                                    disabled={loading}
+                                    className="w-full px-4 py-3 border-2 border-recco-gray-200 rounded-xl text-recco-gray-900 placeholder-recco-gray-400 focus:outline-none focus:border-recco-green-500 focus:ring-2 focus:ring-recco-green-100 transition-all disabled:opacity-50"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-recco-gray-700 mb-3">
+                                    Create 4-digit PIN
+                                </label>
+                                <OtpPinInput
+                                    length={4}
+                                    onComplete={handlePinComplete}
+                                    error={error || undefined}
+                                    disabled={loading || !name.trim()}
+                                    isOtp={false}
+                                    label=""
+                                />
+                            </div>
+                            {error && <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700">{error}</div>}
+                        </div>
+                    )}
+
+                    {/* Success */}
+                    {step === "success" && (
+                        <div className="flex flex-col items-center gap-5 py-6">
+                            <div className="w-20 h-20 rounded-full bg-recco-green-100 flex items-center justify-center">
+                                <svg className="w-10 h-10 text-recco-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <h2 className="text-xl font-bold text-recco-green-700">Registration Complete!</h2>
+                            <div className="bg-recco-green-50 border border-recco-green-200 rounded-xl p-4 text-center w-full">
+                                <p className="text-sm text-recco-gray-600 mb-1">Your User ID</p>
+                                <p className="text-2xl font-mono font-bold text-recco-green-700">{generatedUserId}</p>
+                                <p className="text-xs text-recco-gray-500 mt-2">Save this ID — you&apos;ll use it to log in</p>
+                            </div>
+                            <button
+                                onClick={() => router.push("/aggregator/dashboard")}
+                                className="w-full py-3 px-4 bg-recco-green-700 text-white font-semibold rounded-xl hover:bg-recco-green-800 transition-all"
+                            >
+                                Go to Dashboard
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                {/* Footer */}
+                <div className="text-center mt-6 space-x-3">
+                    <span className="text-sm text-recco-gray-500">Already have an account?</span>
+                    <a href="/aggregator/login" className="text-sm text-recco-green-700 hover:text-recco-green-800 font-medium">
+                        Log in
+                    </a>
+                    <span className="text-sm text-recco-gray-400">·</span>
+                    <a href="/" className="text-sm text-recco-gray-500 hover:text-recco-green-700">Back to portals</a>
+                </div>
+            </div>
         </div>
     );
 }

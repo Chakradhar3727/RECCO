@@ -1,0 +1,13 @@
+C:\Users\chakr\RECCO-MVP\apps\web\src\app\admin\disputes\[id]\page.tsx
+C:\Users\chakr\RECCO-MVP\apps\web\src\app\admin\users\[id]\page.tsx
+C:\Users\chakr\RECCO-MVP\apps\web\src\app\aggregator\batches\[id]\page.tsx
+C:\Users\chakr\RECCO-MVP\apps\web\src\app\aggregator\batches\[id]\qr\page.tsx
+C:\Users\chakr\RECCO-MVP\apps\web\src\app\aggregator\collections\[id]\page.tsx
+C:\Users\chakr\RECCO-MVP\apps\web\src\app\pro\clients\[id]\page.tsx
+C:\Users\chakr\RECCO-MVP\apps\web\src\app\recycler\batches\[id]\page.tsx
+C:\Users\chakr\RECCO-MVP\apps\web\src\app\recycler\batches\[id]\acknowledge\page.tsx
+C:\Users\chakr\RECCO-MVP\apps\web\src\app\recycler\batches\[id]\certificate\page.tsx
+C:\Users\chakr\RECCO-MVP\apps\web\src\app\recycler\batches\[id]\cp2\page.tsx
+C:\Users\chakr\RECCO-MVP\apps\web\src\app\recycler\batches\[id]\cp3\page.tsx
+C:\Users\chakr\RECCO-MVP\apps\web\src\app\recycler\batches\[id]\intake\page.tsx
+C:\Users\chakr\RECCO-MVP\apps\web\src\app\recycler\batches\[id]\lab\page.tsx

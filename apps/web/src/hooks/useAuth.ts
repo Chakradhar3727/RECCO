@@ -59,14 +59,38 @@ export function useAuth() {
     );
 
     const signUp = useCallback(
-        async (email: string, password: string, metadata?: Record<string, unknown>) => {
+        async (email: string) => {
             setState((s) => ({ ...s, loading: true, error: null }));
-            const { error } = await supabase.auth.signUp({
+            const { error } = await supabase.auth.signInWithOtp({
                 email,
-                password,
-                options: { data: metadata },
+                options: { shouldCreateUser: true },
             });
-            if (error) setState((s) => ({ ...s, loading: false, error: error.message }));
+            setState((s) => ({ ...s, loading: false }));
+            if (error) setState((s) => ({ ...s, error: error.message }));
+        },
+        [supabase]
+    );
+
+    const verifyOtp = useCallback(
+        async (email: string, token: string) => {
+            setState((s) => ({ ...s, loading: true, error: null }));
+            const { error } = await supabase.auth.verifyOtp({
+                email,
+                token,
+                type: "email",
+            });
+            setState((s) => ({ ...s, loading: false }));
+            if (error) setState((s) => ({ ...s, error: error.message }));
+        },
+        [supabase]
+    );
+
+    const setPassword = useCallback(
+        async (password: string) => {
+            setState((s) => ({ ...s, loading: true, error: null }));
+            const { error } = await supabase.auth.updateUser({ password });
+            setState((s) => ({ ...s, loading: false }));
+            if (error) setState((s) => ({ ...s, error: error.message }));
         },
         [supabase]
     );
@@ -75,5 +99,5 @@ export function useAuth() {
         await supabase.auth.signOut();
     }, [supabase]);
 
-    return { ...state, signIn, signUp, signOut };
+    return { ...state, signIn, signUp, verifyOtp, setPassword, signOut };
 }

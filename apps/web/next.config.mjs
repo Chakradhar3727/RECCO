@@ -10,6 +10,9 @@ const withPWA = withPWAInit({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     transpilePackages: ["@recco/db", "@recco/ui"],
+    experimental: {
+        instrumentationHook: true,
+    },
 };
 
 export default withPWA(nextConfig);

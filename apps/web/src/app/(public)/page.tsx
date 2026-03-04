@@ -16,7 +16,7 @@ const portals = [
         description: "Master Control - Platform governance & fraud monitor",
         icon: ShieldCheck,
         color: "bg-recco-navy-900",
-        link: "/auth/admin/login",
+        link: "/admin/login",
     },
     {
         id: "aggregator",
@@ -24,7 +24,7 @@ const portals = [
         description: "Waste Collector - Track collections & create batches",
         icon: Truck,
         color: "bg-recco-green-700",
-        link: "/auth/aggregator/login",
+        link: "/aggregator/login",
     },
     {
         id: "recycler",
@@ -32,7 +32,7 @@ const portals = [
         description: "Processing Facility - Manage intake & issue certificates",
         icon: Recycle,
         color: "bg-recco-teal-700",
-        link: "/auth/recycler/login",
+        link: "/recycler/login",
     },
     {
         id: "pibo",
@@ -40,7 +40,7 @@ const portals = [
         description: "Producer/Importer/Brand Owner - Compliance & Marketplace",
         icon: Factory,
         color: "bg-recco-amber-700",
-        link: "/auth/pibo/login",
+        link: "/pibo/login",
     },
     {
         id: "pro",
@@ -48,7 +48,7 @@ const portals = [
         description: "Compliance Manager - Pooled client management",
         icon: Briefcase,
         color: "bg-purple-700",
-        link: "/auth/pro/login",
+        link: "/pro/login",
     },
 ];
 
