@@ -6,7 +6,6 @@ import { OtpPinInput } from "@/components/shared/otp-pin-input";
 import {
     sendAggregatorOtp,
     verifyAggregatorOtp,
-    completeAggregatorRegistration,
 } from "../login/actions";
 
 type Step = "email" | "otp" | "details" | "success";
@@ -53,13 +52,26 @@ export default function AggregatorRegisterPage() {
             if (!name.trim()) { setError("Please enter your name."); return; }
             setError(null);
             setLoading(true);
-            const result = await completeAggregatorRegistration(email, name, pin);
-            setLoading(false);
-            if (result.success) {
-                setGeneratedUserId(result.userId || "");
-                setStep("success");
-            } else {
-                setError(result.error || "Registration failed");
+
+            try {
+                const res = await fetch("/api/aggregator/complete-registration", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, name, pin }),
+                });
+
+                const data = await res.json();
+                setLoading(false);
+
+                if (data.success) {
+                    setGeneratedUserId(data.userId || "");
+                    setStep("success");
+                } else {
+                    setError(data.error || "Registration failed");
+                }
+            } catch (err: any) {
+                setLoading(false);
+                setError("Network error. Please try again.");
             }
         },
         [email, name]

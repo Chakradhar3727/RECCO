@@ -1,12 +1,19 @@
 import React from 'react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
 import { Recycle, LogOut, LayoutDashboard, Truck, FileBadge, Settings } from 'lucide-react';
 
-export default function RecyclerLayout({ children }: { children: React.ReactNode }) {
+export default async function RecyclerLayout({ children }: { children: React.ReactNode }) {
+    // Auth guard — only authenticated users can access
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) redirect('/recycler/login');
+
     return (
         <div className="min-h-screen bg-recco-gray-50 flex">
             {/* Sidebar */}
-            <aside className="w-64 bg-recco-teal-900 text-white flex flex-col">
+            <aside className="w-64 bg-recco-teal-700 text-white flex flex-col">
                 <div className="p-6 flex flex-col gap-2">
                     <div className="flex items-center gap-2 text-xl font-bold">
                         <Recycle size={28} className="text-white" />
@@ -20,25 +27,27 @@ export default function RecyclerLayout({ children }: { children: React.ReactNode
                         <LayoutDashboard size={20} />
                         Dashboard
                     </Link>
-                    <Link href="/recycler/intake" className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 font-medium hover:bg-white/10 hover:text-white transition-colors">
+                    <Link href="/recycler/batches" className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 font-medium hover:bg-white/10 hover:text-white transition-colors">
                         <Truck size={20} />
                         Material Intake
                     </Link>
-                    <Link href="/recycler/certificates" className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 font-medium hover:bg-white/10 hover:text-white transition-colors">
+                    <Link href="/recycler/marketplace" className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 font-medium hover:bg-white/10 hover:text-white transition-colors">
                         <FileBadge size={20} />
                         EPR Certificates
                     </Link>
-                    <Link href="/recycler/settings" className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 font-medium hover:bg-white/10 hover:text-white transition-colors">
+                    <Link href="/recycler/facility-qr" className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 font-medium hover:bg-white/10 hover:text-white transition-colors">
                         <Settings size={20} />
                         Facility Settings
                     </Link>
                 </nav>
 
                 <div className="p-4 border-t border-white/10">
-                    <button className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-red-300 font-medium hover:bg-white/10 transition-colors">
-                        <LogOut size={20} />
-                        Sign Out
-                    </button>
+                    <form action="/api/auth/signout" method="POST">
+                        <button type="submit" className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-red-300 font-medium hover:bg-white/10 transition-colors">
+                            <LogOut size={20} />
+                            Sign Out
+                        </button>
+                    </form>
                 </div>
             </aside>
 

@@ -1,8 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
 import { Briefcase, LogOut, LayoutDashboard, Users, BarChart3, Settings } from 'lucide-react';
 
-export default function ProLayout({ children }: { children: React.ReactNode }) {
+export default async function ProLayout({ children }: { children: React.ReactNode }) {
+    // Auth guard — only authenticated users can access
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) redirect('/pro/login');
+
     return (
         <div className="min-h-screen bg-recco-gray-50 flex">
             {/* Sidebar */}
@@ -24,21 +31,23 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
                         <Users size={20} />
                         Client Management
                     </Link>
-                    <Link href="/pro/reports" className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 font-medium hover:bg-white/10 hover:text-white transition-colors">
+                    <Link href="/pro/pool" className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 font-medium hover:bg-white/10 hover:text-white transition-colors">
                         <BarChart3 size={20} />
                         Compliance Reports
                     </Link>
-                    <Link href="/pro/settings" className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 font-medium hover:bg-white/10 hover:text-white transition-colors">
+                    <Link href="/pro/marketplace" className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 font-medium hover:bg-white/10 hover:text-white transition-colors">
                         <Settings size={20} />
                         Settings
                     </Link>
                 </nav>
 
                 <div className="p-4 border-t border-white/10">
-                    <button className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-red-300 font-medium hover:bg-white/10 transition-colors">
-                        <LogOut size={20} />
-                        Sign Out
-                    </button>
+                    <form action="/api/auth/signout" method="POST">
+                        <button type="submit" className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-red-300 font-medium hover:bg-white/10 transition-colors">
+                            <LogOut size={20} />
+                            Sign Out
+                        </button>
+                    </form>
                 </div>
             </aside>
 

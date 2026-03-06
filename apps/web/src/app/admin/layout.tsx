@@ -1,51 +1,92 @@
 import React from 'react';
-import Link from 'next/link';
-import { ShieldCheck, LogOut, LayoutDashboard, Users, FileText, Settings } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
+import { createClient, createServiceRoleClient } from '@/lib/supabase/server';
+import AdminShell from '@/components/admin/admin-shell';
+import type { AdminRole, AdminSection } from '@/lib/admin/rbac';
+import { canAccessSection, getSectionFromPath } from '@/lib/admin/rbac';
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <div className="min-h-screen bg-recco-gray-50 flex">
-            {/* Sidebar */}
-            <aside className="w-64 bg-recco-navy-900 text-white flex flex-col">
-                <div className="p-6 flex flex-col gap-2">
-                    <div className="flex items-center gap-2 text-xl font-bold">
-                        <ShieldCheck size={28} className="text-recco-green-700" />
-                        <span>RECCO Admin</span>
-                    </div>
-                    <span className="text-xs text-recco-navy-900/40 uppercase tracking-widest bg-white/10 px-2 py-1 rounded w-fit mt-2">Platform Control</span>
-                </div>
 
-                <nav className="flex-1 px-4 py-6 flex flex-col gap-2">
-                    <Link href="/admin/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/10 text-white font-medium hover:bg-white/20 transition-colors">
-                        <LayoutDashboard size={20} />
-                        Dashboard
-                    </Link>
-                    <Link href="/admin/users" className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 font-medium hover:bg-white/10 hover:text-white transition-colors">
-                        <Users size={20} />
-                        User Management
-                    </Link>
-                    <Link href="/admin/reports" className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 font-medium hover:bg-white/10 hover:text-white transition-colors">
-                        <FileText size={20} />
-                        Reports
-                    </Link>
-                    <Link href="/admin/settings" className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 font-medium hover:bg-white/10 hover:text-white transition-colors">
-                        <Settings size={20} />
-                        Settings
-                    </Link>
-                </nav>
 
-                <div className="p-4 border-t border-white/10">
-                    <button className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-red-300 font-medium hover:bg-white/10 transition-colors">
-                        <LogOut size={20} />
-                        Sign Out
-                    </button>
-                </div>
-            </aside>
+/**
+ * Admin Layout — Server Component
+ *
+ * Module 2.2 Phase 2: Full production admin shell.
+ * - Reads admin_role from user_profiles server-side
+ * - Enforces RBAC via redirect (not just visual hiding)
+ * - Computes session time remaining for client countdown
+ * - Counts unread notifications for bell badge
+ * - Passes all data to AdminShell client component
+ */
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  // ─── 0. Skip auth for login page (avoid redirect loop) ─────────
+  const earlyHeaders = headers();
+  const earlyPath = earlyHeaders.get('x-pathname') || '';
+  if (earlyPath === '/admin/login') {
+    return <>{children}</>;
+  }
 
-            {/* Main Content */}
-            <main className="flex-1 overflow-y-auto">
-                {children}
-            </main>
-        </div>
-    );
+  // ─── 1. Authenticate ────────────────────────────────────────────
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect('/admin/login');
+  }
+
+  // ─── 2. Read portal_role + admin_role from user_profiles ────────
+  const adminClient = createServiceRoleClient();
+
+  const { data: profile } = await adminClient
+    .from('user_profiles')
+    .select('full_name, portal_role, admin_role')
+    .eq('id', user.id)
+    .single();
+
+  // ─── 2b. Restrict to ADMIN portal_role only ─────────────────────
+  const portalRole = profile?.portal_role || '';
+  if (portalRole !== 'ADMIN') {
+    // Non-admin users cannot access the admin portal
+    redirect('/?reason=admin_only');
+  }
+
+  const adminRole = (profile?.admin_role || 'ANALYST') as AdminRole;
+  const adminName = profile?.full_name || user.email || 'Admin';
+  const adminEmail = user.email || '';
+
+  // ─── 3. RBAC Route Guard (server-side enforcement) ──────────────
+  const headersList = headers();
+  const pathname = headersList.get('x-pathname') || '';
+  const section = getSectionFromPath(pathname);
+
+  if (section && !canAccessSection(adminRole, section)) {
+    redirect('/admin/dashboard?reason=insufficient_permissions');
+  }
+
+  // ─── 5. Unread notification count ───────────────────────────────
+  let unreadCount = 0;
+  try {
+    const { count } = await adminClient
+      .from('notifications')
+      .select('id', { count: 'exact', head: true })
+      .eq('is_read', false)
+      .or(`target_user_id.eq.${user.id},target_user_id.is.null`)
+      .in('target_portal', ['ADMIN', 'ALL']);
+
+    unreadCount = count || 0;
+  } catch {
+    // Silent fail — badge shows 0
+  }
+
+  // ─── 6. Render shell with server-computed props ─────────────────
+  return (
+    <AdminShell
+      adminRole={adminRole}
+      adminName={adminName}
+      adminEmail={adminEmail}
+      unreadNotificationCount={unreadCount}
+    >
+      {children}
+    </AdminShell>
+  );
 }

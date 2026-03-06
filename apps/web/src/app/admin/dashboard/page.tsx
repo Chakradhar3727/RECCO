@@ -1,30 +1,56 @@
 import React from 'react';
+import {
+    getDashboardMetrics,
+    getSystemHealth,
+    getTransportStats,
+    getFinancialSnapshot,
+    getRecentActions,
+} from './actions';
+import { DashboardRealtime } from './components';
+import { formatISTTimestamp } from '@/lib/utils/ist-time';
 
-export default function AdminDashboardPage() {
+/**
+ * Admin Dashboard — Server Component
+ *
+ * Module 2.3 Phase 2: 5-row live dashboard.
+ * Row 1: Platform Health Strip (system, blockchain, OCR)
+ * Row 2: Live Metric Cards (6 animated counters)
+ * Row 3: Portal Breakdown Table (sparklines)
+ * Row 4: Transport Chain Monitor + Financial Snapshot
+ * Row 5: Recent Admin Actions
+ *
+ * Data is fetched server-side and hydrated via DashboardRealtime
+ * client component, which handles 10s polling + 3 Supabase Realtime channels.
+ */
+export default async function AdminDashboardPage() {
+    const [metrics, health, transport, financials, actions] = await Promise.all([
+        getDashboardMetrics(),
+        getSystemHealth(),
+        getTransportStats(),
+        getFinancialSnapshot(),
+        getRecentActions(),
+    ]);
+
     return (
-        <div className="p-8">
-            <h1 className="text-3xl font-bold text-recco-navy-900 mb-6">Admin Dashboard</h1>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="bg-white p-6 rounded-xl border border-recco-slate-200 shadow-sm">
-                    <h3 className="text-lg font-semibold text-recco-navy-900 mb-2">Total Users</h3>
-                    <p className="text-4xl font-bold text-recco-green-700">1,248</p>
-                </div>
-                <div className="bg-white p-6 rounded-xl border border-recco-slate-200 shadow-sm">
-                    <h3 className="text-lg font-semibold text-recco-navy-900 mb-2">Total Recyclers</h3>
-                    <p className="text-4xl font-bold text-recco-teal-700">56</p>
-                </div>
-                <div className="bg-white p-6 rounded-xl border border-recco-slate-200 shadow-sm">
-                    <h3 className="text-lg font-semibold text-recco-navy-900 mb-2">Platform Revenue</h3>
-                    <p className="text-4xl font-bold text-recco-amber-700">₹4.2M</p>
+        <div className="space-y-1">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-2">
+                <div>
+                    <h1 className="text-xl font-bold text-[#1A2F4B]">Unified Admin Dashboard</h1>
+                    <p className="text-xs text-gray-400 mt-0.5">
+                        Last refreshed: {formatISTTimestamp(new Date().toISOString())}
+                    </p>
                 </div>
             </div>
 
-            <div className="bg-white p-6 rounded-xl border border-recco-slate-200 shadow-sm">
-                <h2 className="text-xl font-bold text-recco-navy-900 mb-4">Recent Platform Activity</h2>
-                <div className="text-recco-slate-600">
-                    Activity logs will be displayed here...
-                </div>
-            </div>
+            {/* Live Dashboard — Client Component with Realtime */}
+            <DashboardRealtime
+                initialMetrics={metrics}
+                initialHealth={health}
+                initialTransport={transport}
+                initialFinancials={financials}
+                initialActions={actions}
+            />
         </div>
     );
 }

@@ -103,6 +103,14 @@ export async function verifyProRegistrationOtp(
         return { success: false, error: "Account created but failed to set password. Please try again.", step: "otp" };
     }
 
+    // Create user_profiles entry immediately so user shows in admin
+    await admin.from("user_profiles").upsert({
+        id: data.user.id,
+        email: email.toLowerCase(),
+        portal_role: "PRO",
+        full_name: email.split("@")[0],
+    });
+
     return { success: true, step: "cpcb", userId: data.user.id };
 }
 
@@ -204,7 +212,7 @@ export async function proRegisterSubmit(userId: string): Promise<AuthResult> {
 
     if (error) return { success: false, error: "Failed to submit.", step: "review" };
 
-    await adminClient.from("user_profiles").upsert({ id: userId, role: "pro" });
+    await adminClient.from("user_profiles").upsert({ id: userId, portal_role: "PRO" });
 
     return { success: true };
 }

@@ -10,7 +10,7 @@ const AUTH_PREFIX = "/(auth)";
 const AUTH_ROUTES = ["/login", "/register", "/forgot-pin"];
 
 // ─── Public routes that bypass middleware entirely ──────────────────
-const PUBLIC_ROUTES = ["/pickup", "/delivery", "/verify", "/api/auth"];
+const PUBLIC_ROUTES = ["/pickup", "/delivery", "/verify", "/api/auth", "/api/admin/verify-otp", "/api/aggregator"];
 
 // ─── Admin session timeout: 15 minutes (900 seconds) ───────────────
 const ADMIN_SESSION_TIMEOUT_MS = 15 * 60 * 1000;
@@ -69,7 +69,10 @@ export async function middleware(request: NextRequest) {
   // ── 2. Refresh session via Supabase middleware helper ────────────
   //    Wrapped in try-catch: if Supabase is unreachable (DNS/network),
   //    treat user as unauthenticated so redirects still work.
-  let response = NextResponse.next({ request: { headers: request.headers } });
+  // Forward pathname header so layout.tsx Server Component can read current route
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-pathname', pathname);
+  let response = NextResponse.next({ request: { headers: requestHeaders } });
   let user = null;
 
   try {
@@ -97,13 +100,12 @@ export async function middleware(request: NextRequest) {
   // ── 4. Protected routes — redirect unauthenticated users ────────
   if (matchesPrefix(pathname, PROTECTED_PREFIXES)) {
     if (!user) {
-      const portal = getPortalFromPath(pathname);
-      const loginPath = portal
-        ? `/${portal}/login`
-        : "/";
-      const redirectUrl = new URL(loginPath, request.url);
-      redirectUrl.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(redirectUrl);
+      // IMPORTANT: The middleware's Supabase client lacks the ISP DNS bypass
+      // agent, so getUser() fails when the ISP blocks supabase.co domains.
+      // Let ALL portal routes through — each portal's layout/page handles
+      // its own auth check using createClient() from server.ts which HAS
+      // the bypass agent.
+      return response;
     }
 
     // ── 5. Admin-specific: Session timeout enforcement ──────────
@@ -159,20 +161,24 @@ export async function middleware(request: NextRequest) {
 
           const role = profile?.admin_role || "UNKNOWN";
 
-          // RBAC route map: which roles can access which sub-routes
+          // RBAC route map: Phase 2 complete permission matrix (11 sections)
           const RBAC_ROUTES: Record<string, string[]> = {
-            "/admin/compliance": ["COMPLIANCE", "SUPERADMIN"],
-            "/admin/fraud": ["ANALYST", "SUPERADMIN"],
-            "/admin/analytics": ["ANALYST", "SUPERADMIN"],
+            "/admin/users": ["SUPERADMIN", "COMPLIANCE", "SUPPORT"],
+            "/admin/fraud": ["SUPERADMIN", "COMPLIANCE"],
+            "/admin/transactions": ["SUPERADMIN", "SUPPORT", "ANALYST"],
+            "/admin/blockchain": ["SUPERADMIN", "COMPLIANCE", "ANALYST"],
+            "/admin/compliance": ["SUPERADMIN", "COMPLIANCE", "ANALYST"],
+            "/admin/analytics": ["SUPERADMIN", "COMPLIANCE", "ANALYST"],
+            "/admin/disputes": ["SUPERADMIN", "SUPPORT"],
+            "/admin/notifications": ["SUPERADMIN", "SUPPORT"],
             "/admin/config": ["SUPERADMIN"],
-            "/admin/users": ["SUPPORT", "SUPERADMIN"],
-            "/admin/support": ["SUPPORT", "SUPERADMIN"],
+            "/admin/audit-log": ["SUPERADMIN", "SUPPORT", "ANALYST"],
           };
 
           for (const [routePrefix, allowedRoles] of Object.entries(RBAC_ROUTES)) {
             if (pathname.startsWith(routePrefix) && !allowedRoles.includes(role)) {
-              const forbiddenUrl = new URL("/admin", request.url);
-              forbiddenUrl.searchParams.set("reason", "forbidden");
+              const forbiddenUrl = new URL("/admin/dashboard", request.url);
+              forbiddenUrl.searchParams.set("reason", "insufficient_permissions");
               return NextResponse.redirect(forbiddenUrl);
             }
           }

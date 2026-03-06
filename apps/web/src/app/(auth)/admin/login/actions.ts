@@ -98,6 +98,8 @@ export async function validateAdminEmail(email: string): Promise<LoginResult> {
 
 /**
  * Step 2: Verify admin password and send OTP.
+ * If the admin email is in the allowlist but the auth user doesn't exist yet,
+ * we auto-create the user with the provided password (first-time setup).
  */
 export async function verifyAdminPassword(
     email: string,
@@ -105,6 +107,46 @@ export async function verifyAdminPassword(
 ): Promise<LoginResult> {
     const supabase = createClient();
     const adminClient = createServiceRoleClient();
+
+    // Auto-create admin user if they're in the allowlist but don't exist in auth
+    const { data: userList } = await adminClient.auth.admin.listUsers();
+    const existingUser = userList?.users?.find(
+        (u) => u.email?.toLowerCase() === email.toLowerCase()
+    );
+
+    if (!existingUser) {
+        // First-time admin setup: create the auth user with the provided password
+        const { error: createError } = await adminClient.auth.admin.createUser({
+            email,
+            password,
+            email_confirm: true,
+            user_metadata: { role: "admin" },
+        });
+
+        if (createError) {
+            console.error("Admin user creation error:", createError);
+            return {
+                success: false,
+                error: `Failed to create admin account: ${createError.message}`,
+                step: "password",
+            };
+        }
+
+        // Also create the user_profiles entry
+        const { data: newUserList } = await adminClient.auth.admin.listUsers();
+        const newUser = newUserList?.users?.find(
+            (u) => u.email?.toLowerCase() === email.toLowerCase()
+        );
+        if (newUser) {
+            await adminClient.from("user_profiles").upsert({
+                id: newUser.id,
+                email: email.toLowerCase(),
+                portal_role: "ADMIN",
+                full_name: email.split("@")[0],
+                admin_role: "SUPERADMIN",
+            });
+        }
+    }
 
     // Attempt sign-in with password
     const { error } = await supabase.auth.signInWithPassword({
@@ -205,42 +247,27 @@ export async function verifyAdminPassword(
 
     return { success: true, step: "otp" };
 }
-
 /**
- * Step 3: Verify OTP and create admin session.
+ * Step 3b: Create admin session AFTER client-side OTP verification.
+ * OTP verification now happens client-side so auth cookies are set
+ * directly in the browser (fixing the redirect issue).
  */
-export async function verifyAdminOtp(
-    email: string,
-    otp: string
+export async function createAdminSession(
+    userId: string
 ): Promise<LoginResult> {
-    const supabase = createClient();
     const adminClient = createServiceRoleClient();
-
-    const { data, error } = await supabase.auth.verifyOtp({
-        email,
-        token: otp,
-        type: "email",
-    });
-
-    if (error || !data.user) {
-        return {
-            success: false,
-            error: "Invalid or expired OTP. Please try again.",
-            step: "otp",
-        };
-    }
 
     // ── Create admin session (1-active-session max) ─────────────────
     // First, deactivate any existing active sessions for this user
     await adminClient
         .from("admin_sessions")
         .update({ is_active: false })
-        .eq("user_id", data.user.id)
+        .eq("user_id", userId)
         .eq("is_active", true);
 
     // Create new active session
     await adminClient.from("admin_sessions").insert({
-        user_id: data.user.id,
+        user_id: userId,
         is_active: true,
         last_active_at: new Date().toISOString(),
     });

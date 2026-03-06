@@ -6,7 +6,6 @@ import { OtpPinInput } from "@/components/shared/otp-pin-input";
 import {
     validateAdminEmail,
     verifyAdminPassword,
-    verifyAdminOtp,
 } from "./actions";
 
 // ─── Types ──────────────────────────────────────────────────────────
@@ -110,22 +109,36 @@ export default function AdminLoginPage() {
         [email, password]
     );
 
-    // ── Step 3: OTP Verification ────────────────────────────────────
+    // ── Step 3: OTP Verification (via local API route to bypass ISP block) ──
     const handleOtpComplete = useCallback(
         async (otp: string) => {
             setError(null);
             setLoading(true);
 
-            const result = await verifyAdminOtp(email, otp);
-            setLoading(false);
+            try {
+                const res = await fetch("/api/admin/verify-otp", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, otp }),
+                });
 
-            if (result.success) {
-                router.push("/admin");
-            } else {
-                setError(result.error || "Invalid OTP");
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    setLoading(false);
+                    setError(data.error || "Invalid or expired OTP. Please try again.");
+                    return;
+                }
+
+                // Auth cookies are set via Set-Cookie headers from the API response.
+                // Hard redirect so the browser sends them with the next request.
+                window.location.href = "/admin/dashboard";
+            } catch (err: any) {
+                setLoading(false);
+                setError("Network error. Please try again.");
             }
         },
-        [email, router]
+        [email]
     );
 
     return (

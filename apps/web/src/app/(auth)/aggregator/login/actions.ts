@@ -253,70 +253,77 @@ export async function completeAggregatorRegistration(
     name: string,
     pin: string
 ): Promise<AuthResult & { userId?: string }> {
-    const adminClient = createServiceRoleClient();
+    try {
+        const adminClient = createServiceRoleClient();
 
-    // Generate user ID: AGG-<first 5 chars of email>-<random 6 digits>
-    const emailPrefix = email.split("@")[0].substring(0, 5).toUpperCase();
-    const randomSuffix = String(Math.floor(100000 + Math.random() * 900000));
-    const userId = `AGG-${emailPrefix}-${randomSuffix}`;
+        // Generate user ID: AGG-<first 5 chars of email>-<random 6 digits>
+        const emailPrefix = email.split("@")[0].substring(0, 5).toUpperCase();
+        const randomSuffix = String(Math.floor(100000 + Math.random() * 900000));
+        const userId = `AGG-${emailPrefix}-${randomSuffix}`;
 
-    // Look up the user by email via admin API (more reliable than cookie session)
-    const { data: userList, error: listError } = await adminClient.auth.admin.listUsers();
+        // Look up the user by email via admin API (more reliable than cookie session)
+        const { data: userList, error: listError } = await adminClient.auth.admin.listUsers();
 
-    if (listError) {
-        console.error("Admin listUsers error:", listError);
-        return { success: false, error: `Admin API error: ${listError.message}`, step: "details" };
+        if (listError) {
+            console.error("Admin listUsers error:", listError);
+            return { success: false, error: `Admin API error: ${listError.message}`, step: "details" };
+        }
+
+        const user = userList.users.find(
+            (u) => u.email?.toLowerCase() === email.toLowerCase()
+        );
+
+        if (!user) {
+            return { success: false, error: "User not found. Please start over.", step: "email" };
+        }
+
+        // Set PIN as the password (use admin API to bypass min length restriction)
+        const { error: updateError } = await adminClient.auth.admin.updateUserById(
+            user.id,
+            { password: pin + PIN_SUFFIX }
+        );
+
+        if (updateError) {
+            console.error("PIN update error:", updateError);
+            return { success: false, error: `Failed to set PIN: ${updateError.message}`, step: "details" };
+        }
+
+        // Update user profile
+        const { error: profileError } = await adminClient
+            .from("user_profiles")
+            .upsert({
+                id: user.id,
+                email: email.toLowerCase(),
+                portal_role: "AGGREGATOR",
+                full_name: name,
+            });
+
+        if (profileError) {
+            console.error("Profile upsert error:", profileError);
+            // Non-blocking — continue even if profile upsert fails
+        }
+
+        // Insert/update aggregators table (upsert to handle retries)
+        const { error: aggError } = await adminClient
+            .from("aggregators")
+            .upsert({
+                id: user.id,
+                user_id: userId,
+                email: email.toLowerCase(),
+                name,
+                status: "active",
+            });
+
+        if (aggError) {
+            console.error("Aggregator insert error:", aggError);
+            return { success: false, error: `Registration failed: ${aggError.message}`, step: "details" };
+        }
+
+        return { success: true, userId };
+    } catch (err: any) {
+        console.error("completeAggregatorRegistration uncaught error:", err);
+        return { success: false, error: err?.message || "Unexpected error during registration.", step: "details" };
     }
-
-    const user = userList.users.find(
-        (u) => u.email?.toLowerCase() === email.toLowerCase()
-    );
-
-    if (!user) {
-        return { success: false, error: "User not found. Please start over.", step: "email" };
-    }
-
-    // Set PIN as the password (use admin API to bypass min length restriction)
-    const { error: updateError } = await adminClient.auth.admin.updateUserById(
-        user.id,
-        { password: pin + PIN_SUFFIX }
-    );
-
-    if (updateError) {
-        console.error("PIN update error:", updateError);
-        return { success: false, error: `Failed to set PIN: ${updateError.message}`, step: "details" };
-    }
-
-    // Update user profile
-    const { error: profileError } = await adminClient
-        .from("user_profiles")
-        .upsert({
-            id: user.id,
-            role: "aggregator",
-            display_name: name,
-        });
-
-    if (profileError) {
-        console.error("Profile upsert error:", profileError);
-    }
-
-    // Insert/update aggregators table (upsert to handle retries)
-    const { error: aggError } = await adminClient
-        .from("aggregators")
-        .upsert({
-            id: user.id,
-            user_id: userId,
-            email: email.toLowerCase(),
-            name,
-            status: "active",
-        });
-
-    if (aggError) {
-        console.error("Aggregator insert error:", aggError);
-        return { success: false, error: `Registration failed: ${aggError.message}`, step: "details" };
-    }
-
-    return { success: true, userId };
 }
 
 // ─── Forgot PIN (Patch 3) ───────────────────────────────────────────

@@ -131,6 +131,14 @@ export async function verifyRecyclerRegistrationOtp(
         return { success: false, error: "Account created but failed to set password. Please try again.", step: "otp" };
     }
 
+    // Create user_profiles entry immediately so user shows in admin
+    await admin.from("user_profiles").upsert({
+        id: data.user.id,
+        email: email.toLowerCase(),
+        portal_role: "RECYCLER",
+        full_name: email.split("@")[0],
+    });
+
     return { success: true, step: "regulatory", userId: data.user.id };
 }
 
@@ -317,12 +325,12 @@ export async function recyclerRegisterStep6(userId: string): Promise<AuthResult>
         return { success: false, error: "Failed to submit registration.", step: "review" };
     }
 
-    // Update user profile
+    // Update user profile with correct portal_role
     await adminClient
         .from("user_profiles")
         .upsert({
             id: userId,
-            role: "recycler",
+            portal_role: "RECYCLER",
         });
 
     return { success: true };
