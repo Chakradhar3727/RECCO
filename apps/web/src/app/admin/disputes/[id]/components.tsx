@@ -45,10 +45,10 @@ function SLAHeader({ deadline, resolved }: { deadline: string | null; resolved: 
     }, [deadline, resolved]);
 
     const colorMap = {
-        normal: { bg: '#F0FAF4', text: '#1B6B35', border: '#1B6B35' },
-        warning: { bg: '#FFFBEB', text: '#B45309', border: '#B45309' },
-        critical: { bg: '#FEF2F2', text: '#DC2626', border: '#DC2626' },
-        breached: { bg: '#FEF2F2', text: '#DC2626', border: '#DC2626' },
+        normal: { bg: 'var(--recco-green-50)', text: 'var(--recco-green-700)', border: 'var(--recco-green-700)' },
+        warning: { bg: '#FFFBEB', text: 'var(--recco-amber-600)', border: 'var(--recco-amber-600)' },
+        critical: { bg: '#FEF2F2', text: 'var(--recco-red-600)', border: 'var(--recco-red-600)' },
+        breached: { bg: '#FEF2F2', text: 'var(--recco-red-600)', border: 'var(--recco-red-600)' },
     };
 
     const c = colorMap[urgency];
@@ -81,7 +81,7 @@ function WeightDisplay({ label, weight, subtext }: { label: string; weight: numb
     return (
         <div className="text-center">
             <p className="text-[10px] text-gray-400 uppercase">{label}</p>
-            <p className="text-lg font-bold font-mono text-[#1A2F4B]">
+            <p className="text-lg font-bold font-mono stitch-text-navy">
                 {weight.toFixed(2)} <span className="text-xs text-gray-400">kg</span>
             </p>
             {subtext && <p className="text-[9px] text-gray-400">{subtext}</p>}
@@ -103,9 +103,9 @@ function GPSDisplay({ lat, lng, label }: { lat: number; lng: number; label: stri
 function EvidenceCard({ evidence }: { evidence: EvidenceCardData }) {
     const d = evidence.dispute;
     const tierConfig = {
-        AUTO_ACCEPT: { bg: '#F0FAF4', border: '#1B6B35', label: 'AUTO-ACCEPT (< 10%)' },
-        STRUCTURED_REVIEW: { bg: '#FFFBEB', border: '#B45309', label: 'STRUCTURED REVIEW (10–15%)' },
-        AUTO_REJECT: { bg: '#FEF2F2', border: '#DC2626', label: 'AUTO-REJECT (> 15%)' },
+        AUTO_ACCEPT: { bg: 'var(--recco-green-50)', border: 'var(--recco-green-700)', label: 'AUTO-ACCEPT (< 10%)' },
+        STRUCTURED_REVIEW: { bg: '#FFFBEB', border: 'var(--recco-amber-600)', label: 'STRUCTURED REVIEW (10–15%)' },
+        AUTO_REJECT: { bg: '#FEF2F2', border: 'var(--recco-red-600)', label: 'AUTO-REJECT (> 15%)' },
     }[d.varianceTier];
 
     return (
@@ -128,8 +128,8 @@ function EvidenceCard({ evidence }: { evidence: EvidenceCardData }) {
                 {/* Column 1: AGG Evidence */}
                 <div className="bg-white rounded-lg border border-[#E5E5E5] p-3 space-y-2">
                     <div className="flex items-center gap-2 mb-2">
-                        <span className="w-2 h-2 rounded-full bg-[#B45309]" />
-                        <h4 className="text-xs font-bold text-[#1A2F4B]">Aggregator Evidence</h4>
+                        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--recco-amber-600)' }} />
+                        <h4 className="text-xs font-bold stitch-text-navy">Aggregator Evidence</h4>
                     </div>
 
                     {/* Photos */}
@@ -153,7 +153,7 @@ function EvidenceCard({ evidence }: { evidence: EvidenceCardData }) {
                         {evidence.aggPhotos.map((photo, i) => (
                             <div key={i}>
                                 <p className="text-[9px] text-gray-400">OCR #{i + 1}</p>
-                                <p className="text-[11px] font-mono font-bold text-[#1A2F4B]">
+                                <p className="text-[11px] font-mono font-bold stitch-text-navy">
                                     {photo.ocrWeight > 0 ? `${photo.ocrWeight.toFixed(1)} kg` : '—'}
                                 </p>
                             </div>
@@ -174,8 +174,8 @@ function EvidenceCard({ evidence }: { evidence: EvidenceCardData }) {
                 {/* Column 2: Transport Chain */}
                 <div className="bg-white rounded-lg border border-[#E5E5E5] p-3 space-y-2">
                     <div className="flex items-center gap-2 mb-2">
-                        <span className="w-2 h-2 rounded-full bg-[#0E5A6E]" />
-                        <h4 className="text-xs font-bold text-[#1A2F4B]">Transport Chain</h4>
+                        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--recco-teal-700)' }} />
+                        <h4 className="text-xs font-bold stitch-text-navy">Transport Chain</h4>
                     </div>
 
                     {/* Timeline */}
@@ -183,11 +183,11 @@ function EvidenceCard({ evidence }: { evidence: EvidenceCardData }) {
                         {/* Collection */}
                         <div className="flex gap-2">
                             <div className="flex flex-col items-center">
-                                <div className="w-3 h-3 rounded-full bg-[#B45309] border-2 border-white shadow" />
+                                <div className="w-3 h-3 rounded-full border-2 border-white shadow" style={{ backgroundColor: 'var(--recco-amber-600)' }} />
                                 <div className="w-0.5 flex-1 bg-gray-200" />
                             </div>
                             <div className="flex-1 pb-2">
-                                <p className="text-[11px] font-bold text-[#1A2F4B]">Collection</p>
+                                <p className="text-[11px] font-bold stitch-text-navy">Collection</p>
                                 {evidence.transport.collectionTime ? (
                                     <>
                                         <p className="text-[10px] text-gray-400">{formatISTTimestamp(evidence.transport.collectionTime)}</p>
@@ -204,11 +204,11 @@ function EvidenceCard({ evidence }: { evidence: EvidenceCardData }) {
                         {/* Pickup */}
                         <div className="flex gap-2">
                             <div className="flex flex-col items-center">
-                                <div className="w-3 h-3 rounded-full bg-[#0E5A6E] border-2 border-white shadow" />
+                                <div className="w-3 h-3 rounded-full border-2 border-white shadow" style={{ backgroundColor: 'var(--recco-teal-700)' }} />
                                 <div className="w-0.5 flex-1 bg-gray-200" />
                             </div>
                             <div className="flex-1 pb-2">
-                                <p className="text-[11px] font-bold text-[#1A2F4B]">Pickup</p>
+                                <p className="text-[11px] font-bold stitch-text-navy">Pickup</p>
                                 {evidence.transport.pickupTime ? (
                                     <>
                                         <p className="text-[10px] text-gray-400">{formatISTTimestamp(evidence.transport.pickupTime)}</p>
@@ -225,10 +225,10 @@ function EvidenceCard({ evidence }: { evidence: EvidenceCardData }) {
                         {/* Delivery */}
                         <div className="flex gap-2">
                             <div className="flex flex-col items-center">
-                                <div className="w-3 h-3 rounded-full bg-[#1B6B35] border-2 border-white shadow" />
+                                <div className="w-3 h-3 rounded-full border-2 border-white shadow" style={{ backgroundColor: 'var(--recco-green-700)' }} />
                             </div>
                             <div className="flex-1">
-                                <p className="text-[11px] font-bold text-[#1A2F4B]">Delivery</p>
+                                <p className="text-[11px] font-bold stitch-text-navy">Delivery</p>
                                 {evidence.transport.deliveryTime ? (
                                     <>
                                         <p className="text-[10px] text-gray-400">{formatISTTimestamp(evidence.transport.deliveryTime)}</p>
@@ -248,22 +248,22 @@ function EvidenceCard({ evidence }: { evidence: EvidenceCardData }) {
                     {/* Transit Duration */}
                     <div className="text-center">
                         <p className="text-[10px] text-gray-400 uppercase">Transit Duration</p>
-                        <p className="text-sm font-bold font-mono text-[#0E5A6E]">
+                        <p className="text-sm font-bold font-mono" style={{ color: 'var(--recco-teal-700)' }}>
                             {evidence.transport.transitDuration || '—'}
                         </p>
                     </div>
 
                     <div className="text-center">
                         <p className="text-[10px] text-gray-400 uppercase">Carrier</p>
-                        <p className="text-[11px] text-[#1A2F4B]">{evidence.transport.carrierName}</p>
+                        <p className="text-[11px] stitch-text-navy">{evidence.transport.carrierName}</p>
                     </div>
                 </div>
 
                 {/* Column 3: Recycler Evidence */}
                 <div className="bg-white rounded-lg border border-[#E5E5E5] p-3 space-y-2">
                     <div className="flex items-center gap-2 mb-2">
-                        <span className="w-2 h-2 rounded-full bg-[#1B6B35]" />
-                        <h4 className="text-xs font-bold text-[#1A2F4B]">Recycler Evidence (CP1)</h4>
+                        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--recco-green-700)' }} />
+                        <h4 className="text-xs font-bold stitch-text-navy">Recycler Evidence (CP1)</h4>
                     </div>
 
                     {/* Scale Photo */}
@@ -298,7 +298,7 @@ function EvidenceCard({ evidence }: { evidence: EvidenceCardData }) {
                     <div className="text-center">
                         <p className="text-[10px] text-gray-400 uppercase">Difference</p>
                         <p className="text-lg font-bold font-mono" style={{
-                            color: d.variancePercent > 15 ? '#DC2626' : d.variancePercent > 10 ? '#B45309' : '#1B6B35'
+                            color: d.variancePercent > 15 ? 'var(--recco-red-600)' : d.variancePercent > 10 ? 'var(--recco-amber-600)' : 'var(--recco-green-700)'
                         }}>
                             {(d.aggWeight - d.recWeight).toFixed(2)} kg
                         </p>
@@ -315,10 +315,10 @@ function EvidenceCard({ evidence }: { evidence: EvidenceCardData }) {
 // ═══════════════════════════════════════════════════════════════════════
 
 const DECISION_OPTIONS: { key: DecisionType; label: string; description: string; color: string }[] = [
-    { key: 'ACCEPT_AGG', label: 'Accept AGG Weight', description: 'Use aggregator\'s declared weight for settlement', color: '#B45309' },
-    { key: 'ACCEPT_RECYCLER', label: 'Accept Recycler Weight', description: 'Use recycler\'s measured weight for settlement', color: '#1B6B35' },
-    { key: 'SPLIT', label: 'Split Difference', description: 'Average both weights for fair settlement', color: '#0E5A6E' },
-    { key: 'ESCALATE', label: 'Escalate', description: 'Flag for senior admin review with new 24h SLA', color: '#DC2626' },
+    { key: 'ACCEPT_AGG', label: 'Accept AGG Weight', description: 'Use aggregator\'s declared weight for settlement', color: 'var(--recco-amber-600)' },
+    { key: 'ACCEPT_RECYCLER', label: 'Accept Recycler Weight', description: 'Use recycler\'s measured weight for settlement', color: 'var(--recco-green-700)' },
+    { key: 'SPLIT', label: 'Split Difference', description: 'Average both weights for fair settlement', color: 'var(--recco-teal-700)' },
+    { key: 'ESCALATE', label: 'Escalate', description: 'Flag for senior admin review with new 24h SLA', color: 'var(--recco-red-600)' },
 ];
 
 function DecisionPanel({
@@ -357,8 +357,8 @@ function DecisionPanel({
 
     if (isResolved || success) {
         return (
-            <div className="bg-[#F0FAF4] border border-[#1B6B35]/20 rounded-lg p-4 text-center">
-                <p className="text-sm font-bold text-[#1B6B35] mb-1">
+            <div className="border rounded-lg p-4 text-center" style={{ backgroundColor: 'var(--recco-green-50)', borderColor: 'rgba(27,107,53,0.2)' }}>
+                <p className="text-sm font-bold stitch-text-green mb-1">
                     ✓ Dispute {success ? 'Resolved' : 'Already Resolved'}
                 </p>
                 {currentDecision && (
@@ -368,7 +368,7 @@ function DecisionPanel({
                 )}
                 <Link
                     href="/admin/disputes"
-                    className="inline-block mt-3 text-xs text-[#1B6B35] hover:underline"
+                    className="inline-block mt-3 text-xs stitch-text-green hover:underline"
                 >
                     ← Back to Disputes
                 </Link>
@@ -378,7 +378,7 @@ function DecisionPanel({
 
     return (
         <div className="bg-white rounded-lg border border-[#E5E5E5] p-4 space-y-3">
-            <h3 className="text-sm font-bold text-[#1A2F4B]">Admin Decision</h3>
+            <h3 className="text-sm font-bold stitch-text-navy">Admin Decision</h3>
 
             {/* Decision Options */}
             <div className="grid grid-cols-2 gap-2">
@@ -388,8 +388,8 @@ function DecisionPanel({
                         onClick={() => { setSelectedDecision(opt.key); setError(''); }}
                         disabled={isPending}
                         className={`text-left p-2.5 rounded-lg border-2 transition-all ${selectedDecision === opt.key
-                                ? 'shadow-sm'
-                                : 'border-gray-200 hover:border-gray-300'
+                            ? 'shadow-sm'
+                            : 'border-gray-200 hover:border-gray-300'
                             }`}
                         style={
                             selectedDecision === opt.key
@@ -397,7 +397,7 @@ function DecisionPanel({
                                 : {}
                         }
                     >
-                        <p className="text-xs font-bold" style={{ color: selectedDecision === opt.key ? opt.color : '#1A2F4B' }}>
+                        <p className="text-xs font-bold" style={{ color: selectedDecision === opt.key ? opt.color : 'var(--recco-navy-900)' }}>
                             {opt.label}
                         </p>
                         <p className="text-[10px] text-gray-400 mt-0.5">{opt.description}</p>
@@ -416,7 +416,7 @@ function DecisionPanel({
                     placeholder="Provide reasoning for this decision..."
                     rows={3}
                     disabled={isPending}
-                    className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-[#1B6B35] placeholder:text-gray-300"
+                    className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none placeholder:text-gray-300" style={{ outlineColor: 'var(--recco-green-700)' }}
                 />
                 <p className="text-[10px] text-gray-300 text-right">{notes.length}/20 min</p>
             </div>
@@ -431,7 +431,7 @@ function DecisionPanel({
                 onClick={handleSubmit}
                 disabled={isPending || !selectedDecision}
                 className="w-full py-2 rounded-lg text-xs font-bold text-white transition-colors disabled:opacity-50"
-                style={{ backgroundColor: selectedDecision ? (DECISION_OPTIONS.find(o => o.key === selectedDecision)?.color || '#1A2F4B') : '#999' }}
+                style={{ backgroundColor: selectedDecision ? (DECISION_OPTIONS.find(o => o.key === selectedDecision)?.color || 'var(--recco-navy-900)') : '#999' }}
             >
                 {isPending ? (
                     <span className="flex items-center justify-center gap-2">
@@ -464,7 +464,7 @@ export default function DisputeDetailClient({
             {/* Header row */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-lg font-bold text-[#1A2F4B]">
+                    <h1 className="text-lg font-bold stitch-text-navy">
                         Dispute: BATCH-{d.batchId.slice(0, 8)}
                     </h1>
                     <p className="text-[10px] text-gray-400">

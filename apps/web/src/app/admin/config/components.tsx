@@ -67,82 +67,93 @@ export function ConfigTable({
         (groups[category] = groups[category] || []).push(c);
     });
 
+    // Humanize technical keys for better UX
+    const humanizeKey = (key: string) => {
+        return key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+            .replace('Epr', 'EPR')
+            .replace('Pct', '%')
+            .replace('Gps', 'GPS')
+            .replace('Tolerance M', 'Tolerance (meters)');
+    };
+
     return (
-        <div className="space-y-4">
+        <div className="space-y-8">
             {Object.entries(groups).map(([category, items]) => (
-                <div key={category} className="bg-white rounded-lg border border-[#E5E5E5] overflow-hidden">
-                    <div className="px-4 py-2 bg-[#F5F5F5] border-b border-[#E5E5E5]">
-                        <h3 className="text-xs font-bold text-[#1A2F4B]">{category}</h3>
+                <section key={category} className="mb-8">
+                    <h2 className="stitch-section-title">{category}</h2>
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden divide-y divide-gray-100">
+                        {items.map((config) => (
+                            <div
+                                key={config.key}
+                                className="p-6 hover:bg-slate-50/50 transition-colors flex flex-col lg:flex-row lg:items-center gap-6"
+                            >
+                                {/* Left: Humanized Title & Description */}
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <h3 className="text-sm font-bold text-[#0F172A]">{humanizeKey(config.key)}</h3>
+                                        <code className="text-[10px] text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded border border-gray-200">{config.key}</code>
+                                    </div>
+                                    <p className="text-sm text-gray-500 max-w-2xl">{config.description || 'No description provided.'}</p>
+                                    <p className="text-[11px] text-slate-400 mt-2 font-medium">Last updated: {formatISTTimestamp(config.lastUpdatedAt)}</p>
+                                </div>
+
+                                {/* Right: Editable Value */}
+                                <div className="w-full lg:w-[320px] shrink-0">
+                                    {editing === config.key ? (
+                                        <div className="flex flex-col gap-2">
+                                            <div className="flex items-center gap-2">
+                                                <input
+                                                    type="text"
+                                                    value={editValue}
+                                                    onChange={(e) => setEditValue(e.target.value)}
+                                                    className="stitch-input w-full"
+                                                    autoFocus
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === 'Enter') handleSave(config.key);
+                                                        if (e.key === 'Escape') cancelEdit();
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={() => handleSave(config.key)}
+                                                    disabled={isPending || editValue.trim() === ''}
+                                                    className="flex-1 stitch-btn stitch-btn-primary !py-1.5"
+                                                >
+                                                    {isPending ? 'Saving...' : 'Save Changes'}
+                                                </button>
+                                                <button
+                                                    onClick={cancelEdit}
+                                                    className="flex-1 stitch-btn stitch-btn-outline !py-1.5"
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-lg gap-4">
+                                            <span className="text-lg font-mono font-bold break-all" style={{ color: 'var(--recco-navy-900)' }}>
+                                                {config.value}
+                                            </span>
+                                            <button
+                                                onClick={() => startEdit(config.key, config.value)}
+                                                className="text-xs font-bold px-3 py-1.5 rounded bg-white border border-gray-200 text-slate-600 hover:bg-gray-50 hover:text-[#1B6B35] transition-all shadow-sm shrink-0"
+                                            >
+                                                Edit
+                                            </button>
+                                        </div>
+                                    )}
+                                    {feedback?.key === config.key && (
+                                        <div className={`mt-2 p-2 rounded text-xs font-bold flex items-center gap-1.5 ${feedback.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+                                            <span>{feedback.type === 'success' ? '✓' : '⚠'}</span>
+                                            {feedback.msg}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                    {items.map((config) => (
-                        <div
-                            key={config.key}
-                            className="flex items-center gap-3 px-4 py-3 border-b border-[#E5E5E5] last:border-b-0 hover:bg-gray-50 transition-colors"
-                        >
-                            {/* Key + Description */}
-                            <div className="flex-1 min-w-0">
-                                <p className="text-xs font-mono font-bold text-[#1A2F4B]">{config.key}</p>
-                                {config.description && (
-                                    <p className="text-[10px] text-gray-400 mt-0.5 truncate">{config.description}</p>
-                                )}
-                            </div>
-
-                            {/* Value / Edit */}
-                            <div className="w-[200px]">
-                                {editing === config.key ? (
-                                    <div className="flex items-center gap-1">
-                                        <input
-                                            type="text"
-                                            value={editValue}
-                                            onChange={(e) => setEditValue(e.target.value)}
-                                            className="flex-1 text-xs font-mono border border-[#1B6B35] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#1B6B35]"
-                                            autoFocus
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter') handleSave(config.key);
-                                                if (e.key === 'Escape') cancelEdit();
-                                            }}
-                                        />
-                                        <button
-                                            onClick={() => handleSave(config.key)}
-                                            disabled={isPending}
-                                            className="text-[10px] px-2 py-1 rounded bg-[#1B6B35] text-white font-bold hover:bg-[#155a2b] disabled:opacity-50"
-                                        >
-                                            {isPending ? '...' : '✓'}
-                                        </button>
-                                        <button
-                                            onClick={cancelEdit}
-                                            className="text-[10px] px-2 py-1 rounded bg-gray-200 text-gray-600 font-bold hover:bg-gray-300"
-                                        >
-                                            ✕
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-xs font-mono text-[#1A2F4B] font-bold">{config.value}</span>
-                                        <button
-                                            onClick={() => startEdit(config.key, config.value)}
-                                            className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
-                                        >
-                                            Edit
-                                        </button>
-                                    </div>
-                                )}
-                                {feedback?.key === config.key && (
-                                    <p className={`text-[10px] mt-0.5 ${feedback.type === 'success' ? 'text-[#1B6B35]' : 'text-red-500'}`}>
-                                        {feedback.msg}
-                                    </p>
-                                )}
-                            </div>
-
-                            {/* Last Updated */}
-                            <div className="w-[130px] text-right">
-                                <p className="text-[10px] text-gray-400">
-                                    {formatISTTimestamp(config.lastUpdatedAt)}
-                                </p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                </section>
             ))}
         </div>
     );

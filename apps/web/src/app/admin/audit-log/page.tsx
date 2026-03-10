@@ -90,13 +90,13 @@ async function getActionTypes(): Promise<{ action: string; count: number }[]> {
 function ActionBadge({ action }: { action: string }) {
     const colorMap: Record<string, { bg: string; color: string }> = {
         UPDATE_USER: { bg: '#EFF6FF', color: '#2563EB' },
-        APPROVE_USER: { bg: '#F0FAF4', color: '#1B6B35' },
-        REJECT_USER: { bg: '#FEF2F2', color: '#DC2626' },
-        RESOLVE_DISPUTE: { bg: '#F0FAF4', color: '#1B6B35' },
-        ESCALATE_DISPUTE: { bg: '#FEF2F2', color: '#DC2626' },
-        UPDATE_CONFIG: { bg: '#FFFBEB', color: '#B45309' },
-        FLAG_FRAUD: { bg: '#FEF2F2', color: '#DC2626' },
-        DISMISS_FRAUD: { bg: '#F0FAF4', color: '#1B6B35' },
+        APPROVE_USER: { bg: 'var(--recco-green-100)', color: 'var(--recco-green-700)' },
+        REJECT_USER: { bg: '#FEF2F2', color: 'var(--recco-red-700)' },
+        RESOLVE_DISPUTE: { bg: 'var(--recco-green-100)', color: 'var(--recco-green-700)' },
+        ESCALATE_DISPUTE: { bg: '#FEF2F2', color: 'var(--recco-red-700)' },
+        UPDATE_CONFIG: { bg: '#FFFBEB', color: 'var(--recco-amber-700)' },
+        FLAG_FRAUD: { bg: '#FEF2F2', color: 'var(--recco-red-700)' },
+        DISMISS_FRAUD: { bg: 'var(--recco-green-100)', color: 'var(--recco-green-700)' },
     };
     const c = colorMap[action] || { bg: '#F5F5F5', color: '#666' };
 
@@ -133,38 +133,41 @@ function DataDiff({ previous, next }: { previous: any; next: any }) {
 
 function AuditRow({ entry }: { entry: AuditEntry }) {
     return (
-        <div className="flex items-start gap-3 py-3 px-4 border-b border-[#E5E5E5] hover:bg-gray-50 transition-colors">
+        <div className="flex flex-col sm:flex-row sm:items-start gap-4 py-4 px-6 border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors">
             {/* Timestamp */}
-            <div className="w-[110px] flex-shrink-0">
-                <p className="text-[10px] text-gray-400">{formatISTTimestamp(entry.createdAt)}</p>
-                <p className="text-[9px] text-gray-300">{getRelativeTime(entry.createdAt)}</p>
+            <div className="w-full sm:w-[110px] flex-shrink-0">
+                <p className="text-xs font-semibold stitch-text-navy">{formatISTTimestamp(entry.createdAt).split(',')[0]}</p>
+                <p className="text-[10px] text-gray-500 mt-0.5">{formatISTTimestamp(entry.createdAt).split(',')[1]}</p>
+                <p className="text-[10px] text-gray-400 mt-1">{getRelativeTime(entry.createdAt)}</p>
             </div>
 
             {/* Admin */}
-            <div className="w-[90px] flex-shrink-0">
-                <p className="text-[11px] font-medium text-[#1A2F4B] truncate">{entry.adminName}</p>
+            <div className="w-full sm:w-[110px] flex-shrink-0">
+                <p className="text-sm font-medium stitch-text-navy truncate">{entry.adminName}</p>
                 {entry.ipAddress && (
-                    <p className="text-[9px] font-mono text-gray-300">{entry.ipAddress}</p>
+                    <p className="text-xs font-mono text-gray-400 mt-0.5">{entry.ipAddress}</p>
                 )}
             </div>
 
             {/* Action */}
-            <div className="w-[120px] flex-shrink-0">
+            <div className="w-full sm:w-[140px] flex-shrink-0">
                 <ActionBadge action={entry.action} />
             </div>
 
             {/* Entity */}
-            <div className="w-[120px] flex-shrink-0">
+            <div className="w-full sm:w-[140px] flex-shrink-0">
                 {entry.entityType && (
-                    <p className="text-[10px] text-gray-500">{entry.entityType}</p>
+                    <p className="text-xs font-medium text-gray-600">{entry.entityType}</p>
                 )}
                 {entry.entityId && (
-                    <p className="text-[9px] font-mono text-gray-300">{entry.entityId.slice(0, 12)}...</p>
+                    <p className="text-[10px] font-mono text-gray-400 mt-0.5" title={entry.entityId}>
+                        {entry.entityId.slice(0, 16)}...
+                    </p>
                 )}
             </div>
 
             {/* Data Diff */}
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 mt-2 sm:mt-0">
                 <DataDiff previous={entry.previousData} next={entry.newData} />
             </div>
         </div>
@@ -193,82 +196,90 @@ export default async function AuditLogPage({
     const totalPages = Math.ceil(totalCount / 50);
 
     return (
-        <div className="space-y-4">
+        <div className="stitch-page p-8 max-w-7xl mx-auto space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-xl font-bold text-[#1A2F4B]">Audit Log</h1>
-                    <p className="text-xs text-gray-400 mt-0.5">
+                    <h1 className="text-3xl font-bold stitch-text-navy tracking-tight">Audit Log</h1>
+                    <p className="text-sm text-gray-500 mt-1">
                         Immutable record of all admin actions. {totalCount} total entries.
                     </p>
                 </div>
-                <div className="flex items-center gap-2 bg-[#F0FAF4] border border-[#1B6B35]/20 rounded-lg px-3 py-1.5">
-                    <span className="text-[10px] text-[#1B6B35] font-medium">🔒 Tamper-proof · Immutable</span>
+                <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-4 py-2">
+                    <span className="text-xs font-bold text-green-700">🔒 Tamper-proof · Immutable</span>
                 </div>
             </div>
 
             {/* Action Type Filter */}
-            <div className="flex flex-wrap gap-1 bg-white rounded-lg border border-[#E5E5E5] p-1.5">
+            <div className="flex flex-wrap items-center gap-2 pb-2">
                 <Link
                     href="/admin/audit-log"
-                    className={`text-[10px] px-2.5 py-1 rounded-md transition-colors ${filter === 'ALL' ? 'bg-[#1A2F4B] text-white' : 'text-gray-500 hover:bg-gray-50'
+                    className={`flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg transition-all ${filter === 'ALL'
+                        ? 'bg-[var(--recco-navy-900)] text-white shadow-md'
+                        : 'text-gray-600 bg-white border border-gray-200 hover:bg-gray-50'
                         }`}
                 >
-                    All ({totalCount})
+                    All
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${filter === 'ALL' ? 'bg-white/20' : 'bg-gray-100 text-gray-500'}`}>{totalCount}</span>
                 </Link>
                 {actionTypes.slice(0, 8).map((at) => (
                     <Link
                         key={at.action}
                         href={`/admin/audit-log?filter=${at.action.toLowerCase()}`}
-                        className={`text-[10px] px-2.5 py-1 rounded-md transition-colors ${filter === at.action ? 'bg-[#1A2F4B] text-white' : 'text-gray-500 hover:bg-gray-50'
+                        className={`flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg transition-all ${filter === at.action
+                            ? 'bg-[var(--recco-navy-900)] text-white shadow-md'
+                            : 'text-gray-600 bg-white border border-gray-200 hover:bg-gray-50'
                             }`}
                     >
-                        {at.action.replace(/_/g, ' ')} ({at.count})
+                        {at.action.replace(/_/g, ' ')}
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${filter === at.action ? 'bg-white/20' : 'bg-gray-100 text-gray-500'}`}>{at.count}</span>
                     </Link>
                 ))}
             </div>
 
             {/* Log Table */}
-            <div className="bg-white rounded-lg border border-[#E5E5E5] overflow-hidden">
-                {/* Headers */}
-                <div className="flex items-center gap-3 py-2 px-4 bg-[#F5F5F5] border-b border-[#E5E5E5]">
-                    <span className="w-[110px] text-[10px] text-gray-400 uppercase font-bold">Timestamp</span>
-                    <span className="w-[90px] text-[10px] text-gray-400 uppercase font-bold">Admin</span>
-                    <span className="w-[120px] text-[10px] text-gray-400 uppercase font-bold">Action</span>
-                    <span className="w-[120px] text-[10px] text-gray-400 uppercase font-bold">Entity</span>
-                    <span className="flex-1 text-[10px] text-gray-400 uppercase font-bold">Changes</span>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                {/* Stitch dark navy header */}
+                <div className="hidden sm:flex items-center gap-4 py-3 px-6 bg-[var(--recco-navy-900)] text-white">
+                    <span className="w-[110px] text-[10px] uppercase font-bold tracking-wider">Timestamp</span>
+                    <span className="w-[110px] text-[10px] uppercase font-bold tracking-wider">Admin</span>
+                    <span className="w-[140px] text-[10px] uppercase font-bold tracking-wider">Action</span>
+                    <span className="w-[140px] text-[10px] uppercase font-bold tracking-wider">Entity</span>
+                    <span className="flex-1 text-[10px] uppercase font-bold tracking-wider">Changes</span>
                 </div>
 
                 {entries.length === 0 ? (
-                    <div className="py-12 text-center">
-                        <p className="text-sm text-gray-400">No audit entries found</p>
-                        <p className="text-xs text-gray-300 mt-1">
+                    <div className="py-16 text-center bg-gray-50/50">
+                        <p className="text-sm font-medium stitch-text-navy">No audit entries found</p>
+                        <p className="text-sm text-gray-500 mt-1 max-w-md mx-auto">
                             Admin actions will be recorded here automatically.
                         </p>
                     </div>
                 ) : (
-                    entries.map((entry) => <AuditRow key={entry.id} entry={entry} />)
+                    <div className="divide-y divide-gray-100">
+                        {entries.map((entry) => <AuditRow key={entry.id} entry={entry} />)}
+                    </div>
                 )}
             </div>
 
             {/* Pagination */}
             {totalPages > 1 && (
-                <div className="flex items-center justify-center gap-2">
+                <div className="stitch-pagination">
                     {page > 1 && (
                         <Link
                             href={`/admin/audit-log?page=${page - 1}${filter !== 'ALL' ? `&filter=${filter.toLowerCase()}` : ''}`}
-                            className="text-xs px-3 py-1 rounded bg-gray-100 text-gray-600 hover:bg-gray-200"
+                            className="stitch-pagination-btn"
                         >
                             ← Previous
                         </Link>
                     )}
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-gray-500">
                         Page {page} of {totalPages}
                     </span>
                     {page < totalPages && (
                         <Link
                             href={`/admin/audit-log?page=${page + 1}${filter !== 'ALL' ? `&filter=${filter.toLowerCase()}` : ''}`}
-                            className="text-xs px-3 py-1 rounded bg-gray-100 text-gray-600 hover:bg-gray-200"
+                            className="stitch-pagination-btn"
                         >
                             Next →
                         </Link>

@@ -1,6 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* RECCO Stitch Design System — Phase 2 Admin Portal */
+@import '../styles/stitch-design.css';
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -48,6 +53,7 @@ body {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;

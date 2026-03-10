@@ -122,7 +122,7 @@ export default function Home() {
             <footer className="mt-auto p-12 border-t bg-recco-gray-50">
                 <div className="max-w-7xl mx-auto text-center">
                     <p className="text-recco-navy-900/40 text-sm font-medium">
-                        &copy; 2026 RECCO EPR SaaS Platform. Built for India's Circular Economy.
+                        &copy; 2026 RECCO EPR SaaS Platform. Built for India&apos;s Circular Economy.
                     </p>
                 </div>
             </footer>

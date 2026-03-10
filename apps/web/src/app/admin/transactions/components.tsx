@@ -38,7 +38,7 @@ function StatCard({
     label,
     value,
     isCurrency = false,
-    color = '#1A2F4B',
+    color = 'var(--recco-navy-900)',
 }: {
     label: string;
     value: number;
@@ -46,11 +46,11 @@ function StatCard({
     color?: string;
 }) {
     return (
-        <div className="group bg-white rounded-lg border border-[#E5E5E5] p-4 transition-all hover:border-l-[3px] hover:border-l-[#1B6B35] hover:shadow-sm">
-            <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">{label}</p>
-            <p className="text-2xl font-bold" style={{ color, fontFamily: 'Courier New, monospace' }}>
+        <div className="stitch-metric-card">
+            <h3 className="stitch-metric-label">{label}</h3>
+            <div className="stitch-metric-value" style={{ color }}>
                 {isCurrency ? formatINR(value) : value.toLocaleString('en-IN')}
-            </p>
+            </div>
         </div>
     );
 }
@@ -62,9 +62,9 @@ function StatCard({
 function TransactionFeed({ events }: { events: TransactionEvent[] }) {
     if (events.length === 0) {
         return (
-            <div className="bg-[#F0FAF4] border border-[#1B6B35]/20 rounded-lg p-6 text-center">
-                <p className="text-[#1B6B35] font-medium text-sm">No transactions recorded yet</p>
-                <p className="text-gray-400 text-xs mt-1">
+            <div className="bg-[var(--recco-green-50)] border border-[rgba(27,107,53,0.2)] rounded-lg p-8 text-center">
+                <p className="stitch-text-green font-medium">No transactions recorded yet</p>
+                <p className="text-gray-500 text-sm mt-1">
                     Transaction feed will populate when the payment system goes live in Phase 6.
                 </p>
             </div>
@@ -76,14 +76,13 @@ function TransactionFeed({ events }: { events: TransactionEvent[] }) {
             {events.map((event, i) => (
                 <div
                     key={event.id}
-                    className="flex items-center gap-3 py-2.5 px-3 transition-colors hover:bg-gray-50"
+                    className={`flex items-center gap-4 py-3 px-4 transition-colors hover:bg-gray-100 border-b border-gray-100 last:border-0 ${i % 2 === 1 ? 'bg-gray-50/50' : 'bg-white'}`}
                     style={{
-                        backgroundColor: i % 2 === 1 ? '#F5F5F5' : 'white',
-                        borderLeft: `3px solid ${event.barColor}`,
+                        borderLeft: `4px solid ${event.barColor}`,
                     }}
                 >
                     <div className="flex-1 min-w-0">
-                        <p className="text-xs text-[#1A2F4B] truncate">{event.description}</p>
+                        <p className="text-sm font-medium stitch-text-navy truncate">{event.description}</p>
                         <p className="text-[10px] text-gray-400 mt-0.5">
                             {formatISTTimestamp(event.timestamp)}
                         </p>
@@ -97,7 +96,7 @@ function TransactionFeed({ events }: { events: TransactionEvent[] }) {
                     {event.disputeId && (
                         <Link
                             href={`/admin/disputes/${event.disputeId}`}
-                            className="text-[10px] text-[#0E5A6E] hover:underline"
+                            className="text-[10px] hover:underline" style={{ color: 'var(--recco-teal-700)' }}
                         >
                             View
                         </Link>
@@ -147,10 +146,10 @@ function SLACountdown({ deadline }: { deadline: string | null }) {
     }, [deadline]);
 
     const colorMap = {
-        normal: '#B45309',
-        warning: '#B45309',
-        critical: '#DC2626',
-        breached: '#DC2626',
+        normal: 'var(--recco-amber-600)',
+        warning: 'var(--recco-amber-600)',
+        critical: 'var(--recco-red-600)',
+        breached: 'var(--recco-red-600)',
     };
 
     return (
@@ -164,26 +163,18 @@ function SLACountdown({ deadline }: { deadline: string | null }) {
 }
 
 function DisputeCardItem({ dispute }: { dispute: DisputeCard }) {
-    const varianceColor = dispute.variancePercent > 15 ? '#DC2626' : '#B45309';
+    const varianceColor = dispute.variancePercent > 15 ? 'var(--recco-red-600)' : 'var(--recco-amber-600)';
 
     return (
         <Link
             href={`/admin/disputes/${dispute.id}`}
-            className="block p-2.5 rounded-md border transition-all hover:shadow-sm"
-            style={{
-                backgroundColor:
-                    dispute.status === 'OPEN' ? '#FFFBEB' :
-                        dispute.status === 'IN_REVIEW' ? '#F0FDFA' :
-                            dispute.status === 'RESOLVED' ? '#F0FAF4' :
-                                '#FEF2F2',
-                borderColor:
-                    dispute.status === 'OPEN' ? '#B45309' :
-                        dispute.status === 'IN_REVIEW' ? '#0E5A6E' :
-                            dispute.status === 'RESOLVED' ? '#1B6B35' :
-                                '#DC2626',
-            }}
+            className={`block p-3 rounded-lg border transition-all hover:shadow-md ${dispute.status === 'OPEN' ? 'bg-[#FFFBEB] border-[#D97706]' :
+                dispute.status === 'IN_REVIEW' ? 'bg-[#F0FDFA] border-[#0D5C63]' :
+                    dispute.status === 'RESOLVED' ? 'bg-[#F0FAF4] border-[#1B6B35]' :
+                        'bg-[#FEF2F2] border-[#DC2626]'
+                }`}
         >
-            <p className="text-[11px] font-mono text-[#1A2F4B] font-bold truncate">
+            <p className="text-[11px] font-mono stitch-text-navy font-bold truncate">
                 {dispute.batchId ? `BATCH-${dispute.batchId.slice(0, 8)}` : dispute.id.slice(0, 8)}
             </p>
             <p className="text-[10px] text-gray-500 mt-0.5">
@@ -195,7 +186,7 @@ function DisputeCardItem({ dispute }: { dispute: DisputeCard }) {
                 </span>
                 {dispute.status === 'OPEN' && <SLACountdown deadline={dispute.slaDeadline} />}
                 {dispute.status === 'RESOLVED' && dispute.adminDecision && (
-                    <span className="text-[9px] bg-[#F0FAF4] text-[#1B6B35] px-1.5 py-0.5 rounded-full">
+                    <span className="text-[9px] px-1.5 py-0.5 rounded-full" style={{ backgroundColor: 'var(--recco-green-50)', color: 'var(--recco-green-700)' }}>
                         {dispute.adminDecision.replace(/_/g, ' ')}
                     </span>
                 )}
@@ -220,14 +211,14 @@ function DisputeTracker({
     };
 }) {
     const columns = [
-        { key: 'open', label: 'Open', data: disputes.open, headerColor: '#B45309' },
-        { key: 'inReview', label: 'In-Review', data: disputes.inReview, headerColor: '#0E5A6E' },
-        { key: 'resolved', label: 'Resolved', data: disputes.resolved, headerColor: '#1B6B35' },
-        { key: 'escalated', label: 'Escalated', data: disputes.escalated, headerColor: '#DC2626' },
+        { key: 'open', label: 'Open', data: disputes.open, headerColor: 'var(--recco-amber-600)' },
+        { key: 'inReview', label: 'In-Review', data: disputes.inReview, headerColor: 'var(--recco-teal-700)' },
+        { key: 'resolved', label: 'Resolved', data: disputes.resolved, headerColor: 'var(--recco-green-700)' },
+        { key: 'escalated', label: 'Escalated', data: disputes.escalated, headerColor: 'var(--recco-red-600)' },
     ];
 
     return (
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {columns.map((col) => (
                 <div key={col.key}>
                     <div className="flex items-center justify-between mb-2">
@@ -276,8 +267,8 @@ function RevenueTooltip({ active, payload, label }: any) {
     if (!active || !payload?.length) return null;
     return (
         <div className="bg-white border border-gray-200 rounded-lg px-3 py-2 shadow-md text-xs">
-            <p className="font-bold text-[#1A2F4B] mb-1">{label}</p>
-            <p className="text-[#1B6B35]">Revenue: {formatINR(payload[0]?.value || 0)}</p>
+            <p className="font-bold stitch-text-navy mb-1">{label}</p>
+            <p className="stitch-text-green">Revenue: {formatINR(payload[0]?.value || 0)}</p>
             <p className="text-gray-400">Transactions: {payload[0]?.payload?.count || 0}</p>
         </div>
     );
@@ -287,8 +278,8 @@ function VolumeTooltip({ active, payload, label }: any) {
     if (!active || !payload?.length) return null;
     return (
         <div className="bg-white border border-gray-200 rounded-lg px-3 py-2 shadow-md text-xs">
-            <p className="font-bold text-[#1A2F4B] mb-1">{label}</p>
-            <p className="text-[#1A2F4B]">Transactions: {payload[0]?.value || 0}</p>
+            <p className="font-bold stitch-text-navy mb-1">{label}</p>
+            <p className="stitch-text-navy">Transactions: {payload[0]?.value || 0}</p>
             <p className="text-gray-400">Value: {formatINR(payload[0]?.payload?.totalValue || 0)}</p>
         </div>
     );
@@ -317,18 +308,18 @@ function FinancialCharts({
     }, [activePeriod]);
 
     return (
-        <div className="bg-white rounded-lg border border-[#E5E5E5] p-4">
-            <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-bold text-[#1A2F4B]">Financial Summary</h3>
-                <div className="flex gap-1">
+        <div className="stitch-card hover:shadow-md transition-shadow">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+                <h3 className="text-lg font-bold stitch-text-navy">Financial Summary</h3>
+                <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
                     {(Object.entries(PERIOD_LABELS) as [Period, string][]).map(([key, label]) => (
                         <button
                             key={key}
                             onClick={() => switchPeriod(key)}
                             className={`text-[11px] px-2.5 py-1 rounded-md transition-colors ${activePeriod === key
-                                    ? 'bg-[#1A2F4B] text-white'
-                                    : 'text-gray-400 hover:bg-gray-100'
-                                }`}
+                                ? 'text-white'
+                                : 'text-gray-400 hover:bg-gray-100'
+                                }`} style={activePeriod === key ? { backgroundColor: 'var(--recco-navy-900)' } : {}}
                         >
                             {label}
                         </button>
@@ -338,7 +329,7 @@ function FinancialCharts({
 
             {loading ? (
                 <div className="h-[200px] flex items-center justify-center">
-                    <div className="w-5 h-5 border-2 border-[#1B6B35] border-t-transparent rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--recco-green-700)', borderTopColor: 'transparent' }} />
                 </div>
             ) : (
                 <div className="grid grid-cols-2 gap-4">
@@ -463,7 +454,7 @@ export default function TransactionDashboardClient({
                         description: `Escrow created — AGG ${(row.aggregator_id || '').slice(0, 8)}`,
                         amount: Number(row.amount) || 0,
                         timestamp: row.created_at,
-                        barColor: '#B45309',
+                        barColor: 'var(--recco-amber-600)',
                     };
                     setEvents((prev) => [newEvent, ...prev].slice(0, 50));
                 }
@@ -481,7 +472,7 @@ export default function TransactionDashboardClient({
                             description: `Payment released → AGG ${(row.aggregator_id || '').slice(0, 8)}`,
                             amount: Number(row.amount) || 0,
                             timestamp: new Date().toISOString(),
-                            barColor: '#1B6B35',
+                            barColor: 'var(--recco-green-700)',
                         };
                         setEvents((prev) => [newEvent, ...prev].slice(0, 50));
                     }
@@ -503,7 +494,7 @@ export default function TransactionDashboardClient({
                         description: `Certificate sold — ${(row.seller_id || '').slice(0, 8)} → ${(row.buyer_id || '').slice(0, 8)}`,
                         amount: Number(row.purchase_price) || 0,
                         timestamp: row.created_at,
-                        barColor: '#0E5A6E',
+                        barColor: 'var(--recco-teal-700)',
                     };
                     setEvents((prev) => [newEvent, ...prev].slice(0, 50));
                 }
@@ -539,26 +530,26 @@ export default function TransactionDashboardClient({
     }, []);
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-6">
             {/* ─── ROW 1: Stat Cards ─── */}
-            <div className="grid grid-cols-4 gap-3">
-                <StatCard label="Today's Value" value={stats.todayValue} isCurrency color="#1B6B35" />
-                <StatCard label="Platform Revenue (2%)" value={stats.platformRevenue} isCurrency color="#0E5A6E" />
-                <StatCard label="Pending Escrow" value={stats.pendingEscrow} isCurrency color="#B45309" />
-                <StatCard label="Open Disputes" value={stats.openDisputes} color="#DC2626" />
+            <div className="stitch-grid-4">
+                <StatCard label="Today's Value" value={stats.todayValue} isCurrency color="var(--recco-green-700)" />
+                <StatCard label="Platform Revenue (2%)" value={stats.platformRevenue} isCurrency color="var(--recco-teal-700)" />
+                <StatCard label="Pending Escrow" value={stats.pendingEscrow} isCurrency color="var(--recco-amber-600)" />
+                <StatCard label="Open Disputes" value={stats.openDisputes} color="var(--recco-red-600)" />
             </div>
 
             {/* ─── ROW 2: Transaction Feed + Dispute Tracker ─── */}
-            <div className="grid grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
                 {/* Left: Transaction Feed (60%) */}
-                <div className="col-span-3 bg-white rounded-lg border border-[#E5E5E5] overflow-hidden">
-                    <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[#E5E5E5]">
-                        <h3 className="text-sm font-bold text-[#1A2F4B]">Transaction Feed</h3>
+                <div className="stitch-card col-span-1 lg:col-span-3 hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-3 mb-4">
+                        <h3 className="text-lg font-bold stitch-text-navy">Transaction Feed</h3>
                         <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#1B6B35] opacity-75" />
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#1B6B35]" />
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[var(--recco-green-700)]" />
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--recco-green-700)]" />
                         </span>
-                        <span className="text-[10px] font-bold px-1.5 py-0.5 bg-[#F0FAF4] text-[#1B6B35] rounded">
+                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded stitch-text-green bg-[var(--recco-green-50)]">
                             LIVE
                         </span>
                     </div>
@@ -566,8 +557,8 @@ export default function TransactionDashboardClient({
                 </div>
 
                 {/* Right: Dispute Tracker (40%) */}
-                <div className="col-span-2 bg-white rounded-lg border border-[#E5E5E5] p-3">
-                    <h3 className="text-sm font-bold text-[#1A2F4B] mb-3">Dispute Tracker</h3>
+                <div className="stitch-card col-span-1 lg:col-span-2 hover:shadow-md transition-shadow">
+                    <h3 className="text-lg font-bold stitch-text-navy mb-4">Dispute Tracker</h3>
                     <DisputeTracker disputes={disputes} />
                 </div>
             </div>

@@ -67,15 +67,16 @@ export default function AdminSidebar({ adminRole, isOpen, onClose }: AdminSideba
             {/* Sidebar */}
             <aside
                 className={`
-          fixed top-0 left-0 h-full w-[240px] md:w-[240px] bg-[#1A2F4B] text-white z-50
-          flex flex-col transition-transform duration-300 ease-in-out
+          fixed top-0 left-0 h-full w-[240px] md:w-[240px] text-white z-50
+          flex flex-col transition-transform duration-300 ease-in-out border-r border-white/10
           md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
+                style={{ backgroundColor: 'var(--recco-navy-900)' }}
             >
                 {/* Logo Header */}
-                <div className="p-5 flex items-center justify-between border-b border-white/10">
+                <div className="h-16 px-5 flex items-center justify-between border-b border-white/10 shrink-0">
                     <div className="flex items-center gap-2">
-                        <ShieldCheck size={24} className="text-[#1B6B35]" />
+                        <ShieldCheck size={24} style={{ color: 'var(--recco-green-700)' }} />
                         <span className="text-lg font-bold tracking-tight">RECCO Admin</span>
                     </div>
                     {/* Close button for mobile */}
@@ -111,12 +112,13 @@ export default function AdminSidebar({ adminRole, isOpen, onClose }: AdminSideba
                     flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
                     transition-all duration-150
                     ${isActive
-                                            ? 'bg-[#1B6B35]/20 text-[#1B6B35] border-l-[3px] border-[#1B6B35] pl-[9px]'
+                                            ? 'bg-[#1B6B35]/20 border-l-[3px] pl-[9px]'
                                             : 'text-white/70 hover:bg-white/8 hover:text-white'
                                         }
                   `}
+                                    style={isActive ? { color: 'var(--recco-green-700)', borderColor: 'var(--recco-green-700)' } : {}}
                                 >
-                                    <Icon size={18} className={isActive ? 'text-[#1B6B35]' : ''} />
+                                    <Icon size={18} style={isActive ? { color: 'var(--recco-green-700)' } : {}} />
                                     <span>{item.label}</span>
                                 </Link>
                             );

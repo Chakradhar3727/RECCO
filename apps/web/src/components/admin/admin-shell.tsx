@@ -45,7 +45,7 @@ export default function AdminShell({
       />
 
       {/* Main Content Area */}
-      <main className="md:ml-[240px] mt-16 p-6 bg-white min-h-[calc(100vh-64px)]">
+      <main className="md:ml-[240px] mt-16 p-6 min-h-[calc(100vh-64px)] stitch-admin">
         {children}
       </main>
     </div>

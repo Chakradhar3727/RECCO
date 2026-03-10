@@ -15,14 +15,12 @@ interface PageProps {
 }
 
 /**
- * Fraud Detection Dashboard — Server Component
+ * Fraud Detection Dashboard — Server Component (Stitch Redesign)
  *
  * Module 2.5 Phase 2:
- *  Section 1: Severity tabs (Critical | Medium | Low) with counts
- *  Section 2: 2-column fraud flag card grid
- *  Section 3: Fraud Score History chart with dynamic threshold
- *
- * Data is fetched server-side, interactive features handled by client.
+ *  Section 1: Full-width colored severity buttons with progress bar
+ *  Section 2: 2-column fraud flag card grid with left accent borders
+ *  Section 3: Fraud Score History chart with danger zones + stat blocks
  */
 export default async function FraudDashboardPage({ searchParams }: PageProps) {
     const supabase = createClient();
@@ -38,11 +36,16 @@ export default async function FraudDashboardPage({ searchParams }: PageProps) {
         getFraudThreshold(),
     ]);
 
+    const totalFlags = counts.critical + counts.medium + counts.low;
+
     return (
-        <div className="space-y-5">
-            <div>
-                <h1 className="text-xl font-bold text-[#1A2F4B]">Fraud Detection Dashboard</h1>
-                <p className="text-xs text-gray-400 mt-0.5">Monitor and triage fraud flags across the platform</p>
+        <div className="stitch-page">
+            {/* ── Page Header (Stitch design) ─────────────────────── */}
+            <div className="stitch-page-header">
+                <div>
+                    <h1 className="stitch-page-title tracking-tight">Fraud Detection & Risk Analytics</h1>
+                    <p className="stitch-page-subtitle">{totalFlags} active flags requiring investigation</p>
+                </div>
             </div>
 
             <FraudDashboardClient

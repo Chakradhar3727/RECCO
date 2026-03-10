@@ -15,9 +15,9 @@ import { formatINR, formatISTTimestamp } from '@/lib/utils/ist-time';
 
 function VarianceBadge({ tier, percent }: { tier: string; percent: number }) {
     const config = {
-        AUTO_ACCEPT: { bg: '#F0FAF4', color: '#1B6B35', label: '< 10%' },
-        STRUCTURED_REVIEW: { bg: '#FFFBEB', color: '#B45309', label: '10–15%' },
-        AUTO_REJECT: { bg: '#FEF2F2', color: '#DC2626', label: '> 15%' },
+        AUTO_ACCEPT: { bg: 'var(--recco-green-100)', color: 'var(--recco-green-700)', label: '< 10%' },
+        STRUCTURED_REVIEW: { bg: '#FFFBEB', color: 'var(--recco-amber-700)', label: '10–15%' },
+        AUTO_REJECT: { bg: '#FEF2F2', color: 'var(--recco-red-700)', label: '> 15%' },
     }[tier] || { bg: '#F5F5F5', color: '#666', label: '?' };
 
     return (
@@ -33,7 +33,7 @@ function VarianceBadge({ tier, percent }: { tier: string; percent: number }) {
 function SLABadge({ deadline, resolved }: { deadline: string | null; resolved: boolean }) {
     if (resolved) {
         return (
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#F0FAF4] text-[#1B6B35]">
+            <span className="stitch-badge stitch-badge-active">
                 Resolved
             </span>
         );
@@ -66,10 +66,10 @@ function SLABadge({ deadline, resolved }: { deadline: string | null; resolved: b
 
 function StatusDot({ status }: { status: string }) {
     const colors: Record<string, string> = {
-        OPEN: '#B45309',
-        IN_REVIEW: '#0E5A6E',
-        RESOLVED: '#1B6B35',
-        ESCALATED: '#DC2626',
+        OPEN: 'var(--recco-amber-700)',
+        IN_REVIEW: 'var(--recco-teal-700)',
+        RESOLVED: 'var(--recco-green-700)',
+        ESCALATED: 'var(--recco-red-700)',
     };
     return (
         <span
@@ -81,26 +81,26 @@ function StatusDot({ status }: { status: string }) {
 
 function DisputeRow({ dispute }: { dispute: DisputeListItem }) {
     const tierBorder: Record<string, string> = {
-        AUTO_ACCEPT: '#1B6B35',
-        STRUCTURED_REVIEW: '#B45309',
-        AUTO_REJECT: '#DC2626',
+        AUTO_ACCEPT: 'var(--recco-green-700)',
+        STRUCTURED_REVIEW: 'var(--recco-amber-700)',
+        AUTO_REJECT: 'var(--recco-red-700)',
     };
 
     return (
         <Link
             href={`/admin/disputes/${dispute.id}`}
-            className="block"
+            className="block group"
         >
             <div
-                className="flex items-center gap-4 py-3 px-4 transition-all hover:bg-gray-50 border-b border-[#E5E5E5]"
-                style={{ borderLeft: `3px solid ${tierBorder[dispute.varianceTier] || '#999'}` }}
+                className="flex items-center gap-4 py-4 px-6 transition-all hover:bg-gray-50 border-b border-gray-100 last:border-0"
+                style={{ borderLeft: `4px solid ${tierBorder[dispute.varianceTier] || '#999'}` }}
             >
                 {/* Batch ID + Status */}
                 <div className="w-[140px] flex-shrink-0">
-                    <p className="text-xs font-mono font-bold text-[#1A2F4B]">
+                    <p className="text-sm font-mono font-bold stitch-text-navy group-hover:text-[var(--recco-green-700)] transition-colors">
                         BATCH-{dispute.batchId.slice(0, 8)}
                     </p>
-                    <p className="text-[10px] text-gray-400 mt-0.5 flex items-center">
+                    <p className="text-xs text-gray-500 mt-1 flex items-center font-medium">
                         <StatusDot status={dispute.status} />
                         {dispute.status.replace(/_/g, ' ')}
                     </p>
@@ -109,19 +109,19 @@ function DisputeRow({ dispute }: { dispute: DisputeListItem }) {
                 {/* Weights */}
                 <div className="flex-1 grid grid-cols-3 gap-2">
                     <div>
-                        <p className="text-[10px] text-gray-400 uppercase">AGG Weight</p>
-                        <p className="text-xs font-mono font-bold text-[#1A2F4B]">
+                        <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">AGG Weight</p>
+                        <p className="text-sm font-mono font-bold stitch-text-navy">
                             {dispute.aggWeight.toFixed(2)} kg
                         </p>
                     </div>
                     <div>
-                        <p className="text-[10px] text-gray-400 uppercase">REC Weight</p>
-                        <p className="text-xs font-mono font-bold text-[#1A2F4B]">
+                        <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">REC Weight</p>
+                        <p className="text-sm font-mono font-bold stitch-text-navy">
                             {dispute.recWeight.toFixed(2)} kg
                         </p>
                     </div>
                     <div>
-                        <p className="text-[10px] text-gray-400 uppercase">Variance</p>
+                        <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">Variance</p>
                         <VarianceBadge tier={dispute.varianceTier} percent={dispute.variancePercent} />
                     </div>
                 </div>
@@ -129,13 +129,13 @@ function DisputeRow({ dispute }: { dispute: DisputeListItem }) {
                 {/* SLA + Date */}
                 <div className="w-[140px] flex-shrink-0 text-right">
                     <SLABadge deadline={dispute.slaDeadline} resolved={!!dispute.resolvedAt} />
-                    <p className="text-[10px] text-gray-400 mt-1">
+                    <p className="text-xs text-gray-500 mt-1.5 font-medium">
                         {formatISTTimestamp(dispute.createdAt)}
                     </p>
                 </div>
 
                 {/* Arrow */}
-                <div className="text-gray-300 text-sm">→</div>
+                <div className="text-gray-300 text-lg group-hover:text-[var(--recco-green-700)] transition-colors group-hover:translate-x-1">→</div>
             </div>
         </Link>
     );
@@ -158,20 +158,20 @@ export default async function DisputesPage({
     ]);
 
     const tabs = [
-        { key: 'ALL', label: 'All', count: counts.all, color: '#1A2F4B' },
-        { key: 'OPEN', label: 'Open', count: counts.open, color: '#B45309' },
-        { key: 'IN_REVIEW', label: 'In Review', count: counts.inReview, color: '#0E5A6E' },
-        { key: 'RESOLVED', label: 'Resolved', count: counts.resolved, color: '#1B6B35' },
-        { key: 'ESCALATED', label: 'Escalated', count: counts.escalated, color: '#DC2626' },
+        { key: 'ALL', label: 'All', count: counts.all, color: 'var(--recco-navy-900)' },
+        { key: 'OPEN', label: 'Open', count: counts.open, color: 'var(--recco-amber-700)' },
+        { key: 'IN_REVIEW', label: 'In Review', count: counts.inReview, color: 'var(--recco-teal-700)' },
+        { key: 'RESOLVED', label: 'Resolved', count: counts.resolved, color: 'var(--recco-green-700)' },
+        { key: 'ESCALATED', label: 'Escalated', count: counts.escalated, color: 'var(--recco-red-700)' },
     ];
 
     return (
-        <div className="space-y-4">
+        <div className="stitch-page p-8 max-w-7xl mx-auto space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-xl font-bold text-[#1A2F4B]">Weight Dispute Engine</h1>
-                    <p className="text-xs text-gray-400 mt-0.5">
+                    <h1 className="text-3xl font-bold stitch-text-navy tracking-tight">Weight Dispute Engine</h1>
+                    <p className="text-sm text-gray-500 mt-1">
                         3-tier triage: auto-accept (&lt;10%), structured review (10–15%), auto-reject (&gt;15%)
                     </p>
                 </div>
@@ -186,22 +186,22 @@ export default async function DisputesPage({
             </div>
 
             {/* Status Filter Tabs */}
-            <div className="flex gap-1 bg-white rounded-lg border border-[#E5E5E5] p-1">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2">
                 {tabs.map((tab) => (
                     <Link
                         key={tab.key}
                         href={`/admin/disputes${tab.key === 'ALL' ? '' : `?status=${tab.key.toLowerCase()}`}`}
-                        className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md transition-colors ${filter === tab.key
-                                ? 'text-white'
-                                : 'text-gray-500 hover:bg-gray-50'
+                        className={`flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg transition-all ${filter === tab.key
+                            ? 'text-white shadow-md'
+                            : 'text-gray-600 bg-white border border-gray-200 hover:bg-gray-50'
                             }`}
                         style={filter === tab.key ? { backgroundColor: tab.color } : {}}
                     >
                         {tab.label}
                         <span
-                            className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${filter === tab.key
-                                    ? 'bg-white/20 text-white'
-                                    : 'bg-gray-100 text-gray-500'
+                            className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${filter === tab.key
+                                ? 'bg-white/20 text-white'
+                                : 'bg-gray-100 text-gray-500'
                                 }`}
                         >
                             {tab.count}
@@ -211,28 +211,30 @@ export default async function DisputesPage({
             </div>
 
             {/* Dispute List */}
-            <div className="bg-white rounded-lg border border-[#E5E5E5] overflow-hidden">
-                {/* Column Headers */}
-                <div className="flex items-center gap-4 py-2 px-4 bg-[#F5F5F5] border-b border-[#E5E5E5]">
-                    <div className="w-[140px] text-[10px] text-gray-400 uppercase font-bold">Batch / Status</div>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                {/* Stitch dark navy header */}
+                <div className="flex items-center gap-4 py-3 px-6 bg-[var(--recco-navy-900)] text-white">
+                    <div className="w-[140px] text-[10px] uppercase font-bold tracking-wider">Batch / Status</div>
                     <div className="flex-1 grid grid-cols-3 gap-2">
-                        <span className="text-[10px] text-gray-400 uppercase font-bold">AGG Weight</span>
-                        <span className="text-[10px] text-gray-400 uppercase font-bold">REC Weight</span>
-                        <span className="text-[10px] text-gray-400 uppercase font-bold">Variance</span>
+                        <span className="text-[10px] uppercase font-bold tracking-wider">AGG Weight</span>
+                        <span className="text-[10px] uppercase font-bold tracking-wider">REC Weight</span>
+                        <span className="text-[10px] uppercase font-bold tracking-wider">Variance</span>
                     </div>
-                    <div className="w-[140px] text-[10px] text-gray-400 uppercase font-bold text-right">SLA / Date</div>
-                    <div className="w-4" />
+                    <div className="w-[140px] text-[10px] uppercase font-bold tracking-wider text-right">SLA / Date</div>
+                    <div className="w-[20px]" />
                 </div>
 
                 {disputes.length === 0 ? (
-                    <div className="py-12 text-center">
-                        <p className="text-sm text-gray-400">No disputes found</p>
-                        <p className="text-xs text-gray-300 mt-1">
+                    <div className="py-16 text-center bg-gray-50/50">
+                        <p className="text-sm font-medium stitch-text-navy">No disputes found</p>
+                        <p className="text-sm text-gray-500 mt-1 max-w-md mx-auto">
                             Disputes will appear here when weight variance is detected between aggregator and recycler.
                         </p>
                     </div>
                 ) : (
-                    disputes.map((d) => <DisputeRow key={d.id} dispute={d} />)
+                    <div className="divide-y divide-gray-100">
+                        {disputes.map((d) => <DisputeRow key={d.id} dispute={d} />)}
+                    </div>
                 )}
             </div>
         </div>

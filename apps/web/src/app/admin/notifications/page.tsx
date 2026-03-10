@@ -98,10 +98,10 @@ async function getNotificationStats(): Promise<NotificationStats> {
 
 function TypeIcon({ type }: { type: string }) {
     const config: Record<string, { icon: string; bg: string; color: string }> = {
-        ALERT: { icon: '⚠️', bg: '#FEF2F2', color: '#DC2626' },
+        ALERT: { icon: '⚠️', bg: '#FEF2F2', color: 'var(--recco-red-700)' },
         INFO: { icon: 'ℹ️', bg: '#EFF6FF', color: '#2563EB' },
-        SUCCESS: { icon: '✓', bg: '#F0FAF4', color: '#1B6B35' },
-        HIGH: { icon: '🔴', bg: '#FEF2F2', color: '#DC2626' },
+        SUCCESS: { icon: '✓', bg: 'var(--recco-green-100)', color: 'var(--recco-green-700)' },
+        HIGH: { icon: '🔴', bg: '#FEF2F2', color: 'var(--recco-red-700)' },
     };
     const c = config[type] || config.INFO;
     return (
@@ -117,35 +117,37 @@ function TypeIcon({ type }: { type: string }) {
 function NotificationRow({ notification }: { notification: Notification }) {
     return (
         <div
-            className={`flex items-start gap-3 py-3 px-4 border-b border-[#E5E5E5] transition-colors hover:bg-gray-50 ${!notification.isRead ? 'bg-blue-50/30' : ''
+            className={`flex items-start gap-4 px-6 py-4 border-b border-gray-100 last:border-b-0 transition-colors hover:bg-gray-50 ${!notification.isRead ? 'bg-blue-50/20' : ''
                 }`}
         >
             <TypeIcon type={notification.type} />
             <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                    <p className={`text-xs ${!notification.isRead ? 'font-bold' : 'font-medium'} text-[#1A2F4B] truncate`}>
+                    <p className={`text-sm ${!notification.isRead ? 'font-bold' : 'font-medium'} stitch-text-navy truncate`}>
                         {notification.title}
                     </p>
                     {!notification.isRead && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />
+                        <span className="w-2 h-2 rounded-full bg-blue-600 flex-shrink-0" />
                     )}
                 </div>
-                <p className="text-[11px] text-gray-500 mt-0.5 line-clamp-2">{notification.body}</p>
-                <div className="flex items-center gap-2 mt-1">
-                    <span className="text-[10px] text-gray-400">{notification.userName}</span>
-                    <span className="text-[10px] text-gray-300">·</span>
-                    <span className="text-[10px] text-gray-400">{getRelativeTime(notification.createdAt)}</span>
+                <p className="text-sm text-gray-500 mt-1 line-clamp-2">{notification.body}</p>
+                <div className="flex items-center gap-2 mt-2">
+                    <span className="text-xs font-medium text-gray-500">{notification.userName}</span>
+                    <span className="text-xs text-gray-300">·</span>
+                    <span className="text-xs font-medium text-gray-400">{getRelativeTime(notification.createdAt)}</span>
                 </div>
             </div>
-            <span
-                className="text-[9px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0"
-                style={{
-                    backgroundColor: notification.type === 'ALERT' ? '#FEF2F2' : notification.type === 'SUCCESS' ? '#F0FAF4' : '#F5F5F5',
-                    color: notification.type === 'ALERT' ? '#DC2626' : notification.type === 'SUCCESS' ? '#1B6B35' : '#666',
-                }}
-            >
-                {notification.type}
-            </span>
+            <div className="flex flex-col items-end gap-2 shrink-0">
+                <span
+                    className="text-[11px] font-bold px-2 py-1 rounded-full uppercase tracking-wider"
+                    style={{
+                        backgroundColor: notification.type === 'ALERT' ? '#FEF2F2' : notification.type === 'SUCCESS' ? 'var(--recco-green-100)' : '#F5F5F5',
+                        color: notification.type === 'ALERT' ? 'var(--recco-red-700)' : notification.type === 'SUCCESS' ? 'var(--recco-green-700)' : '#666',
+                    }}
+                >
+                    {notification.type}
+                </span>
+            </div>
         </div>
     );
 }
@@ -177,19 +179,19 @@ export default async function NotificationsPage({
     ];
 
     return (
-        <div className="space-y-4">
+        <div className="stitch-page p-8 max-w-7xl mx-auto space-y-8">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-xl font-bold text-[#1A2F4B]">Notifications Center</h1>
-                    <p className="text-xs text-gray-400 mt-0.5">
+                    <h1 className="text-3xl font-bold stitch-text-navy tracking-tight">Notifications Center</h1>
+                    <p className="text-sm text-gray-500 mt-1">
                         Platform-wide notification monitoring and delivery status
                     </p>
                 </div>
                 {stats.failedDeliveries > 0 && (
-                    <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-lg px-3 py-1.5">
-                        <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-                        <span className="text-xs font-bold text-red-700">
+                    <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-lg px-4 py-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse" />
+                        <span className="text-sm font-bold text-red-700">
                             {stats.failedDeliveries} failed deliver{stats.failedDeliveries > 1 ? 'ies' : 'y'}
                         </span>
                     </div>
@@ -197,48 +199,53 @@ export default async function NotificationsPage({
             </div>
 
             {/* Stats Row */}
-            <div className="grid grid-cols-5 gap-2">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 {tabs.map((tab) => (
-                    <div key={tab.key} className="bg-white rounded-lg border border-[#E5E5E5] p-3 text-center">
-                        <p className="text-[10px] text-gray-400 uppercase">{tab.label}</p>
-                        <p className="text-lg font-bold font-mono text-[#1A2F4B]">{tab.count}</p>
+                    <div key={tab.key} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-center items-center text-center">
+                        <p className="text-xs font-bold text-gray-400 tracking-wider uppercase mb-1">{tab.label}</p>
+                        <p className="text-3xl font-bold font-mono stitch-text-navy">{tab.count}</p>
                     </div>
                 ))}
             </div>
 
-            {/* Filter Tabs */}
-            <div className="flex gap-1 bg-white rounded-lg border border-[#E5E5E5] p-1">
-                {tabs.map((tab) => (
-                    <Link
-                        key={tab.key}
-                        href={`/admin/notifications${tab.key === 'ALL' ? '' : `?filter=${tab.key.toLowerCase()}`}`}
-                        className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md transition-colors ${filter === tab.key
-                            ? 'bg-[#1A2F4B] text-white'
-                            : 'text-gray-500 hover:bg-gray-50'
-                            }`}
-                    >
-                        {tab.label}
-                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${filter === tab.key ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
-                            }`}>
-                            {tab.count}
-                        </span>
-                    </Link>
-                ))}
-            </div>
-
-            {/* Notification List */}
-            <div className="bg-white rounded-lg border border-[#E5E5E5] overflow-hidden">
-                {notifications.length === 0 ? (
-                    <div className="py-12 text-center">
-                        <p className="text-3xl mb-2">🔔</p>
-                        <p className="text-sm text-gray-400">No notifications</p>
-                        <p className="text-xs text-gray-300 mt-1">
-                            Notifications will appear here as platform events occur.
-                        </p>
+            {/* Content Area */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                {/* Filter Tabs */}
+                <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                    <div className="flex flex-wrap gap-2">
+                        {tabs.map((tab) => (
+                            <Link
+                                key={tab.key}
+                                href={`/admin/notifications${tab.key === 'ALL' ? '' : `?filter=${tab.key.toLowerCase()}`}`}
+                                className={`flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg transition-colors ${filter === tab.key
+                                    ? 'bg-[#1B6B35] text-white shadow-sm'
+                                    : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                                    }`}
+                            >
+                                {tab.label}
+                                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${filter === tab.key ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
+                                    }`}>
+                                    {tab.count}
+                                </span>
+                            </Link>
+                        ))}
                     </div>
-                ) : (
-                    notifications.map((n) => <NotificationRow key={n.id} notification={n} />)
-                )}
+                </div>
+
+                {/* Notification List */}
+                <div className="divide-y divide-gray-100">
+                    {notifications.length === 0 ? (
+                        <div className="py-16 text-center flex flex-col items-center justify-center">
+                            <span className="text-4xl mb-4 opacity-50">📭</span>
+                            <p className="text-lg font-bold stitch-text-navy">No notifications</p>
+                            <p className="text-sm text-gray-500 mt-2 max-w-sm">
+                                Notifications will appear here as platform events occur. Check back later or adjust filters.
+                            </p>
+                        </div>
+                    ) : (
+                        notifications.map((n) => <NotificationRow key={n.id} notification={n} />)
+                    )}
+                </div>
             </div>
         </div>
     );

@@ -67,7 +67,7 @@ export default function AdminTopBar({
         .slice(0, 2);
 
     return (
-        <header className="fixed top-0 left-0 md:left-[240px] right-0 h-16 bg-[#1A2F4B]/95 backdrop-blur-sm z-40 flex items-center justify-between px-4 md:px-6 border-b border-white/10">
+        <header className="fixed top-0 left-0 md:left-[240px] right-0 h-16 backdrop-blur-sm z-40 flex items-center justify-between px-4 md:px-6 border-b border-white/10" style={{ backgroundColor: 'var(--recco-navy-900)' }}>
             {/* Left: Hamburger (mobile) + Section Name */}
             <div className="flex items-center gap-3">
                 <button
@@ -81,7 +81,6 @@ export default function AdminTopBar({
                         <line x1="3" y1="18" x2="21" y2="18" />
                     </svg>
                 </button>
-                <span className="text-white/50 text-sm hidden md:inline">RECCO</span>
                 <span className="text-white font-medium text-sm md:text-base">
                     {getSectionName(pathname)}
                 </span>
@@ -101,7 +100,7 @@ export default function AdminTopBar({
                         <path d="M13.73 21a2 2 0 0 1-3.46 0" />
                     </svg>
                     {unreadNotificationCount > 0 && (
-                        <span className="absolute -top-0.5 -right-0.5 bg-[#B91C1C] text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                        <span className="absolute -top-0.5 -right-0.5 text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1" style={{ backgroundColor: 'var(--recco-red-700)' }}>
                             {unreadNotificationCount > 99 ? '99+' : unreadNotificationCount}
                         </span>
                     )}
@@ -116,7 +115,8 @@ export default function AdminTopBar({
                 <div className="relative" ref={profileRef}>
                     <button
                         onClick={() => setShowProfile(!showProfile)}
-                        className="w-8 h-8 rounded-full bg-[#1B6B35] flex items-center justify-center text-white text-xs font-bold cursor-pointer hover:ring-2 hover:ring-white/30 transition-all"
+                        className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold cursor-pointer hover:ring-2 hover:ring-white/30 transition-all"
+                        style={{ backgroundColor: 'var(--recco-green-700)' }}
                         aria-label="Profile menu"
                     >
                         {initials}
@@ -126,9 +126,9 @@ export default function AdminTopBar({
                     {showProfile && (
                         <div className="absolute right-0 top-12 w-72 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden z-50">
                             {/* Profile Header */}
-                            <div className="p-4 bg-[#1A2F4B] text-white">
+                            <div className="p-4 text-white" style={{ backgroundColor: 'var(--recco-navy-900)' }}>
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-[#1B6B35] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0" style={{ backgroundColor: 'var(--recco-green-700)' }}>
                                         {initials}
                                     </div>
                                     <div className="min-w-0">
@@ -147,7 +147,7 @@ export default function AdminTopBar({
                             <div className="p-3 space-y-2 border-b border-gray-100">
                                 <div className="flex items-center justify-between">
                                     <span className="text-[10px] text-gray-400 uppercase">Portal</span>
-                                    <span className="text-xs font-medium text-[#1A2F4B]">Admin</span>
+                                    <span className="text-xs font-medium stitch-text-navy">Admin</span>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <span className="text-[10px] text-gray-400 uppercase">Email</span>
@@ -155,7 +155,7 @@ export default function AdminTopBar({
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <span className="text-[10px] text-gray-400 uppercase">Role</span>
-                                    <span className="text-xs font-medium text-[#1A2F4B]">{adminRole}</span>
+                                    <span className="text-xs font-medium stitch-text-navy">{adminRole}</span>
                                 </div>
                             </div>
 

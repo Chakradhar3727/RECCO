@@ -34,10 +34,10 @@ export default async function AdminDashboardPage() {
     return (
         <div className="space-y-1">
             {/* Header */}
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-4 mt-2">
                 <div>
-                    <h1 className="text-xl font-bold text-[#1A2F4B]">Unified Admin Dashboard</h1>
-                    <p className="text-xs text-gray-400 mt-0.5">
+                    <h1 className="stitch-page-title">Admin Dashboard</h1>
+                    <p className="stitch-page-subtitle">
                         Last refreshed: {formatISTTimestamp(new Date().toISOString())}
                     </p>
                 </div>

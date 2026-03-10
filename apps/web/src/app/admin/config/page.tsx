@@ -19,36 +19,38 @@ export default async function ConfigPage() {
     const configs = await getSystemConfig();
 
     return (
-        <div className="space-y-4">
+        <div className="stitch-page p-8 max-w-7xl mx-auto space-y-8">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="stitch-page-header">
                 <div>
-                    <h1 className="text-xl font-bold text-[#1A2F4B]">System Configuration</h1>
-                    <p className="text-xs text-gray-400 mt-0.5">
-                        Platform-wide settings. All changes are audit-logged.
+                    <h1 className="stitch-page-title tracking-tight">System Configuration</h1>
+                    <p className="stitch-page-subtitle">
+                        Platform-wide settings and thresholds. All changes are audit-logged.
                     </p>
                 </div>
-                <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5">
-                    <span>⚠️</span>
-                    <span className="text-[10px] text-amber-700 font-medium">Changes take effect immediately</span>
+                <div>
+                    <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2 shadow-sm">
+                        <span className="text-lg">⚠️</span>
+                        <span className="text-[10px] uppercase tracking-widest text-amber-700 font-bold">Live Updates</span>
+                    </div>
                 </div>
             </div>
 
             {/* Config Summary */}
-            <div className="grid grid-cols-3 gap-2">
-                <div className="bg-white rounded-lg border border-[#E5E5E5] p-3">
-                    <p className="text-[10px] text-gray-400 uppercase">Total Settings</p>
-                    <p className="text-lg font-bold font-mono text-[#1A2F4B]">{configs.length}</p>
+            <div className="stitch-grid-3 mb-8">
+                <div className="stitch-metric-card" style={{ borderBottom: '3px solid var(--recco-navy-900)' }}>
+                    <p className="text-xs font-bold text-gray-400 tracking-wider uppercase mb-1">Total Variables</p>
+                    <p className="text-3xl font-bold font-mono stitch-text-navy">{configs.length}</p>
                 </div>
-                <div className="bg-white rounded-lg border border-[#E5E5E5] p-3">
-                    <p className="text-[10px] text-gray-400 uppercase">Categories</p>
-                    <p className="text-lg font-bold font-mono text-[#0E5A6E]">
+                <div className="stitch-metric-card" style={{ borderBottom: '3px solid var(--recco-teal-700)' }}>
+                    <p className="text-xs font-bold text-gray-400 tracking-wider uppercase mb-1">Categories</p>
+                    <p className="text-3xl font-bold font-mono" style={{ color: 'var(--recco-teal-700)' }}>
                         {new Set(configs.map(c => c.key.split('_')[0])).size}
                     </p>
                 </div>
-                <div className="bg-white rounded-lg border border-[#E5E5E5] p-3">
-                    <p className="text-[10px] text-gray-400 uppercase">Access Level</p>
-                    <p className="text-lg font-bold text-[#DC2626]">ADMIN ONLY</p>
+                <div className="stitch-metric-card" style={{ borderBottom: '3px solid var(--recco-red-700)' }}>
+                    <p className="text-xs font-bold text-gray-400 tracking-wider uppercase mb-1">Access Level</p>
+                    <p className="text-xl font-bold tracking-widest mt-2" style={{ color: 'var(--recco-red-700)' }}>ADMIN ONLY</p>
                 </div>
             </div>
 

@@ -27,8 +27,8 @@ export default async function UserDetailPage({ params }: PageProps) {
     if (!entity) {
         return (
             <div className="flex flex-col items-center justify-center py-20 gap-4">
-                <p className="text-lg font-bold text-[#1A2F4B]">User not found</p>
-                <Link href="/admin/users" className="text-sm text-[#1B6B35] hover:underline">
+                <p className="text-lg font-bold stitch-text-navy">User not found</p>
+                <Link href="/admin/users" className="text-sm stitch-text-green hover:underline">
                     ← Back to Users
                 </Link>
             </div>
@@ -40,7 +40,7 @@ export default async function UserDetailPage({ params }: PageProps) {
             {/* Back navigation */}
             <Link
                 href="/admin/users"
-                className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-[#1A2F4B] transition-colors"
+                className="inline-flex items-center gap-1 text-sm text-gray-400 transition-colors" style={{ color: undefined }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--recco-navy-900)'} onMouseLeave={(e) => e.currentTarget.style.color = ''}
             >
                 ← Back to Users
             </Link>

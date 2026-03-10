@@ -34,12 +34,14 @@ export default async function TransactionMonitoringPage() {
     ]);
 
     return (
-        <div className="space-y-4">
-            <div>
-                <h1 className="text-xl font-bold text-[#1A2F4B]">Transaction Monitoring</h1>
-                <p className="text-xs text-gray-400 mt-0.5">
-                    Real-time payment feed, dispute tracking, and financial analytics
-                </p>
+        <div className="stitch-page p-8 max-w-7xl mx-auto space-y-6">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold stitch-text-navy tracking-tight">Financial Operations</h1>
+                    <p className="text-sm text-gray-500 mt-1">
+                        Real-time payment feed, dispute tracking, and financial analytics
+                    </p>
+                </div>
             </div>
 
             <TransactionDashboardClient

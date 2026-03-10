@@ -1,0 +1,1117 @@
+/* ═══════════════════════════════════════════════════════════════════════
+ * RECCO STITCH DESIGN SYSTEM — Premium B2B SaaS
+ * ═══════════════════════════════════════════════════════════════════════
+ * Specialized, premium B2B SaaS platform built exclusively for high-stakes 
+ * regulatory oversight.
+ * ═══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Primary Colors */
+  --recco-green-700: #1B6B35;
+  --recco-green-600: #15532A;
+  /* Hover state for primary */
+  --recco-green-100: #E8F5EE;
+  --recco-green-50: #F0FAF4;
+
+  /* Secondary / Teal */
+  --recco-teal-700: #0D5C63;
+  --recco-teal-100: #E0F0F1;
+
+  /* Warning / Amber */
+  --recco-amber-700: #B45309;
+  --recco-amber-100: #FEF3C7;
+  --recco-amber-50: #FFFBEB;
+
+  /* Critical / Red */
+  --recco-red-700: #991B1B;
+  --recco-red-100: #FEE2E2;
+  --recco-red-50: #FEF2F2;
+
+  /* Navy & Slate (Headings, Sidebar, Text) */
+  --recco-navy-900: #0F172A;
+  --recco-navy-800: #1E293B;
+  --recco-navy-700: #334155;
+  --recco-navy-100: #F1F5F9;
+
+  /* Purple (PRO portal / Blockchain) */
+  --recco-purple-700: #7C3AED;
+  --recco-purple-600: #6D28D9;
+  --recco-purple-100: #EDE9FE;
+
+  /* Neutral & Structure */
+  --recco-bg: #F8FAFC;
+  --recco-surface: #FFFFFF;
+  --recco-border: #E2E8F0;
+  --recco-border-focus: #1B6B35;
+  --recco-ring-focus: rgba(27, 107, 53, 0.15);
+
+  --recco-text-primary: #0F172A;
+  --recco-text-secondary: #475569;
+  --recco-text-muted: #94A3B8;
+  --recco-alt-row: #F8FAFC;
+
+  /* Typography */
+  --font-primary: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'DM Mono', 'Courier New', 'Consolas', monospace;
+
+  /* Spacing & Radii */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Elevations */
+  --shadow-elevation-1: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-elevation-2: 0 2px 8px rgba(15, 23, 42, 0.08);
+  --shadow-elevation-3: 0 4px 16px rgba(15, 23, 42, 0.12);
+  --shadow-elevation-4: 0 8px 24px rgba(15, 23, 42, 0.16);
+  --shadow-elevation-5: 0 16px 48px rgba(15, 23, 42, 0.24);
+
+  /* Transitions */
+  --transition-default: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Backward compatibility for previous classes */
+  --shadow-card: var(--shadow-elevation-1);
+  --shadow-panel: var(--shadow-elevation-4);
+  --shadow-dropdown: var(--shadow-elevation-2);
+}
+
+/* ─── BASE ──────────────────────────────────────────────────────────── */
+
+.stitch-admin {
+  font-family: var(--font-primary);
+  color: var(--recco-text-primary);
+  background: var(--recco-bg);
+  min-height: 100vh;
+}
+
+/* Smooth transitions globally for interactive elements */
+.stitch-admin a,
+.stitch-admin button,
+.stitch-admin input,
+.stitch-admin .stitch-card,
+.stitch-admin .stitch-metric-card {
+  transition: all var(--transition-default);
+}
+
+/* ─── TYPOGRAPHY ────────────────────────────────────────────────────── */
+
+.stitch-page-title {
+  font-family: var(--font-primary);
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--recco-text-primary);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.stitch-page-subtitle {
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--recco-text-secondary);
+  line-height: 1.5;
+  margin-top: 4px;
+}
+
+.stitch-section-title {
+  font-family: var(--font-primary);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--recco-text-primary);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin-bottom: 16px;
+}
+
+.stitch-subsection-title {
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--recco-text-primary);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.stitch-label {
+  font-family: var(--font-primary);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--recco-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stitch-value {
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--recco-text-primary);
+  line-height: 1.5;
+}
+
+.stitch-value-mono {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--recco-text-primary);
+  line-height: 1.0;
+}
+
+.stitch-metric-lg {
+  font-family: var(--font-primary);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.stitch-link {
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--recco-green-700);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.stitch-link:hover {
+  text-decoration: underline;
+  opacity: 0.9;
+}
+
+/* ─── CARDS ─────────────────────────────────────────────────────────── */
+
+.stitch-card {
+  background: var(--recco-surface);
+  border: 1px solid var(--recco-border);
+  border-radius: var(--radius-lg);
+  /* 12px radius */
+  padding: 24px;
+  box-shadow: var(--shadow-elevation-1);
+}
+
+.stitch-card:hover {
+  box-shadow: var(--shadow-elevation-2);
+}
+
+.stitch-card-accent {
+  position: relative;
+}
+
+.stitch-card-accent::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  opacity: 0;
+  transition: opacity var(--transition-default);
+}
+
+.stitch-card-accent:hover::before {
+  opacity: 1;
+}
+
+/* Base backgrounds for colored cards */
+.stitch-card-green {
+  background: var(--recco-green-50);
+  border-color: var(--recco-green-100);
+}
+
+.stitch-card-amber {
+  background: var(--recco-amber-50);
+  border-color: var(--recco-amber-100);
+}
+
+.stitch-card-red {
+  background: var(--recco-red-50);
+  border-color: var(--recco-red-100);
+}
+
+.stitch-card-teal {
+  background: var(--recco-teal-100);
+  border-color: var(--recco-teal-100);
+}
+
+/* Metric Cards */
+.stitch-metric-card {
+  background: var(--recco-surface);
+  border: 1px solid var(--recco-border);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: var(--shadow-elevation-1);
+}
+
+.stitch-metric-card:hover {
+  box-shadow: var(--shadow-elevation-2);
+  transform: translateY(-2px);
+}
+
+.stitch-metric-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--recco-green-700);
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  opacity: 0;
+  transition: opacity var(--transition-default);
+}
+
+.stitch-metric-card:hover::before {
+  opacity: 1;
+}
+
+.stitch-metric-card[data-accent="amber"]::before {
+  background: var(--recco-amber-700);
+}
+
+.stitch-metric-card[data-accent="red"]::before {
+  background: var(--recco-red-700);
+}
+
+.stitch-metric-card[data-accent="teal"]::before {
+  background: var(--recco-teal-700);
+}
+
+/* Keep before pseudo-element visible if we specifically want it to be */
+.stitch-metric-card[data-accent="amber"]:hover::before,
+.stitch-metric-card[data-accent="red"]:hover::before,
+.stitch-metric-card[data-accent="teal"]:hover::before {
+  opacity: 1;
+}
+
+.stitch-metric-label {
+  font-family: var(--font-primary);
+  font-size: 11px;
+  color: var(--recco-text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.stitch-metric-subtitle {
+  font-family: var(--font-primary);
+  font-size: 12px;
+  color: var(--recco-text-muted);
+  margin-top: 8px;
+}
+
+/* ─── BADGES ────────────────────────────────────────────────────────── */
+
+.stitch-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-primary);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* Portal badges */
+.stitch-badge-aggregator {
+  background: var(--recco-green-100);
+  color: var(--recco-green-700);
+}
+
+.stitch-badge-recycler {
+  background: var(--recco-teal-100);
+  color: var(--recco-teal-700);
+}
+
+.stitch-badge-pibo {
+  background: var(--recco-amber-100);
+  color: var(--recco-amber-700);
+}
+
+.stitch-badge-pro {
+  background: var(--recco-purple-100);
+  color: var(--recco-purple-700);
+}
+
+.stitch-badge-admin {
+  background: var(--recco-navy-100);
+  color: var(--recco-navy-900);
+}
+
+/* Status badges */
+.stitch-badge-active {
+  background: var(--recco-green-100);
+  color: var(--recco-green-700);
+}
+
+.stitch-badge-pending {
+  background: var(--recco-amber-100);
+  color: var(--recco-amber-700);
+}
+
+.stitch-badge-suspended {
+  background: var(--recco-red-100);
+  color: var(--recco-red-700);
+}
+
+.stitch-badge-rejected {
+  background: var(--recco-gray-100);
+  color: var(--recco-text-secondary);
+}
+
+/* Severity badges */
+.stitch-badge-critical {
+  background: var(--recco-red-700);
+  color: white;
+}
+
+.stitch-badge-medium {
+  background: var(--recco-amber-700);
+  color: white;
+}
+
+.stitch-badge-low {
+  background: var(--recco-green-700);
+  color: white;
+}
+
+/* Count badges */
+.stitch-count-badge {
+  background: var(--recco-red-700);
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 0 6px;
+  height: 18px;
+  line-height: 18px;
+  border-radius: var(--radius-full);
+  min-width: 18px;
+  text-align: center;
+  display: inline-block;
+}
+
+/* Health strip pills */
+.stitch-health-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 16px;
+  border-radius: var(--radius-full);
+  border: 1px solid;
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--recco-surface);
+}
+
+.stitch-health-pill-green {
+  border-color: var(--recco-green-100);
+  color: var(--recco-green-700);
+}
+
+.stitch-health-pill-teal {
+  border-color: var(--recco-teal-100);
+  color: var(--recco-teal-700);
+}
+
+.stitch-health-pill-amber {
+  border-color: var(--recco-amber-100);
+  color: var(--recco-amber-700);
+}
+
+.stitch-health-pill-red {
+  border-color: var(--recco-red-100);
+  color: var(--recco-red-700);
+}
+
+/* Pulsing status dot */
+.stitch-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: stitch-pulse 2s ease-in-out infinite;
+}
+
+.stitch-pulse-dot-green {
+  background: var(--recco-green-700);
+}
+
+.stitch-pulse-dot-amber {
+  background: var(--recco-amber-700);
+}
+
+.stitch-pulse-dot-red {
+  background: var(--recco-red-700);
+}
+
+@keyframes stitch-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2);
+  }
+
+  50% {
+    opacity: 0.7;
+    transform: scale(0.85);
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0);
+  }
+}
+
+/* ─── TABLES ────────────────────────────────────────────────────────── */
+
+.stitch-table-wrapper {
+  background: var(--recco-surface);
+  border: 1px solid var(--recco-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-elevation-1);
+}
+
+.stitch-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.stitch-table thead tr {
+  background: var(--recco-navy-900);
+  color: white;
+}
+
+.stitch-table thead th {
+  padding: 12px 16px;
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: left;
+  border-bottom: 1px solid var(--recco-navy-800);
+}
+
+.stitch-table tbody tr {
+  transition: background var(--transition-default);
+}
+
+.stitch-table tbody tr:nth-child(even) {
+  background: var(--recco-alt-row);
+}
+
+.stitch-table tbody tr:hover {
+  background: var(--recco-green-50);
+}
+
+.stitch-table tbody td {
+  padding: 16px;
+  font-family: var(--font-primary);
+  font-size: 14px;
+  border-bottom: 1px solid var(--recco-border);
+  color: var(--recco-text-primary);
+}
+
+.stitch-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ─── BUTTONS ───────────────────────────────────────────────────────── */
+
+.stitch-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  gap: 8px;
+}
+
+.stitch-btn-primary {
+  background: var(--recco-green-700);
+  color: white;
+}
+
+.stitch-btn-primary:hover {
+  background: var(--recco-green-600);
+  box-shadow: var(--shadow-elevation-2);
+}
+
+.stitch-btn-secondary {
+  background: var(--recco-surface);
+  color: var(--recco-text-primary);
+  border-color: var(--recco-border);
+}
+
+.stitch-btn-secondary:hover {
+  background: var(--recco-bg);
+  color: var(--recco-green-700);
+  border-color: var(--recco-border-focus);
+}
+
+.stitch-btn-danger {
+  background: white;
+  color: var(--recco-red-700);
+  border-color: var(--recco-red-700);
+}
+
+.stitch-btn-danger:hover {
+  background: var(--recco-red-50);
+}
+
+.stitch-btn-outline {
+  background: transparent;
+  color: var(--recco-teal-700);
+  border-color: var(--recco-teal-700);
+}
+
+.stitch-btn-outline:hover {
+  background: var(--recco-teal-100);
+}
+
+.stitch-btn-full {
+  width: 100%;
+}
+
+.stitch-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ─── FORMS ─────────────────────────────────────────────────────────── */
+
+.stitch-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 16px;
+  border: 1.5px solid var(--recco-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-primary);
+  font-size: 14px;
+  background: var(--recco-surface);
+  color: var(--recco-text-primary);
+  outline: none;
+}
+
+.stitch-input:focus {
+  border-color: var(--recco-border-focus);
+  box-shadow: 0 0 0 3px var(--recco-ring-focus);
+}
+
+.stitch-input::placeholder {
+  color: var(--recco-text-muted);
+}
+
+.stitch-textarea {
+  resize: vertical;
+  min-height: 80px;
+  padding: 12px 16px;
+}
+
+/* Filters / Tabs */
+.stitch-tab-group {
+  display: inline-flex;
+  gap: 4px;
+  background: var(--recco-bg);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--recco-border);
+}
+
+.stitch-tab {
+  padding: 8px 16px;
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  white-space: nowrap;
+  color: var(--recco-text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.stitch-tab:hover {
+  color: var(--recco-text-primary);
+}
+
+.stitch-tab-active {
+  background: var(--recco-surface);
+  color: var(--recco-text-primary);
+  box-shadow: var(--shadow-elevation-1);
+  font-weight: 600;
+}
+
+/* ─── PROGRESS BARS ─────────────────────────────────────────────────── */
+
+.stitch-progress {
+  width: 100%;
+  height: 6px;
+  background: var(--recco-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.stitch-progress-bar {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stitch-progress-green .stitch-progress-bar {
+  background: var(--recco-green-700);
+}
+
+.stitch-progress-amber .stitch-progress-bar {
+  background: var(--recco-amber-700);
+}
+
+.stitch-progress-red .stitch-progress-bar {
+  background: var(--recco-red-700);
+}
+
+.stitch-progress-teal .stitch-progress-bar {
+  background: var(--recco-teal-700);
+}
+
+/* Fraud score bar */
+.stitch-fraud-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stitch-fraud-bar-track {
+  width: 120px;
+  height: 8px;
+  background: var(--recco-bg);
+  border: 1px solid var(--recco-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.stitch-fraud-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  transition: width 0.5s ease;
+}
+
+/* ─── AVATARS & ICONS ───────────────────────────────────────────────── */
+
+.stitch-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--recco-navy-900);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.stitch-avatar-sm {
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
+}
+
+.stitch-avatar-lg {
+  width: 48px;
+  height: 48px;
+  font-size: 16px;
+}
+
+.stitch-icon-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─── PANEL / DRAWER ────────────────────────────────────────────────── */
+
+.stitch-panel {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 480px;
+  background: var(--recco-surface);
+  border-left: 4px solid var(--recco-green-700);
+  box-shadow: var(--shadow-elevation-5);
+  z-index: 50;
+  transform: translateX(100%);
+}
+
+.stitch-panel-open {
+  transform: translateX(0);
+}
+
+.stitch-panel-header {
+  padding: 24px;
+  border-bottom: 1px solid var(--recco-border);
+}
+
+.stitch-panel-body {
+  padding: 24px;
+  overflow-y: auto;
+  max-height: calc(100vh - 160px);
+}
+
+.stitch-panel-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px 24px;
+  border-top: 1px solid var(--recco-border);
+  background: var(--recco-surface);
+}
+
+/* ─── SLA INDICATORS ────────────────────────────────────────────────── */
+
+.stitch-sla-bar {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.stitch-sla-normal {
+  background: var(--recco-amber-50);
+  color: var(--recco-amber-700);
+  border: 1px solid var(--recco-amber-100);
+}
+
+.stitch-sla-urgent {
+  background: var(--recco-red-50);
+  color: var(--recco-red-700);
+  border: 1px solid var(--recco-red-100);
+}
+
+/* ─── SKELETONS ─────────────────────────────────────────────────────── */
+
+.stitch-skeleton {
+  background: linear-gradient(90deg, var(--recco-bg) 25%, var(--recco-border) 50%, var(--recco-bg) 75%);
+  background-size: 200% 100%;
+  animation: stitch-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes stitch-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ─── DISPUTE EVIDENCE SPLIT PANE ───────────────────────────────────── */
+
+.stitch-dispute-header {
+  background: var(--recco-navy-900);
+  color: white;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.stitch-evidence-column {
+  flex: 1;
+  border-right: 1px solid var(--recco-border);
+  padding: 24px;
+  background: var(--recco-surface);
+}
+
+.stitch-evidence-column:last-child {
+  border-right: none;
+}
+
+.stitch-evidence-header {
+  padding: 8px 16px;
+  color: white;
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+.stitch-evidence-header-agg {
+  background: var(--recco-green-700);
+}
+
+.stitch-evidence-header-transport {
+  background: var(--recco-teal-700);
+}
+
+.stitch-evidence-header-recycler {
+  background: var(--recco-amber-700);
+}
+
+/* ─── TIMELINE ──────────────────────────────────────────────────────── */
+
+.stitch-timeline {
+  position: relative;
+  padding-left: 24px;
+}
+
+.stitch-timeline::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  border-left: 2px dashed var(--recco-border);
+}
+
+.stitch-timeline-item {
+  position: relative;
+  padding-bottom: 24px;
+}
+
+.stitch-timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.stitch-timeline-dot {
+  position: absolute;
+  left: -24px;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--recco-teal-700);
+  border: 2px solid var(--recco-surface);
+  box-shadow: 0 0 0 1px var(--recco-teal-100);
+}
+
+/* ─── NOTIFICATIONS ─────────────────────────────────────────────────── */
+
+.stitch-notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  border-bottom: 1px solid var(--recco-border);
+}
+
+.stitch-notification-item:hover {
+  background: var(--recco-bg);
+}
+
+.stitch-notification-unread {
+  background: var(--recco-green-50);
+}
+
+/* ─── BULK BAR ──────────────────────────────────────────────────────── */
+
+.stitch-bulk-bar {
+  background: var(--recco-navy-900);
+  color: white;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-elevation-3);
+  animation: stitch-slide-up 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: sticky;
+  bottom: 24px;
+  margin-top: 24px;
+  z-index: 40;
+}
+
+@keyframes stitch-slide-up {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ─── LAYOUT HELPERS ────────────────────────────────────────────────── */
+
+.stitch-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 48px;
+}
+
+.stitch-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stitch-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.stitch-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.stitch-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.stitch-grid-6 {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1280px) {
+  .stitch-grid-6 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .stitch-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .stitch-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .stitch-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .stitch-grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .stitch-grid-6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.stitch-split-panel {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .stitch-split-panel {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── PAGINATION ────────────────────────────────────────────────────── */
+
+.stitch-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.stitch-pagination-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid var(--recco-border);
+  border-radius: var(--radius-sm);
+  background: var(--recco-surface);
+  color: var(--recco-text-secondary);
+  cursor: pointer;
+}
+
+.stitch-pagination-btn:hover:not(:disabled) {
+  background: var(--recco-bg);
+  color: var(--recco-text-primary);
+  border-color: var(--recco-text-muted);
+}
+
+.stitch-pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--recco-bg);
+}
+
+.stitch-pagination-active {
+  background: var(--recco-green-700) !important;
+  color: white !important;
+  border-color: var(--recco-green-700) !important;
+}
+
+/* Custom Scrollbar for a more premium feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--recco-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--recco-border);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--recco-text-muted);
+}

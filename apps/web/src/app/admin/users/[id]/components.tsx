@@ -44,14 +44,14 @@ function SLATimer({ secondsRemaining }: { secondsRemaining: number | null }) {
     const hours = Math.abs(Math.floor(seconds / 3600));
     const mins = Math.abs(Math.floor((seconds % 3600) / 60));
 
-    let color = 'text-[#B45309]'; // amber
+    let color = 'text-amber-600'; // amber
     let bg = 'bg-amber-50 border-amber-200';
     if (seconds <= 6 * 3600) {
-        color = 'text-[#B91C1C]';
+        color = 'text-red-700';
         bg = 'bg-red-50 border-red-200';
     }
     if (breached) {
-        color = 'text-[#B91C1C]';
+        color = 'text-red-700';
         bg = 'bg-red-50 border-red-300 animate-pulse';
     }
 
@@ -127,7 +127,7 @@ export default function EntityDetailClient({
                 {entries.map(([key, value]) => (
                     <div key={key} className="py-2 border-b border-gray-100">
                         <p className="text-[11px] text-gray-400 capitalize">{key.replace(/_/g, ' ')}</p>
-                        <p className="text-sm font-medium text-[#1A2F4B] mt-0.5">
+                        <p className="text-sm font-medium stitch-text-navy mt-0.5">
                             {value === null ? <span className="text-gray-300 italic">—</span> : String(value)}
                         </p>
                     </div>
@@ -137,43 +137,46 @@ export default function EntityDetailClient({
     };
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-            {/* Left Column — 65% */}
-            <div className="lg:col-span-3 space-y-5">
+        <div className="stitch-grid-5">
+            {/* Left Column — 60% */}
+            <div className="lg:col-span-3 space-y-6">
                 {/* Entity header */}
-                <div className="bg-white border border-[#E5E5E5] rounded-lg p-5">
-                    <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 rounded-full bg-[#1A2F4B] flex items-center justify-center text-white font-bold text-sm">
+                <div className="stitch-card p-6 flex flex-col md:flex-row md:items-start justify-between gap-4">
+                    <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg" style={{ backgroundColor: 'var(--recco-navy-900)' }}>
                             {(entity.fullName || 'U').charAt(0).toUpperCase()}
                         </div>
                         <div>
-                            <h2 className="text-lg font-bold text-[#1A2F4B]">{entity.fullName}</h2>
-                            <p className="text-xs text-gray-400">{entity.email}</p>
+                            <div className="flex items-center gap-3">
+                                <h2 className="text-xl font-bold stitch-text-navy">{entity.fullName}</h2>
+                                <span className={`text-[10px] px-3 py-1 rounded-full font-bold uppercase ${entity.portalRole === 'RECYCLER' ? 'bg-[#0D5C63]/10 text-[#0D5C63]' :
+                                    entity.portalRole === 'PIBO' ? 'bg-[#B45309]/10 text-[#B45309]' :
+                                        entity.portalRole === 'PRO' ? 'bg-[#6D28D9]/10 text-[#6D28D9]' :
+                                            'bg-[#1B6B35]/10 text-[#1B6B35]'
+                                    }`}>
+                                    {entity.portalRole}
+                                </span>
+                            </div>
+                            <p className="text-sm text-gray-500 mt-1">{entity.email}</p>
+
+                            <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-gray-400 mt-3 pt-3 border-t border-gray-100">
+                                <span><strong className="text-gray-500">Registered:</strong> {formatISTTimestamp(entity.createdAt).split(',')[0]}</span>
+                                <span><strong className="text-gray-500">Fraud Score:</strong> <span className={entity.fraudScore >= 80 ? 'text-[#B91C1C] font-bold' : 'stitch-text-navy font-bold'}>{entity.fraudScore}</span></span>
+                                <span><strong className="text-gray-500">Status:</strong> <span className="font-bold uppercase" style={{ color: entity.approvalStatus === 'APPROVED' ? 'var(--recco-green-700)' : entity.approvalStatus === 'REJECTED' ? 'var(--recco-red-700)' : 'var(--recco-amber-600)' }}>{entity.approvalStatus || 'N/A'}</span></span>
+                            </div>
                         </div>
-                        <span className={`ml-auto text-[10px] px-3 py-1 rounded-full font-bold uppercase ${entity.portalRole === 'RECYCLER' ? 'bg-teal-100 text-[#0E5A6E]' :
-                            entity.portalRole === 'PIBO' ? 'bg-amber-100 text-[#B45309]' :
-                                entity.portalRole === 'PRO' ? 'bg-purple-100 text-[#7C3AED]' :
-                                    'bg-green-100 text-[#1B6B35]'
-                            }`}>
-                            {entity.portalRole}
-                        </span>
-                    </div>
-                    <div className="flex gap-4 text-xs text-gray-400">
-                        <span>Registered: {formatISTTimestamp(entity.createdAt)}</span>
-                        <span>Fraud Score: <span className={entity.fraudScore >= 80 ? 'text-[#B91C1C] font-bold' : ''}>{entity.fraudScore}</span></span>
-                        <span>Status: <span className={entity.approvalStatus === 'APPROVED' ? 'text-[#1B6B35]' : entity.approvalStatus === 'REJECTED' ? 'text-[#B91C1C]' : 'text-[#B45309]'}>{entity.approvalStatus || 'N/A'}</span></span>
                     </div>
                 </div>
 
                 {/* Tabs */}
-                <div className="bg-white border border-[#E5E5E5] rounded-lg">
+                <div className="stitch-card overflow-hidden">
                     <div className="flex border-b border-[#E5E5E5]">
                         {(['data', 'docs', 'history'] as const).map((t) => (
                             <button
                                 key={t}
                                 onClick={() => setTab(t)}
-                                className={`px-5 py-3 text-sm font-medium transition-colors ${tab === t ? 'border-b-2 border-[#1B6B35] text-[#1B6B35]' : 'text-gray-400 hover:text-[#1A2F4B]'
-                                    }`}
+                                className={`px-5 py-3 text-sm font-medium transition-colors ${tab === t ? 'border-b-2 stitch-text-green' : 'text-gray-400'
+                                    }`} style={tab === t ? { borderColor: 'var(--recco-green-700)' } : {}}
                             >
                                 {t === 'data' ? 'Registration Data' : t === 'docs' ? 'OCR Documents' : 'Activity History'}
                             </button>
@@ -191,8 +194,8 @@ export default function EntityDetailClient({
                                     entity.documents.map((doc: any) => (
                                         <div key={doc.id} className="p-4 bg-gray-50 rounded-lg border border-gray-100">
                                             <div className="flex items-center justify-between mb-2">
-                                                <span className="text-sm font-medium text-[#1A2F4B] capitalize">{(doc.doc_type || 'Document').replace(/_/g, ' ')}</span>
-                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${doc.is_verified ? 'bg-green-100 text-[#1B6B35]' : 'bg-gray-100 text-gray-500'
+                                                <span className="text-sm font-medium stitch-text-navy capitalize">{(doc.doc_type || 'Document').replace(/_/g, ' ')}</span>
+                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${doc.is_verified ? 'bg-green-100 stitch-text-green' : 'bg-gray-100 text-gray-500'
                                                     }`}>
                                                     {doc.is_verified ? 'Verified' : 'Unverified'}
                                                 </span>
@@ -202,7 +205,7 @@ export default function EntityDetailClient({
                                                     {Object.entries(doc.ocr_raw_data as Record<string, any>).map(([k, v]) => (
                                                         <div key={k}>
                                                             <p className="text-[10px] text-gray-400 capitalize">{k.replace(/_/g, ' ')}</p>
-                                                            <p className="text-xs text-[#1A2F4B]">{String(v)}</p>
+                                                            <p className="text-xs stitch-text-navy">{String(v)}</p>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -223,9 +226,9 @@ export default function EntityDetailClient({
                                 ) : (
                                     entity.auditHistory.map((log: any) => (
                                         <div key={log.id} className="flex items-center gap-3 py-2 border-b border-gray-50">
-                                            <div className="w-2 h-2 rounded-full bg-[#1A2F4B] flex-shrink-0" />
+                                            <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--recco-navy-900)' }} />
                                             <div className="flex-1">
-                                                <p className="text-sm text-[#1A2F4B]">{log.action}</p>
+                                                <p className="text-sm stitch-text-navy">{log.action}</p>
                                                 <p className="text-[10px] text-gray-400">{getRelativeTime(log.created_at)}</p>
                                             </div>
                                         </div>
@@ -244,16 +247,16 @@ export default function EntityDetailClient({
 
                 {/* Result notification */}
                 {result && (
-                    <div className={`px-4 py-3 rounded-lg text-sm font-medium ${result.type === 'success' ? 'bg-green-50 text-[#1B6B35] border border-green-200' : 'bg-red-50 text-[#B91C1C] border border-red-200'
-                        }`}>
+                    <div className={`px-4 py-3 rounded-lg text-sm font-medium ${result.type === 'success' ? 'bg-green-50 stitch-text-green border border-green-200' : 'bg-red-50 border border-red-200'
+                        }`} style={result.type === 'error' ? { color: 'var(--recco-red-700)' } : {}}>
                         {result.message}
                     </div>
                 )}
 
                 {/* Approval Checklist */}
                 {isPendingReview && checklist.length > 0 && (
-                    <div className="bg-white border border-[#E5E5E5] rounded-lg p-5">
-                        <h3 className="text-sm font-bold text-[#1A2F4B] mb-3">Approval Checklist</h3>
+                    <div className="stitch-card p-6">
+                        <h3 className="text-sm font-bold stitch-text-navy mb-3">Approval Checklist</h3>
                         <div className="space-y-2.5">
                             {checklist.map((item, i) => (
                                 <label key={i} className="flex items-start gap-2.5 cursor-pointer group">
@@ -265,9 +268,9 @@ export default function EntityDetailClient({
                                             next[i] = !next[i];
                                             setChecks(next);
                                         }}
-                                        className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[#1B6B35] focus:ring-[#1B6B35] cursor-pointer"
+                                        className="mt-0.5 w-4 h-4 rounded border-gray-300 cursor-pointer" style={{ accentColor: 'var(--recco-green-700)' }}
                                     />
-                                    <span className={`text-xs transition-colors ${checks[i] ? 'text-[#1B6B35]' : 'text-gray-500 group-hover:text-[#1A2F4B]'}`}>
+                                    <span className={`text-xs transition-colors ${checks[i] ? 'stitch-text-green' : 'text-gray-500'}`}>
                                         {item}
                                     </span>
                                 </label>
@@ -277,8 +280,8 @@ export default function EntityDetailClient({
                         {/* Progress bar */}
                         <div className="mt-3 bg-gray-100 rounded-full h-1.5">
                             <div
-                                className="bg-[#1B6B35] h-1.5 rounded-full transition-all duration-300"
-                                style={{ width: `${(checks.filter(Boolean).length / checklist.length) * 100}%` }}
+                                className="h-1.5 rounded-full transition-all duration-300"
+                                style={{ backgroundColor: 'var(--recco-green-700)', width: `${(checks.filter(Boolean).length / checklist.length) * 100}%` }}
                             />
                         </div>
                         <p className="text-[10px] text-gray-400 mt-1">
@@ -289,11 +292,11 @@ export default function EntityDetailClient({
 
                 {/* Actions */}
                 {isPendingReview && (
-                    <div className="bg-white border border-[#E5E5E5] rounded-lg p-5 space-y-3">
+                    <div className="stitch-card p-6 space-y-4">
                         <button
                             onClick={handleApprove}
                             disabled={!canApprove || isPending}
-                            className="w-full py-2.5 bg-[#1B6B35] text-white text-sm font-bold rounded-lg hover:bg-[#155A2B] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                            className="w-full stitch-btn stitch-btn-primary disabled:opacity-40 disabled:cursor-not-allowed justify-center"
                         >
                             {isPending ? 'Processing...' : '✓ Approve Entity'}
                         </button>
@@ -301,7 +304,7 @@ export default function EntityDetailClient({
                         {!showReject ? (
                             <button
                                 onClick={() => setShowReject(true)}
-                                className="w-full py-2.5 border border-[#B91C1C] text-[#B91C1C] text-sm font-medium rounded-lg hover:bg-red-50 transition-colors"
+                                className="w-full py-2.5 border text-sm font-medium rounded-lg hover:bg-red-50 transition-colors" style={{ borderColor: 'var(--recco-red-700)', color: 'var(--recco-red-700)' }}
                             >
                                 ✕ Reject Entity
                             </button>
@@ -318,7 +321,7 @@ export default function EntityDetailClient({
                                 <button
                                     onClick={handleReject}
                                     disabled={!canReject || isPending}
-                                    className="w-full py-2.5 bg-[#B91C1C] text-white text-sm font-bold rounded-lg hover:bg-[#991B1B] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                                    className="w-full py-2.5 text-white text-sm font-bold rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-all" style={{ backgroundColor: 'var(--recco-red-700)' }}
                                 >
                                     {isPending ? 'Processing...' : 'Confirm Rejection'}
                                 </button>
@@ -330,13 +333,13 @@ export default function EntityDetailClient({
                 {/* Already-resolved status */}
                 {entity.approvalStatus === 'APPROVED' && (
                     <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
-                        <p className="text-sm font-bold text-[#1B6B35]">✓ Approved</p>
+                        <p className="text-sm font-bold stitch-text-green">✓ Approved</p>
                         <p className="text-[10px] text-gray-500 mt-1">This entity has been approved.</p>
                     </div>
                 )}
                 {entity.approvalStatus === 'REJECTED' && (
                     <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
-                        <p className="text-sm font-bold text-[#B91C1C]">✕ Rejected</p>
+                        <p className="text-sm font-bold" style={{ color: 'var(--recco-red-700)' }}>✕ Rejected</p>
                         <p className="text-[10px] text-gray-500 mt-1">This entity registration was rejected.</p>
                     </div>
                 )}
