@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import CollectionFormStep1 from './_components/CollectionFormStep1';
-import CollectionFormStep2 from './_components/CollectionFormStep2';
-import CollectionFormStep3 from './_components/CollectionFormStep3';
-import CollectionFormStep4 from './_components/CollectionFormStep4';
-import StepProgressIndicator from './_components/StepProgressIndicator';
+import CollectionFormStep1 from '@/app/aggregator/collections/new/_components/CollectionFormStep1';
+import CollectionFormStep2 from '@/app/aggregator/collections/new/_components/CollectionFormStep2';
+import CollectionFormStep3 from '@/app/aggregator/collections/new/_components/CollectionFormStep3';
+import CollectionFormStep4 from '@/app/aggregator/collections/new/_components/CollectionFormStep4';
+import StepProgressIndicator from '@/app/aggregator/collections/new/_components/StepProgressIndicator';
 
 // ── Form State Type ──────────────────────────────────────────────────
 export interface PhotoSlot {
