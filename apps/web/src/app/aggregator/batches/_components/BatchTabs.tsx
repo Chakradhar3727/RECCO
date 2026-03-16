@@ -11,10 +11,14 @@ interface BatchTabsProps {
 }
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  PENDING_PICKUP: { label: 'Pending Pickup', color: 'text-amber-700', bg: 'bg-amber-100' },
+  CREATED: { label: 'Created', color: 'text-amber-700', bg: 'bg-amber-100' },
+  AWAITING_ACKNOWLEDGMENT: { label: 'Awaiting Ack', color: 'text-orange-700', bg: 'bg-orange-100' },
+  RESCHEDULED: { label: 'Rescheduled', color: 'text-yellow-700', bg: 'bg-yellow-100' },
+  ACKNOWLEDGED: { label: 'Acknowledged', color: 'text-sky-700', bg: 'bg-sky-100' },
+  PICKED_UP: { label: 'Picked Up', color: 'text-teal-700', bg: 'bg-teal-100' },
   IN_TRANSIT: { label: 'In Transit', color: 'text-blue-700', bg: 'bg-blue-100' },
-  AT_RECYCLER: { label: 'At Recycler', color: 'text-purple-700', bg: 'bg-purple-100' },
-  PROCESSING: { label: 'Processing', color: 'text-indigo-700', bg: 'bg-indigo-100' },
+  ARRIVED: { label: 'Arrived', color: 'text-indigo-700', bg: 'bg-indigo-100' },
+  IN_PROCESSING: { label: 'Processing', color: 'text-purple-700', bg: 'bg-purple-100' },
   COMPLETE: { label: 'Complete', color: 'text-emerald-700', bg: 'bg-emerald-100' },
   ISSUED: { label: 'Certificate Issued', color: 'text-emerald-700', bg: 'bg-emerald-100' },
 };
@@ -66,35 +70,37 @@ export default function BatchTabs({ activeBatches, completedBatches }: BatchTabs
               bg: 'bg-gray-100',
             };
 
+            // Use batch_qr_payload or id prefix as batch identifier
+            const batchLabel = batch.batch_qr_payload ?? `BATCH-${batch.id?.substring(0, 6).toUpperCase()}`;
+
             return (
               <div key={batch.id} className="bg-white rounded-xl border border-gray-100 p-4 hover:border-emerald-200 transition-colors">
                 {/* Header Row */}
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-bold text-gray-900 font-mono">
-                    {batch.batch_number ?? `BATCH-${batch.id?.substring(0, 6)}`}
+                    {batchLabel}
                   </span>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${statusCfg.bg} ${statusCfg.color}`}>
+                  <span className={`text-[10px] px-2.5 py-1 rounded-full font-bold ${statusCfg.bg} ${statusCfg.color}`}>
                     {statusCfg.label}
                   </span>
                 </div>
 
-                {/* Material Breakdown */}
-                {batch.material_breakdown && typeof batch.material_breakdown === 'object' && (
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {Object.entries(batch.material_breakdown).map(([material, weight]) => (
-                      <span key={material} className="text-xs bg-gray-50 px-2 py-1 rounded-lg text-gray-600">
-                        {material}: {formatWeightKg(Number(weight))}
-                      </span>
-                    ))}
-                  </div>
+                {/* Collection count if available */}
+                {batch.collection_count && (
+                  <p className="text-xs text-gray-500 mb-2">{batch.collection_count} collections</p>
                 )}
 
                 {/* Footer */}
-                <div className="flex items-center justify-between text-xs text-gray-500">
-                  <span className="font-bold text-gray-900">
-                    {formatWeightKg(Number(batch.total_weight) || 0)}
-                  </span>
-                  <span>{formatRelativeTime(batch.created_at)}</span>
+                <div className="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-50">
+                  <div className="flex items-center gap-1">
+                    <Clock size={12} />
+                    <span>{formatRelativeTime(batch.created_at)}</span>
+                  </div>
+                  {batch.pickup_window_start && (
+                    <span className="text-emerald-600 font-medium">
+                      Pickup: {new Date(batch.pickup_window_start).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+                    </span>
+                  )}
                 </div>
               </div>
             );

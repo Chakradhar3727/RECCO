@@ -42,16 +42,31 @@ export function createClient() {
                 },
                 set(name: string, value: string, options: CookieOptions) {
                     try {
-                        cookieStore.set({ name, value, ...options });
+                        const headersList = require('next/headers').headers();
+                        const isHttps = headersList.get('x-forwarded-proto') === 'https';
+                        
+                        // Fix for Next.js strict domain checks — omit empty domain
+                        if (options.domain === '') {
+                            delete options.domain;
+                        }
+                        cookieStore.set({ 
+                            name, 
+                            value, 
+                            ...options,
+                            secure: options.secure ?? isHttps
+                        });
                     } catch (error) {
-                        // Ignored in Server Components (read-only)
+                        console.error('COOKIE SET ERROR in Server Action/Component:', error);
                     }
                 },
                 remove(name: string, options: CookieOptions) {
                     try {
+                        if (options.domain === '') {
+                            delete options.domain;
+                        }
                         cookieStore.set({ name, value: "", ...options });
                     } catch (error) {
-                        // Ignored in Server Components (read-only)
+                        console.error('COOKIE REMOVE ERROR in Server Action/Component:', error);
                     }
                 },
             },

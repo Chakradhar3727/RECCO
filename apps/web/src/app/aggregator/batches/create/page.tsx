@@ -77,33 +77,33 @@ export default function CreateBatchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-gray-50 pb-24 md:pb-8">
       {/* Header */}
-      <div className="bg-emerald-800 text-white px-4 pt-6 pb-5">
+      <div className="bg-emerald-800 text-white px-4 md:px-8 pt-6 pb-5 md:pb-8 rounded-b-3xl md:rounded-b-none">
         <div className="flex items-center gap-3">
-          <button onClick={() => router.back()} className="hover:bg-emerald-700 p-1 rounded-lg">
-            <ArrowLeft size={20} />
+          <button onClick={() => router.back()} className="hover:bg-emerald-700 p-1.5 md:p-2 rounded-lg transition-colors">
+            <ArrowLeft size={20} className="md:w-6 md:h-6" />
           </button>
           <div>
-            <h1 className="text-lg font-bold">Create New Batch</h1>
-            <p className="text-emerald-200 text-xs">Group collections for recycler transfer</p>
+            <h1 className="text-lg md:text-2xl font-bold">Create New Batch</h1>
+            <p className="text-emerald-200 text-xs md:text-sm mt-0.5">Group collections for recycler transfer</p>
           </div>
         </div>
       </div>
 
-      <div className="px-4 pt-4">
+      <div className="max-w-3xl mx-auto px-4 md:px-8 pt-6 md:pt-8 w-full">
         {loading ? (
           <div className="flex items-center justify-center py-16">
             <Loader2 size={24} className="text-emerald-600 animate-spin" />
           </div>
         ) : collections.length === 0 ? (
-          <div className="bg-white rounded-xl p-8 text-center border border-gray-100">
+          <div className="bg-white rounded-xl p-8 text-center border border-gray-100 shadow-sm">
             <Layers size={32} className="text-gray-300 mx-auto mb-3" />
             <p className="text-gray-500 text-sm">No available collections for batching</p>
           </div>
         ) : (
-          <>
-            <p className="text-sm text-gray-500 mb-3">
+          <div className="bg-white rounded-2xl md:p-6 md:shadow-sm md:border md:border-gray-100 relative pb-[90px] md:pb-0">
+            <p className="text-sm text-gray-500 mb-4 px-1">
               Select collections to group into a batch ({collections.length} available)
             </p>
 
@@ -116,37 +116,37 @@ export default function CreateBatchPage() {
                   setSelectedIds(new Set(collections.map(c => c.id)));
                 }
               }}
-              className="text-xs text-emerald-700 font-medium mb-3 hover:underline"
+              className="text-xs md:text-sm text-emerald-700 font-medium mb-4 px-1 hover:underline"
             >
               {selectedIds.size === collections.length ? 'Deselect All' : 'Select All'}
             </button>
 
-            <div className="space-y-2">
+            <div className="space-y-3">
               {collections.map(c => {
                 const isSelected = selectedIds.has(c.id);
                 return (
                   <button
                     key={c.id}
                     onClick={() => toggleSelection(c.id)}
-                    className={`w-full text-left p-3 rounded-xl border-2 transition-all ${
+                    className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
                       isSelected
-                        ? 'border-emerald-500 bg-emerald-50'
-                        : 'border-gray-100 bg-white'
+                        ? 'border-emerald-500 bg-emerald-50 shadow-sm'
+                        : 'border-gray-100 bg-white hover:border-emerald-200'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center ${
+                      <div className="flex items-center gap-4">
+                        <div className={`w-5 h-5 md:w-6 md:h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
                           isSelected ? 'bg-emerald-600 border-emerald-600' : 'border-gray-300'
                         }`}>
-                          {isSelected && <Check size={12} className="text-white" />}
+                          {isSelected && <Check size={14} className="text-white" />}
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-gray-900">{c.material_type ?? 'Mixed'}</p>
-                          <p className="text-xs text-gray-400">{formatRelativeTime(c.created_at)}</p>
+                          <p className="text-sm md:text-base font-bold text-gray-900">{c.material_type ?? 'Mixed'}</p>
+                          <p className="text-xs md:text-sm text-gray-400 mt-0.5">{formatRelativeTime(c.created_at)}</p>
                         </div>
                       </div>
-                      <span className="text-sm font-bold text-emerald-700 font-mono">
+                      <span className="text-sm md:text-base font-black text-emerald-700 font-mono bg-white px-2 py-1 rounded-md border border-emerald-100">
                         {formatWeightKg(Number(c.median_weight))}
                       </span>
                     </div>
@@ -154,38 +154,44 @@ export default function CreateBatchPage() {
                 );
               })}
             </div>
-          </>
+
+            {/* Error */}
+            {error && (
+              <div className="mt-4 bg-red-50 border border-red-200 rounded-xl p-4 text-sm font-medium text-red-700">
+                {error}
+              </div>
+            )}
+
+            {/* Sticky Bottom Summary - Mobile vs Desktop handling */}
+            {selectedIds.size > 0 && (
+              <div className="fixed md:absolute bottom-0 left-0 right-0 bg-white md:bg-gray-50 md:rounded-b-2xl border-t md:border-t-0 md:border-x md:border-b border-gray-200 px-4 md:px-6 py-4 z-50 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)] md:shadow-none">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4 text-sm text-gray-600">
+                    <div>
+                      <span className="font-bold text-gray-900 text-base">{selectedIds.size}</span> collections selected
+                    </div>
+                    <div className="hidden md:block w-1 h-1 bg-gray-300 rounded-full" />
+                    <div>
+                      Total Weight: <span className="font-bold text-emerald-700 font-mono text-base">{formatWeightKg(totalWeight)}</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleCreateBatch}
+                    disabled={submitting}
+                    className="w-full md:w-auto px-8 py-3 rounded-xl bg-emerald-700 text-white text-sm md:text-base font-bold flex items-center justify-center gap-2 hover:bg-emerald-800 disabled:opacity-50 transition-colors shadow-md shadow-emerald-700/20"
+                  >
+                    {submitting ? (
+                      <><Loader2 size={18} className="animate-spin" /> Processing</>
+                    ) : (
+                      <><Layers size={18} /> Create Batch</>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </div>
-
-      {/* Error */}
-      {error && (
-        <div className="mx-4 mt-3 bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
-          {error}
-        </div>
-      )}
-
-      {/* Sticky Bottom Summary */}
-      {selectedIds.size > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 z-50">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-600">
-              <span className="font-bold text-gray-900">{selectedIds.size}</span> collections · <span className="font-bold text-emerald-700 font-mono">{formatWeightKg(totalWeight)}</span>
-            </span>
-          </div>
-          <button
-            onClick={handleCreateBatch}
-            disabled={submitting}
-            className="w-full py-3 rounded-xl bg-emerald-700 text-white text-sm font-semibold flex items-center justify-center gap-2 hover:bg-emerald-800 disabled:opacity-50"
-          >
-            {submitting ? (
-              <><Loader2 size={16} className="animate-spin" /> Creating...</>
-            ) : (
-              <><Layers size={16} /> Create Batch</>
-            )}
-          </button>
-        </div>
-      )}
     </div>
   );
 }

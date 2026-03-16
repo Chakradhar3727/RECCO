@@ -7,7 +7,7 @@ import { Camera, RotateCcw, AlertTriangle, CheckCircle2, XCircle, ArrowRight, Ar
 
 interface Step2Props {
   formData: CollectionFormData;
-  updateFormData: (updates: Partial<CollectionFormData>) => void;
+  updateFormData: (updates: Partial<CollectionFormData> | ((prev: CollectionFormData) => Partial<CollectionFormData>)) => void;
   onNext: () => void;
   onBack: () => void;
 }
@@ -25,7 +25,7 @@ async function compressPhoto(file: File, maxWidth = 800): Promise<string> {
         canvas.height = img.height * scale;
         const ctx = canvas.getContext('2d')!;
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL('image/jpeg', 0.85));
+        resolve(canvas.toDataURL('image/jpeg', 0.6)); // Lower quality to prevent tunnel blocking large payloads
       };
       img.onerror = reject;
       img.src = e.target?.result as string;
@@ -48,6 +48,7 @@ async function callOCRServerAction(base64Image: string): Promise<{
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ image: base64Image }),
+      signal: AbortSignal.timeout(20000), // 20-second timeout to prevent silent UI hangs
     });
     if (!res.ok) {
       return { success: false, extractedWeight: null, confidence: 0, rawText: '', error: `Server error ${res.status}` };
@@ -63,24 +64,26 @@ export default function CollectionFormStep2({ formData, updateFormData, onNext, 
   const [activeSlot, setActiveSlot] = useState<number | null>(null);
 
   const updatePhotoSlot = useCallback((index: number, updates: Partial<PhotoSlot>) => {
-    const newPhotos = [...formData.photos] as [PhotoSlot, PhotoSlot, PhotoSlot];
-    newPhotos[index] = { ...newPhotos[index], ...updates };
-    const updateObj: Partial<CollectionFormData> = { photos: newPhotos };
+    updateFormData((prevForm) => {
+      const newPhotos = [...prevForm.photos] as [PhotoSlot, PhotoSlot, PhotoSlot];
+      newPhotos[index] = { ...newPhotos[index], ...updates };
+      const updateObj: Partial<CollectionFormData> = { photos: newPhotos };
 
-    // Check if all 3 slots have results — compute median & variance
-    const allDone = newPhotos.every(p => p.state === 'SUCCESS' || p.state === 'LOW_CONFIDENCE');
-    if (allDone) {
-      const weights: [number, number, number] = [
-        newPhotos[0].extractedWeight ?? 0,
-        newPhotos[1].extractedWeight ?? 0,
-        newPhotos[2].extractedWeight ?? 0,
-      ];
-      updateObj.medianWeightKg = computeMedianWeight(weights);
-      updateObj.weightVariancePct = computeWeightVariancePct(weights);
-    }
+      // Check if all 3 slots have results — compute median & variance
+      const allDone = newPhotos.every(p => p.state === 'SUCCESS' || p.state === 'LOW_CONFIDENCE');
+      if (allDone) {
+        const weights: [number, number, number] = [
+          newPhotos[0].extractedWeight ?? 0,
+          newPhotos[1].extractedWeight ?? 0,
+          newPhotos[2].extractedWeight ?? 0,
+        ];
+        updateObj.medianWeightKg = computeMedianWeight(weights);
+        updateObj.weightVariancePct = computeWeightVariancePct(weights);
+      }
 
-    updateFormData(updateObj);
-  }, [formData.photos, updateFormData]);
+      return updateObj;
+    });
+  }, [updateFormData]);
 
   const handleSlotTap = (index: number) => {
     setActiveSlot(index);
@@ -137,8 +140,8 @@ export default function CollectionFormStep2({ formData, updateFormData, onNext, 
 
   return (
     <div>
-      <h2 className="text-lg font-bold text-gray-900 mb-1">Photograph Weighing Scale</h2>
-      <p className="text-sm text-gray-500 mb-4">Take 3 photos of the scale display for OCR weight extraction</p>
+      <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-1">Photograph Weighing Scale</h2>
+      <p className="text-sm text-gray-500 mb-4 md:mb-6">Take 3 photos of the scale display for OCR weight extraction</p>
 
       {/* Hidden file input for camera capture */}
       <input
@@ -151,7 +154,7 @@ export default function CollectionFormStep2({ formData, updateFormData, onNext, 
       />
 
       {/* Photo Slots */}
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-24 md:mb-8">
         {formData.photos.map((photo, index) => (
           <PhotoSlotCard
             key={index}
@@ -165,44 +168,44 @@ export default function CollectionFormStep2({ formData, updateFormData, onNext, 
 
       {/* OCR Summary Bar */}
       {allSlotsComplete && formData.medianWeightKg !== null && (
-        <div className="mt-4 bg-white rounded-xl border border-gray-100 p-4">
-          <div className="text-center mb-2">
-            <p className="text-xs text-gray-500 uppercase tracking-wider font-medium">Median Weight</p>
-            <p className="text-3xl font-bold text-emerald-800 font-mono mt-1">
-              {formData.medianWeightKg.toFixed(2)} <span className="text-lg">kg</span>
+        <div className="mt-4 md:mt-8 bg-white rounded-xl border border-gray-100 p-4 md:p-6 shadow-sm">
+          <div className="text-center mb-2 md:mb-4">
+            <p className="text-xs md:text-sm text-gray-500 uppercase tracking-wider font-medium">Median Weight</p>
+            <p className="text-3xl md:text-5xl font-bold text-emerald-800 font-mono mt-1 md:mt-2">
+              {formData.medianWeightKg.toFixed(2)} <span className="text-lg md:text-2xl">kg</span>
             </p>
           </div>
-          <div className="flex items-center justify-center gap-4 text-xs text-gray-500 font-mono">
+          <div className="flex items-center justify-center gap-4 text-xs md:text-sm text-gray-500 font-mono">
             {formData.photos.map((p, i) => (
-              <span key={i}>#{i + 1}: {p.extractedWeight?.toFixed(1)}</span>
+              <span key={i} className="bg-gray-50 px-2.5 py-1 rounded-md">#{i + 1}: {p.extractedWeight?.toFixed(1)}</span>
             ))}
           </div>
           {/* Variance Chip */}
-          <div className="flex justify-center mt-3">
+          <div className="flex justify-center mt-4">
             <VarianceChip variancePct={formData.weightVariancePct ?? 0} />
           </div>
         </div>
       )}
 
       {/* Navigation */}
-      <div className="sticky bottom-0 pt-4 pb-2 bg-gray-50 mt-4 flex gap-3">
+      <div className="fixed md:relative bottom-0 left-0 right-0 p-4 md:p-0 bg-white md:bg-transparent border-t border-gray-100 md:border-none md:mt-8 z-10 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)] md:shadow-none flex gap-3 max-w-3xl mx-auto w-full">
         <button
           onClick={onBack}
-          className="flex-1 py-3.5 rounded-xl text-sm font-semibold border-2 border-gray-200 text-gray-600 flex items-center justify-center gap-2 hover:bg-gray-50"
+          className="flex-1 py-3.5 md:py-4 rounded-xl text-sm md:text-base font-bold border-2 border-gray-200 text-gray-600 flex items-center justify-center gap-2 hover:bg-gray-50 hover:border-gray-300 transition-colors"
         >
-          <ArrowLeft size={16} /> Back
+          <ArrowLeft size={18} /> Back
         </button>
         <button
           onClick={onNext}
           disabled={!canContinue}
-          className={`flex-[2] py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all ${
+          className={`flex-[2] py-3.5 md:py-4 rounded-xl text-sm md:text-base font-bold flex items-center justify-center gap-2 transition-all ${
             canContinue
-              ? 'bg-emerald-700 text-white hover:bg-emerald-800'
+              ? 'bg-emerald-700 text-white hover:bg-emerald-800 shadow-md shadow-emerald-700/20 active:scale-[0.98]'
               : 'bg-gray-200 text-gray-400 cursor-not-allowed'
           }`}
         >
           {varianceTooHigh ? 'Retake — variance too high' : 'Continue to GPS Lock'}
-          {!varianceTooHigh && <ArrowRight size={16} />}
+          {!varianceTooHigh && <ArrowRight size={18} />}
         </button>
       </div>
     </div>

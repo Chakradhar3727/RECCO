@@ -27,8 +27,24 @@ const STATUS_FILTERS = ['All', 'Available', 'Batched', 'Complete'];
 
 export default function CollectionFilters({ collections }: { collections: Collection[] }) {
   const [search, setSearch] = useState('');
-  const [materialFilter, setMaterialFilter] = useState('All');
+  const [materialFilters, setMaterialFilters] = useState<string[]>(['All']);
   const [statusFilter, setStatusFilter] = useState('All');
+
+  const toggleMaterialFilter = (f: string) => {
+    if (f === 'All') {
+      setMaterialFilters(['All']);
+    } else {
+      setMaterialFilters(prev => {
+        const withoutAll = prev.filter(p => p !== 'All');
+        if (withoutAll.includes(f)) {
+          const next = withoutAll.filter(p => p !== f);
+          return next.length === 0 ? ['All'] : next;
+        } else {
+          return [...withoutAll, f];
+        }
+      });
+    }
+  };
 
   const filtered = useMemo(() => {
     return collections.filter(c => {
@@ -39,15 +55,19 @@ export default function CollectionFilters({ collections }: { collections: Collec
           c.id.toLowerCase().includes(q);
         if (!matches) return false;
       }
-      // Material filter
-      if (materialFilter !== 'All' && c.material_type !== materialFilter) return false;
+      // Material filter — data uses values like PET_BOTTLES, HDPE_CONTAINERS etc.
+      if (!materialFilters.includes('All')) {
+        const mt = (c.material_type || 'MIXED').toUpperCase();
+        const matchesMaterial = materialFilters.some(f => mt.startsWith(f) || mt === f);
+        if (!matchesMaterial) return false;
+      }
       // Status filter
       if (statusFilter === 'Available' && c.status !== 'AVAILABLE_FOR_BATCHING') return false;
       if (statusFilter === 'Batched' && c.status !== 'IN_BATCH') return false;
       if (statusFilter === 'Complete' && c.status !== 'COMPLETE') return false;
       return true;
     });
-  }, [collections, search, materialFilter, statusFilter]);
+  }, [collections, search, materialFilters, statusFilter]);
 
   return (
     <div className="px-4 pt-4">
@@ -68,9 +88,9 @@ export default function CollectionFilters({ collections }: { collections: Collec
         {MATERIAL_FILTERS.map(f => (
           <button
             key={f}
-            onClick={() => setMaterialFilter(f)}
+            onClick={() => toggleMaterialFilter(f)}
             className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
-              materialFilter === f
+              materialFilters.includes(f)
                 ? 'bg-emerald-700 text-white'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}

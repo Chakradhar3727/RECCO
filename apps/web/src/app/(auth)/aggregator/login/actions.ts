@@ -36,7 +36,7 @@ export async function verifyAggregatorPin(
     // Look up the aggregator by email or user_id
     const { data: aggregator } = await adminClient
         .from("aggregators")
-        .select("id, user_id, email")
+        .select("id, user_id, email, name")
         .or(`email.eq.${emailOrUserId.toLowerCase()},user_id.eq.${emailOrUserId.toUpperCase()}`)
         .single();
 
@@ -167,19 +167,32 @@ export async function verifyAggregatorPin(
             .delete()
             .eq("user_id", authUserId);
 
-        // If no aggregator row exists, create one now
-        if (!aggregator) {
-            const emailPrefix = loginEmail.split("@")[0].substring(0, 5).toUpperCase();
-            const randomSuffix = String(Math.floor(100000 + Math.random() * 900000));
-            const genUserId = `AGG-${emailPrefix}-${randomSuffix}`;
-            await adminClient.from("aggregators").upsert({
-                id: authUserId,
-                user_id: genUserId,
-                email: loginEmail,
-                name: loginEmail.split("@")[0],
-                status: "active",
-            });
-        }
+        const emailPrefix = loginEmail.split("@")[0].substring(0, 5).toUpperCase();
+        const genUserId = aggregator?.user_id || `AGG-${emailPrefix}-${String(Math.floor(100000 + Math.random() * 900000))}`;
+        const nameFallback = aggregator?.name || loginEmail.split("@")[0];
+
+        // 1. Ensure user_profile exists
+        await adminClient.from("user_profiles").upsert({
+            id: authUserId,
+            email: loginEmail,
+            full_name: nameFallback,
+            portal_role: "AGGREGATOR",
+        }, { onConflict: "id" });
+
+        // 2. Create aggregators entry
+        await adminClient.from("aggregators").upsert({
+            id: authUserId,
+            user_id: genUserId,
+            email: loginEmail,
+            name: nameFallback,
+            status: "active",
+        }, { onConflict: "id" });
+
+        // 3. Create aggregator_profiles entry
+        await adminClient.from("aggregator_profiles").upsert({
+            id: authUserId,
+            aggregator_id_code: genUserId,
+        }, { onConflict: "id" });
     }
 
     return { success: true };

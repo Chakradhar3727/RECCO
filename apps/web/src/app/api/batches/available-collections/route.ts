@@ -14,7 +14,7 @@ export async function GET() {
     const { data: profile } = await supabase
       .from('aggregator_profiles')
       .select('id')
-      .eq('user_id', user.id)
+      .eq('id', user.id)
       .single();
 
     if (!profile) return NextResponse.json({ collections: [] });

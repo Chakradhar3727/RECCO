@@ -165,7 +165,7 @@ export function IntegrityCheckPanel({ lastResult }: { lastResult: IntegrityResul
             </div>
 
             {/* Mismatch Details */}
-            {result && result.mismatches.length > 0 && (
+            {result && result.mismatches && result.mismatches.length > 0 && (
                 <div className="border border-red-100 rounded-lg overflow-hidden">
                     <div className="bg-red-50 px-3 py-1.5">
                         <span className="text-[10px] font-bold text-[#DC2626] uppercase">Mismatches</span>
