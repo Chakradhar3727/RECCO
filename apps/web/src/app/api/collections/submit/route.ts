@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { computeMedianWeight, computeWeightVariancePct } from '@/lib/utils/weight-stats';
+import { checkInventoryGuards, insertVelocityAnomalyFlag } from '@/lib/guards/inventory-guards';
 
 /**
  * Collection Submission API Route
  * Writes a new collection record to the `collections` table.
  * Inserts fraud flags for WEIGHT_VARIANCE if variance exceeds configured thresholds.
+ * Enforces inventory continuity guards (Module 3.8).
  */
 export async function POST(request: NextRequest) {
   try {
@@ -33,6 +35,15 @@ export async function POST(request: NextRequest) {
 
     if (!profile) {
       return NextResponse.json({ error: 'Aggregator profile not found' }, { status: 404 });
+    }
+
+    // ── Module 3.8: Inventory Continuity Guards ────────────────────────
+    const guardResult = await checkInventoryGuards(profile.id, medianWeightKg);
+    if (!guardResult.allowed) {
+      return NextResponse.json(
+        { error: guardResult.reason || 'Submission blocked by inventory guard' },
+        { status: 429 }
+      );
     }
 
     // Insert collection — materialType may contain comma-separated values for multi-material collections
@@ -71,6 +82,11 @@ export async function POST(request: NextRequest) {
           median: medianWeightKg,
         },
       });
+    }
+
+    // ── Module 3.8: Insert velocity anomaly flag if triggered ─────────
+    if (guardResult.velocityAnomaly) {
+      await insertVelocityAnomalyFlag(user.id, collection.id, 0);
     }
 
     // Update aggregator stats

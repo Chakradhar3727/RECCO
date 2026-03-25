@@ -16,6 +16,10 @@ export interface PhotoSlot {
   confidence?: number;
   rawText?: string;
   error?: string;
+  /** SHA-256 hash of the photo for exact-duplicate detection */
+  sha256?: string;
+  /** Perceptual hash for near-duplicate detection */
+  phash?: string;
 }
 
 export interface CollectionFormData {

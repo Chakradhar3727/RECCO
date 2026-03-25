@@ -3,7 +3,11 @@
 import React, { useRef, useState, useCallback } from 'react';
 import type { CollectionFormData, PhotoSlot } from '../page';
 import { computeMedianWeight, computeWeightVariancePct } from '@/lib/utils/weight-stats';
-import { Camera, RotateCcw, AlertTriangle, CheckCircle2, XCircle, ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
+import { validateExif } from '@/lib/utils/exif-validator';
+import { sha256FromDataUrl, isDuplicatePhoto } from '@/lib/utils/image-hash';
+import { computePhash, isNearDuplicate } from '@/lib/utils/phash';
+import { watermarkPhoto } from '@/lib/utils/watermark-photo';
+import { Camera, RotateCcw, AlertTriangle, CheckCircle2, XCircle, ArrowRight, ArrowLeft, Loader2, ShieldAlert } from 'lucide-react';
 
 interface Step2Props {
   formData: CollectionFormData;
@@ -100,20 +104,62 @@ export default function CollectionFormStep2({ formData, updateFormData, onNext, 
     updatePhotoSlot(activeSlot, { state: 'PROCESSING' });
 
     try {
+      // ── G54: EXIF Validation ──────────────────────────────────
+      const exifResult = await validateExif(file);
+      if (!exifResult.valid) {
+        updatePhotoSlot(activeSlot, {
+          state: 'FAILED',
+          error: exifResult.reason || 'Photo rejected by EXIF check',
+        });
+        return;
+      }
+
       const compressed = await compressPhoto(file);
       updatePhotoSlot(activeSlot, { state: 'PROCESSING', imageBase64: compressed });
 
-      const result = await callOCRServerAction(compressed);
+      // ── G53: SHA-256 Exact Duplicate Check ─────────────────────
+      const hash = await sha256FromDataUrl(compressed);
+      const existingHashes = formData.photos.map(p => p.sha256);
+      if (isDuplicatePhoto(hash, existingHashes)) {
+        updatePhotoSlot(activeSlot, {
+          state: 'FAILED',
+          error: 'Duplicate photo detected. Please take a new photo.',
+        });
+        return;
+      }
+
+      // ── G57: pHash Near-Duplicate Check ─────────────────────────
+      const pHashValue = await computePhash(compressed);
+      const existingPHashes = formData.photos.map(p => p.phash);
+      if (isNearDuplicate(pHashValue, existingPHashes)) {
+        updatePhotoSlot(activeSlot, {
+          state: 'FAILED',
+          error: 'Photo too similar to another slot. Please retake from a different angle.',
+        });
+        return;
+      }
+
+      // ── G56: Watermark the photo ───────────────────────────────
+      const sessionId = sessionStorage.getItem('recco_session_id') || crypto.randomUUID();
+      if (!sessionStorage.getItem('recco_session_id')) {
+        sessionStorage.setItem('recco_session_id', sessionId);
+      }
+      const watermarked = await watermarkPhoto(compressed, { sessionId });
+
+      // ── OCR call on the watermarked image ──────────────────────
+      const result = await callOCRServerAction(watermarked);
 
       if (result.success && result.extractedWeight !== null) {
         const confidence = result.confidence;
-        // Threshold: 60% confidence (configurable via system_config)
         const isHighConfidence = confidence >= 60;
         updatePhotoSlot(activeSlot, {
           state: isHighConfidence ? 'SUCCESS' : 'LOW_CONFIDENCE',
           extractedWeight: result.extractedWeight,
           confidence,
           rawText: result.rawText,
+          imageBase64: watermarked,
+          sha256: hash,
+          phash: pHashValue,
         });
       } else {
         updatePhotoSlot(activeSlot, {
