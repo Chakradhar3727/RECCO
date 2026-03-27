@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { loginAsAggregator } from '../helpers/auth';
+import { loginAsAggregator } from './helpers/auth';
 
 test.describe('Aggregator Authentication', () => {
   test('should display login page with email and PIN inputs', async ({ page }) => {

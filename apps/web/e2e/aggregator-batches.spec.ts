@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { loginAsAggregator } from '../helpers/auth';
+import { loginAsAggregator } from './helpers/auth';
 
 test.describe('Aggregator Batch Manager', () => {
   test.beforeEach(async ({ page }) => {

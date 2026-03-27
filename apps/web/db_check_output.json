@@ -1,0 +1,110 @@
+{
+  "profiles": [
+    {
+      "id": "6bda9d80-a976-49d9-91b2-d4d66ff1b202",
+      "email": "chakradharc902@gmail.com",
+      "full_name": "chakradharc902",
+      "portal_role": "ADMIN",
+      "phone_number": null,
+      "is_approved": false,
+      "fraud_score": 67,
+      "created_at": "2026-03-05T09:38:02.739395+00:00",
+      "last_active_at": "2026-03-05T09:38:02.739395+00:00",
+      "admin_role": "SUPERADMIN"
+    },
+    {
+      "id": "d4181486-1075-47b1-a5b5-e359e8276d3c",
+      "email": "tadekoruchakri37@gmail.com",
+      "full_name": "THATU",
+      "portal_role": "AGGREGATOR",
+      "phone_number": null,
+      "is_approved": false,
+      "fraud_score": 0,
+      "created_at": "2026-03-25T21:57:16.549377+00:00",
+      "last_active_at": "2026-03-25T21:57:16.549377+00:00",
+      "admin_role": null
+    },
+    {
+      "id": "77cbb1e7-9e83-40f0-b2ed-3910e967f84a",
+      "email": "chakritadekoru27@gmail.com",
+      "full_name": "Nandan",
+      "portal_role": "AGGREGATOR",
+      "phone_number": null,
+      "is_approved": false,
+      "fraud_score": 0,
+      "created_at": "2026-03-25T18:31:21.243211+00:00",
+      "last_active_at": "2026-03-25T18:31:21.243211+00:00",
+      "admin_role": null
+    }
+  ],
+  "recyclers": [
+    {
+      "id": "6bda9d80-a976-49d9-91b2-d4d66ff1b202",
+      "owner_id": "6bda9d80-a976-49d9-91b2-d4d66ff1b202",
+      "facility_name": "Test Recycler",
+      "geo_location": null,
+      "address_text": null,
+      "capacity_mt_per_month": 1000,
+      "current_processing_load": 0,
+      "is_active": true,
+      "facility_qr_payload": null,
+      "cpcb_registration_number": null,
+      "spcb_consent_number": null,
+      "epr_registration_number": null,
+      "cpcb_format_warning": false,
+      "gps_latitude": null,
+      "gps_longitude": null,
+      "processing_capacity_kg": null,
+      "address": null,
+      "bank_details_encrypted": null,
+      "registration_step": 0,
+      "approval_status": "APPROVED",
+      "submitted_at": null,
+      "user_id": null
+    }
+  ],
+  "aggs": [
+    {
+      "id": "6bda9d80-a976-49d9-91b2-d4d66ff1b202",
+      "aggregator_id_code": "AGG-001",
+      "total_collections": 0,
+      "total_weight_kg": 0,
+      "current_rating": 5,
+      "bank_details": null,
+      "pin_hash": null,
+      "user_id": "6bda9d80-a976-49d9-91b2-d4d66ff1b202",
+      "full_name": null,
+      "email": null,
+      "registration_step": 0
+    },
+    {
+      "id": "d4181486-1075-47b1-a5b5-e359e8276d3c",
+      "aggregator_id_code": "AGG-TADEK-261330",
+      "total_collections": 0,
+      "total_weight_kg": 0,
+      "current_rating": 5,
+      "bank_details": null,
+      "pin_hash": null,
+      "user_id": null,
+      "full_name": null,
+      "email": null,
+      "registration_step": 0
+    },
+    {
+      "id": "77cbb1e7-9e83-40f0-b2ed-3910e967f84a",
+      "aggregator_id_code": "AGG-CHAKR-908366",
+      "total_collections": 0,
+      "total_weight_kg": 0,
+      "current_rating": 5,
+      "bank_details": null,
+      "pin_hash": null,
+      "user_id": null,
+      "full_name": null,
+      "email": null,
+      "registration_step": 0
+    }
+  ],
+  "err1": null,
+  "err2": null,
+  "err3": null
+}
