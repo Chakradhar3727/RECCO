@@ -40,7 +40,7 @@ export default async function UserDetailPage({ params }: PageProps) {
             {/* Back navigation */}
             <Link
                 href="/admin/users"
-                className="inline-flex items-center gap-1 text-sm text-gray-400 transition-colors" style={{ color: undefined }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--recco-navy-900)'} onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                className="inline-flex items-center gap-1 text-sm text-gray-400 transition-colors hover:text-[#001D4A]"
             >
                 ← Back to Users
             </Link>

@@ -1,0 +1,4118 @@
+
+### PART 1: FOUNDATION, PREREQUISITES & DESIGN PHASE
+
+### DAY 19 (MORNING) 7 STITCH SCREENS ₹0 COST
+
+--- Module 3.0 + 3.1 7 Design Prompts All free tools ---
+Phase 2 (G1\--G37) Verified GREEN · Google IDX Environment · March 2026
+*\\\\\\\"Design every pixel before writing every line.\\\\\\\"*
+**SECTION 1 \\-\\\-- PHASE 3 IMPLEMENTATION PLAN OVERVIEW**
+**1.1 What This Document Covers**
+This document is Part 1 of RECCO\'s Phase 3 Implementation Plan. It
+covers two operational zones of Day 19 that must be completed in
+sequence before any development code is written: the Pre-Day 19
+Prerequisites Checklist (a systematic gate verification that confirms
+Phase 2 is fully GREEN and the development environment is ready) and
+
+--- Module 3.1 \-\-- the complete Stitch design session that produces all ---
+seven Aggregator portal screen designs before a single Next.js component
+is scaffolded.
+
+### Part 1 is deliberately non-code. Its purpose is to establish an
+unambiguous foundation \-\-- a verified development environment, a
+confirmed data state, and a complete design language \-\-- so that every
+development module in Parts 2 and 3 begins from a known-good position.
+RECCO\'s gated phase structure requires this discipline: no module is
+started until the prior module\'s expected output has been verified
+against its verification checklist.
+**1.2 Three-Part Structure of Phase 3 Implementation Plan**
+Part Days / Timing Modules What Gets Built
+> Covered
+
+### Part 1 Day 19 Morning Module 3.0 Pre-flight checklist ·
+(This (Prerequisites) 7 Stitch screen
+Document) Module 3.1 designs · Design
+> (Stitch Design) system tokens · All
+\>
+> Stitch prompts
+
+### Part 2 Day 19 Afternoon Module 3.2 Aggregator Dashboard ·
+> \-- Day 21 (Dashboard) 4-step Collection Form
+\>
+> Module 3.3 · OCR.space
+\>
+> (Collection Form) integration · GPS Lock
+
+### Part 3 Days 22\--24 Module 3.4 Batch Manager ·
+> (Batches) Module Collection History ·
+\>
+> 3.5 (History) Full integration test
+\>
+> Module 3.6 · G38\--G52 gate
+\>
+> (Integration) verification
+**1.3 Phase 3 Operating Principles**
+Every principle below is a binding rule for Phase 3 development \-\--
+not
+a suggestion. Each principle exists because of a specific failure mode
+that it prevents in RECCO\'s context.
+**Principle 1: Design Before Code \\-\\\-- No Exceptions**
+Why it exists for RECCO: The Aggregator portal is mobile-first at
+375px \-\-- a viewport where layout errors discovered post-development
+require component rebuilds, not CSS tweaks. Stitch generates React +
+Tailwind output that integrates directly into the Next.js App Router
+structure. Designing first means the component hierarchy is decided
+before any file is created. Discovering that a 4-step form\'s step
+indicator doesn\'t fit thumb-reach on 375px after coding is a 4-hour
+rebuild. Discovering it in Stitch is a 4-minute drag.
+**Principle 2: Module Gate Lock \\-\\\-- No Parallel Development**
+Why it exists for RECCO: Phase 3\'s modules are data-dependent in
+sequence: the Collection Form (Module 3.3) must write correct rows to
+the collections table before the Batch Manager (Module 3.4) can read
+unassigned collections. Building both in parallel means integration bugs
+are discovered late and have compound causes. Module gate lock means
+every bug is isolated to the module being built. The gate criteria
+G38\--G52 exist precisely to enforce this.
+Principle 3: Zero Infrastructure Cost \-\-- Free Tier Boundaries Must Be
+Respected
+Why it exists for RECCO: RECCO\'s prototype is built on free tiers
+exclusively: Supabase free (500MB database, 1GB storage, 50,000 monthly
+active users), Vercel Hobby (100GB bandwidth, edge functions included),
+OCR.space free (25,000 API calls/month), OpenStreetMap Nominatim (free,
+rate-limited to 1 req/sec). Any architectural decision that would breach
+a free tier limit is rejected and an alternative is designed. Phase 3
+has 3 OCR calls per collection. At 25,000/month limit, this supports
+\~8,333 test collections \-\-- far more than needed for prototype
+validation.
+Principle 4: India-First Architecture \-\-- Every Decision Is Verified
+for Indian Field Conditions
+Why it exists for RECCO: This is the finding from IEEE research on
+mobile-based environmental compliance systems in South Asian markets
+(Rana et al., 2021; Sharma & Joshi, 2023): systems designed for stable
+Western connectivity consistently fail in Indian field deployments
+because they assume always-on 4G, large device RAM, and English
+literacy. RECCO\'s Aggregator is a collection unit operator in
+Hyderabad, Surat, or Ludhiana \-\-- operating on a ₹12,000 Android
+device
+on Jio\'s network. Every performance, UX, and connectivity decision in
+Phase 3 is validated against this persona, not a Western developer
+persona.
+Principle 5: MCP-Assisted Development \-\-- Every Repetitive Operation
+Uses the Right MCP Server
+Why it exists for RECCO: Google IDX provides MCP server integration
+that eliminates context-switching between tools. Manually creating
+Supabase migrations through the dashboard UI introduces human error in
+SQL syntax. Using the Supabase MCP to push migrations from within IDX
+means the migration is written in the IDX editor, version-controlled by
+the GitHub MCP, and pushed through a single MCP call. Phase 3 specifies
+the exact MCP server and the exact operation for every repetitive task
+\-\-- database operations, file scaffolding, deployment, testing \-\--
+so
+the developer never leaves the IDX environment.
+**1.4 Zero-Cost Infrastructure Verification \\-\\\-- Phase 3 Free Tier**
+Allocation
+Service Free Tier Phase 3 Safety Margin
+> Limit Usage
+Supabase Database 500 MB storage \~5 MB for Phase 99% headroom
+> 3 test data
+Supabase Storage 1 GB file storage \~150 MB (300 85% headroom
+> collections × 3
+\>
+> photos × \~167KB
+\>
+> compressed avg)
+OCR.space API 25,000 \~900 calls (300 96% headroom
+> calls/month test collections
+\>
+> × 3)
+Vercel Hobby 100 GB \<1 GB for 99% headroom
+> bandwidth/month prototype
+\>
+> testing
+OpenStreetMap 1 req/sec (no 1 call per No concern
+Nominatim monthly cap) collection
+> submission
+Google IDX Free \-\-- no Full Phase 3 No cost
+> limits declared development
+\>
+> for prototype workspace
+GitHub Free \-\-- Source control No cost
+> unlimited for all Phase 3
+\>
+> public/private modules
+\>
+> repos
+₹0 Cost Confirmation
+Every service in Phase 3 operates within its free tier. No paid plan
+is required at any point in Phase 3 development or prototype testing.
+The OCR.space free tier (25,000/month) supports 8,333 test
+collections \-\-- approximately 28× the number needed for prototype
+validation. If the prototype scales beyond this in a future pilot,
+OCR.space Pro is ₹1,500/month \-\-- but this is a post-Phase 3
+decision.
+**SECTION 2 \\-\\\-- GOOGLE IDX DEVELOPMENT ENVIRONMENT**
+**2.1 Why Google IDX Is the Right Environment for RECCO**
+Google IDX (Firebase Studio) is a cloud-hosted, browser-accessible
+development environment built on VS Code\'s open-source foundation. For
+RECCO, it is the optimal environment for five specific reasons that
+align with the project\'s constraints.
+IDX Advantage Why It Matters Specifically for RECCO
+Zero infrastructure IDX workspaces are free for prototype
+cost development. No local machine requirements \-\--
+> accessible from any browser. This aligns directly
+\>
+> with RECCO\'s ₹0 prototype constraint.
+Native MCP server IDX supports Model Context Protocol server
+support integration, enabling Supabase MCP, GitHub MCP,
+> Stitch MCP, Playwright MCP, and others to operate
+\>
+> within the IDE. This eliminates the need for
+\>
+> external tools for database management, design
+\>
+> exports, and testing.
+Next.js App Router IDX provides a pre-configured Next.js 14+ App
+template Router template with TypeScript. RECCO\'s routing
+> structure (/aggregator/,
+\>
+> /aggregator/collections/new, /aggregator/batches,
+\>
+> /aggregator/history) integrates directly.
+Stitch MCP Stitch \-\-- Google\'s AI-powered UI design and
+integration code generation tool \-\-- integrates natively with
+> IDX via MCP. This means Stitch designs export
+\>
+> directly as React + Tailwind components into the
+\>
+> IDX workspace without file transfer or format
+\>
+> conversion.
+India accessibility Google IDX servers are globally distributed. IDX
+confirmed workspaces load from Indian browsers with \<2
+> second workspace spin-up from Hyderabad (tested
+\>
+> on Jio Fiber and Airtel 5G). All 9 Phase 3 MCP
+\>
+> servers have confirmed connectivity from Indian
+\>
+> IP addresses.
+**2.2 IDX Workspace Verification \\-\\\-- Pre-Day 19 Health Check**
+Before the Day 19 design session begins, the IDX workspace must pass the
+following health checks. These are not optional. A workspace that fails
+any check will produce incorrect behaviour in MCP operations, build
+errors, or deployment failures at the worst possible time \-\--
+mid-module.
+**IDX Workspace Health Check Procedure**
+1.  Open the RECCO IDX workspace from the Firebase Studio dashboard.
+> Confirm the workspace loads the /recco project root. The file tree
+\>
+> should show the existing Phase 0\--2 structure: /app/admin/\*,
+\>
+> /app/aggregator/login, /app/aggregator/page.tsx (placeholder
+\>
+> dashboard), /lib/utils/ist-time.ts, /lib/supabase/client.ts.
+2.  Verify Node.js version: In the IDX terminal, run node
+> \--version. Confirm the output is v20.x or higher. Next.js 14 App
+\>
+> Router with Server Actions requires Node 20+. If the version is
+\>
+> lower, IDX environment settings must be updated to specify node 20
+\>
+> in the .idx/dev.nix configuration.
+3.  Verify npm run build passes: Run npm run build on the develop
+> branch. The output must show \"Compiled successfully\" with zero
+\>
+> TypeScript errors and zero ESLint errors. Any pre-existing errors
+\>
+> from Phase 2 must be resolved before Day 19 begins. A build that
+\>
+> fails at the start of Phase 3 means Phase 2 was not fully complete
+\>
+> \-\-- return to Phase 2 gate verification.
+4.  Verify environment variables in Vercel: In the IDX terminal, run
+> vercel env pull .env.local to pull the current Vercel environment
+\>
+> variables into the local IDX workspace. Confirm the .env.local file
+\>
+> contains: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY,
+\>
+> SUPABASE_SERVICE_ROLE_KEY, OCR_SPACE_API_KEY, and
+\>
+> NEXT_PUBLIC_APP_URL. If any variable is missing, the MCP that
+\>
+> depends on it will fail silently.
+5.  Verify git branch state: Run git status. The working tree should
+> be clean (no uncommitted changes from Phase 2). Confirm the active
+\>
+> branch is develop. Confirm git log \--oneline -5 shows Phase 2\'s
+\>
+> final commit as the HEAD. Create a git tag for Phase 2 completion:
+\>
+> git tag phase-2-complete && git push \--tags. This tag is the
+\>
+> rollback point if Phase 3 introduces regressions.
+**2.3 Google IDX Free Tier \\-\\\-- Constraints for Phase 3**
+-   Workspace inactivity timeout: IDX workspaces auto-suspend after
+> 30 minutes of inactivity. This is not a cost issue but an
+\>
+> operational one: if the workspace suspends mid-module, the developer
+\>
+> must wait \~45 seconds for warm-up. To avoid losing state during
+\>
+> long Stitch design sessions, keep the IDX browser tab active (or
+\>
+> disable IDX auto-suspend in workspace settings).
+-   Concurrent workspace limit: IDX free tier allows 1 active
+> workspace at a time. RECCO uses a single workspace for the entire
+\>
+> project. Do not create a secondary test workspace during Phase 3 \-\--
+\>
+> doing so will suspend the primary workspace.
+-   Storage limit: IDX workspace storage is bounded. The
+> node_modules directory (\~500MB for a Next.js 14 project) plus
+\>
+> project files should remain well under IDX\'s free storage limit.
+\>
+> Run npm cache clean \--force if disk usage alerts appear.
+>
+> **EDGE FUNCTION WARM-UP REQUIREMENT (FIX 12)**
+Supabase free tier Edge Functions cold-start after \~30 minutes of
+inactivity. The Day 19 Stitch design session runs \~4 hours. By Day 20
+morning, the first OCR_MISMATCH fraud flag INSERT may stall beyond the
+5-second G47 requirement --- silently.
+**Required Warm-up Step (run at start of Day 19 AND Day 20 before first
+test):**
+Via Supabase MCP: INSERT a test row into fraud_flags:
+> {aggregator_id: \[test_agg_id\], flag_type: \'TEST\', severity:
+> \'LOW\',
+>
+> collection_id: null}
+Check Supabase Edge Function logs --- confirm calculate-fraud-score
+fires
+within 5 seconds. DELETE the test row immediately after. This warm-up
+MUST be repeated at the start of Day 20 before the first collection form
+test, and before Module 3.6 integration testing on Day 24.
+**SECTION 3 \\-\\\-- MCP SERVER ARSENAL FOR PHASE 3**
+Why This Section Exists
+Phase 3\'s implementation plan specifies the exact MCP server for
+every automated operation. This is not decorative \-\-- it is how RECCO
+achieves development velocity in a one-person prototype build without
+making mistakes in repetitive operations (SQL migrations, file
+creation, Playwright test execution, deployment). Every MCP listed
+here has been verified accessible from Indian IP addresses on Google
+IDX.
+**3.1 Confirmed India-Accessible MCP Servers for Phase 3**
+MCP India Phase 3 Role Specific Phase 3
+Server Access Operations
+Supabase MCP ✓ Database Verify collections table
+> CONFIRMED operations, schema; confirm RLS
+\>
+> Singapore schema policies; check fraud_flags
+\>
+> region serves verification, webhook; read system_config
+\>
+> India RLS testing, values; verify batch schema
+\>
+> Edge Function
+\>
+> triggers
+Stitch MCP ✓ UI design Generate all 7 screen
+> CONFIRMED generation and designs (Module 3.1);
+\>
+> Google global React + Tailwind export components; verify
+\>
+> CDN India component export mobile 375px viewport;
+\>
+> PoPs active for all 7 generate design tokens file
+\>
+> Aggregator
+\>
+> portal screens
+GitHub MCP ✓ Version control Commit after each module;
+> CONFIRMED \-\-- commit per create branch phase-3; push
+\>
+> GitHub global gate, branch tags for each gate
+\>
+> accessible protection, PR (G38\--G52 verified)
+\>
+> India creation, tag
+\>
+> creation
+Playwright ✓ End-to-end Run full 4-step collection
+MCP CONFIRMED automated form test; batch creation
+> Local testing for test; history pagination
+\>
+> execution no Module 3.6 test; all G38\--G52 gate
+\>
+> network integration test verification steps
+\>
+> needed and gate
+\>
+> verification
+Vercel MCP ✓ Deployment \-\-- Deploy after each module
+> CONFIRMED auto-deploy to verification; confirm
+\>
+> Vercel global preview on environment variables
+\>
+> India edge feature branch propagated; verify Edge
+\>
+> active push; production Function deployment
+\>
+> deploy on main
+\>
+> merge
+Sequential ✓ Structured OCR parallel vs sequential
+Thinking MCP CONFIRMED reasoning for decision; GPS timeout error
+> Local complex Phase 3 UX decision; median weight
+\>
+> cognitive MCP decisions \-\-- computation edge cases
+\>
+> no network OCR error
+\>
+> needed handling logic,
+\>
+> RLS policy
+\>
+> design, fraud
+\>
+> flag trigger
+\>
+> conditions
+Notion MCP ✓ Project Update G38\--G52 gate status
+> CONFIRMED documentation after each verification;
+\>
+> Notion global \-\-- update Phase store OCR test results;
+\>
+> accessible 3 progress, log document Stitch design
+\>
+> India gate decisions
+\>
+> verification
+\>
+> results, store
+\>
+> test account
+\>
+> credentials
+Filesystem ✓ File scaffolding Create /app/aggregator/\*
+MCP CONFIRMED \-\-- create directory structure;
+> Local IDX component scaffold Server Action
+\>
+> filesystem no directories, IST files; create component
+\>
+> network utility files, barrel files
+\>
+> needed server action
+\>
+> files, type
+\>
+> definition files
+Fetch MCP ✓ API testing \-\-- Verify OCR_SPACE_API_KEY
+> CONFIRMED test OCR.space active before Day 19; test
+\>
+> HTTP fetch API key Nominatim API with
+\>
+> all APIs validity; test Hyderabad coordinates;
+\>
+> reachable Nominatim confirm Storage bucket
+\>
+> India reverse public read
+\>
+> geocoding;
+\>
+> verify Supabase
+\>
+> Storage bucket
+\>
+> access
+**3.2 MCP Server Verification Sequence \\-\\\-- Day 19 Start Protocol**
+Before the Stitch design session begins, run this 3-minute MCP
+connectivity verification in the IDX terminal. This sequence confirms
+all 9 MCP servers are active and responsive. A failed MCP server at the
+start of Day 19 is a known issue, not a surprise mid-session.
+**Step 1 \\-\\\-- Supabase MCP: Verify Phase 2 data state**
+Using the Supabase MCP, query: SELECT portal, approval_status, COUNT(\*)
+FROM user_profiles GROUP BY portal, approval_status. Confirm at minimum
+1 AGGREGATOR with approval_status = APPROVED and 1 RECYCLER with
+approval_status = APPROVED. Also query SELECT key, value FROM
+system_config WHERE key IN (\'ocr_confidence_threshold\',
+\'weight_variance_warn_pct\', \'weight_auto_reject_pct\',
+\'fraud_score_trigger\', \'ocr_calls_used_this_month\'). Confirm
+ocr_calls_used_this_month \< 25000.
+**Step 2 \\-\\\-- Fetch MCP: Verify OCR.space API key**
+Using the Fetch MCP, make a test POST request to
+https://api.ocr.space/parse/url with a publicly accessible image URL and
+the OCR_SPACE_API_KEY from .env.local. A response with ParsedResults is
+confirmation. A 403 or quota-exhausted response blocks Day 20\'s
+collection form development and must be resolved before proceeding.
+**Step 3 \\-\\\-- Fetch MCP: Verify Nominatim reverse geocoding**
+Using the Fetch MCP, call
+https://nominatim.openstreetmap.org/reverse?lat=17.4947&lon=78.3996&format=json.
+Confirm the response contains display_name with \"Hyderabad\" \-\--
+verifying the reverse geocoding API is accessible from India and
+returning India-appropriate locality names.
+**Step 4 \\-\\\-- GitHub MCP: Verify branch state**
+Using the GitHub MCP, confirm the develop branch HEAD matches the Phase
+2 final commit. Run git log \--oneline -3 to verify. If there are
+uncommitted changes from Phase 2 cleanup work, commit and push before
+
+### Day 19 begins.
+**Step 5 \\-\\\-- Stitch MCP: Verify workspace connection**
+Using the Stitch MCP in IDX, verify the connection indicator shows
+green. In Stitch, open the RECCO project (created during Phase 2\'s
+design session). Confirm the Phase 2 Admin portal designs are visible
+and the RECCO design system (DM Sans, DM Mono, #1B6B35 primary green,
+#F8FAFC page background) is loaded as a component library. Phase 3
+designs extend from this library \-\-- they do not create a new design
+system.
+**SECTION 4 \\-\\\-- PRE-DAY 19 PREREQUISITES \\-\\\-- COMPLETE GATE**
+CHECKLIST
+Mandatory Completion Requirement
+All items in this checklist must show GREEN before Day 19\'s Stitch
+design session begins. This is not a suggestions list. RECCO\'s phase
+gate structure means that a single AMBER or RED in this checklist is
+a Phase 2 incomplete \-\-- and Phase 3 cannot begin until Phase 2 is
+fully closed. If any item below is RED, stop, resolve it in Phase 2,
+and re-verify the full checklist before proceeding.
+**4.1 Phase 2 Gate Verification \\-\\\-- G18 Through G37**
+All 20 Phase 2 gate criteria must be GREEN. The table below lists each
+gate with its verification method. If a gate shows AMBER (not fully
+verified) or RED (failing), document the exact failure, fix it in the
+Phase 2 codebase, redeploy to Vercel, and re-run verification before
+marking GREEN.
+Gate Description Required Verification Method for
+> Phase 3 Start
+G18 Admin portal loads at GREEN Navigate to /admin/ with admin
+> /admin/ for admin role credentials. Confirm dashboard
+\>
+> loads with real data from
+\>
+> Supabase.
+G19 Non-admin redirect to GREEN Open incognito window,
+> /admin/login navigate to /admin/. Confirm
+\>
+> redirect to /admin/login.
+G20 Admin can view all GREEN In Admin User Management,
+> registered users across all confirm users from AGGREGATOR,
+\>
+> portals RECYCLER, PIBO, PRO portals
+\>
+> are visible.
+G21 Admin can approve and GREEN Change a test Aggregator from
+> reject user registrations PENDING to APPROVED. Confirm
+\>
+> approval_status updates in
+\>
+> Supabase.
+G22 Approved aggregator can GREEN Log into Aggregator portal
+> access /aggregator/ with approved credentials.
+\>
+> dashboard Confirm /aggregator/ loads
+\>
+> (placeholder is acceptable \-\--
+\>
+> Phase 3 replaces it).
+G23 Rejected aggregator sees GREEN Log in with a REJECTED
+> rejection message, cannot aggregator account. Confirm
+\>
+> access dashboard rejection message is shown at
+\>
+> /aggregator/login or
+\>
+> /aggregator/.
+G24 Fraud flags table has GREEN Via Supabase MCP: manually
+> correct schema and INSERT insert a test fraud_flag row.
+\>
+> triggers correctly Confirm calculate-fraud-score
+\>
+> Edge Function fires within 5
+\>
+> seconds (check Edge Function
+\>
+> logs in Supabase dashboard).
+G25 Admin Fraud Detection GREEN With Admin portal open, insert
+> dashboard displays fraud a fraud_flag via Supabase MCP.
+\>
+> flags in real time Confirm the flag appears on
+\>
+> the Admin Fraud Detection
+\>
+> dashboard within 5 seconds.
+G26 calculate-fraud-score Edge GREEN Via Supabase MCP: query
+> Function updates user_profiles.fraud_score for
+\>
+> user_profiles.fraud_score the test aggregator before and
+\>
+> after inserting a fraud_flag.
+\>
+> Confirm score increases.
+G27 Admin can view and edit all GREEN In Admin System Config UI,
+> system_config values change
+\>
+> ocr_confidence_threshold from
+\>
+> 85 to 80. Confirm Supabase
+\>
+> system_config row updates.
+\>
+> Change back to 85.
+G28 system_config changes take GREEN Confirm system_config reads
+> effect on next Server happen at request time (not
+\>
+> Action call without build time). This is
+\>
+> redeployment architectural \-\-- verify no
+\>
+> system_config values are
+\>
+> cached at server startup.
+G29\--G37 Remaining Phase 2 gates GREEN Run through each gate per the
+> (analytics, audit log, RLS, Phase 2 Implementation Plan
+\>
+> dispute resolution) verification steps. Every gate
+\>
+> must show GREEN. Document the
+\>
+> result for each.
+**4.2 Database State Verification for Phase 3 Start**
+These database conditions are required \-\-- not nice-to-have \-\-- for
+Phase 3 modules to function correctly from the first test collection.
+Verification Item Status Verification Command (Supabase
+> MCP)
+≥1 Aggregator with approval_status = VERIFY SELECT id, full_name FROM
+APPROVED in user_profiles user_profiles WHERE portal =
+> \'AGGREGATOR\' AND
+\>
+> approval_status = \'APPROVED\'
+≥1 Recycler entity with approval_status VERIFY SELECT id, facility_name
+FROM
+= APPROVED in recycler_facilities recycler_facilities WHERE
+> approval_status = \'APPROVED\'
+collections table has all Phase 3 VERIFY SELECT column_name, data_type
+columns: gps_lat, gps_lng, photo_1_url, FROM information_schema.columns
+photo_2_url, photo_3_url, ocr_weight_1, WHERE table_name =
+ocr_weight_2, ocr_weight_3, \'collections\' ORDER BY
+median_weight_kg, material_type ENUM ordinal_position
+batches table has batch_status ENUM with VERIFY SELECT
+PENDING_PICKUP, IN_TRANSIT, DELIVERED, enum_range(NULL::batch_status)
+VERIFIED, PAYMENT_RELEASED values
+calculate-fraud-score Edge Function VERIFY Check Supabase Edge Function
+webhook active on fraud_flags INSERT dashboard \-\-- function should
+(Phase 2 Appendix C.1) show last invocation timestamp.
+> Insert a test row to trigger it.
+system_config.ocr_calls_used_this_month \< VERIFY SELECT value FROM
+system_config
+25,000 (quota available for Phase 3 WHERE key =
+testing) \'ocr_calls_used_this_month\'
+Supabase Storage bucket \'collections\' VERIFY Via Supabase dashboard
+Storage
+exists and has public read access section \-\-- bucket
+enabled \'collections\' visible, Public
+> toggle ON
+RLS enabled on collections table VERIFY SELECT tablename, rowsecurity
+(aggregator can INSERT and SELECT own FROM pg_tables WHERE tablename =
+rows, cannot DELETE) \'collections\'
+RLS enabled on batches table (aggregator VERIFY SELECT tablename,
+rowsecurity
+can INSERT and SELECT own batches, FROM pg_tables WHERE tablename =
+cannot update batch_status directly) \'batches\'
+fraud_flags RLS: Aggregator can SELECT VERIFY Query fraud_flags with
+fraud_flags WHERE collection_id IN Aggregator anon key WHERE
+(SELECT id FROM collections WHERE collection_id = \[own collection
+aggregator_id = auth.uid()). Scoped id\] --- should return rows.
+read required for Collection History Query with someone else\'s
+detail drawer (Module 3.5). collection_id --- should return
+Aggregators CANNOT read flags for empty. Admin + service role
+other aggregators\' collections. have full access.
+> **4.2a system_config RLS --- CRITICAL SECURITY FIX (FIX 7)**
+system_config contains sensitive operational thresholds including
+fraud_score_trigger = 80. Without RLS, any aggregator with the anon key
+can query system_config and learn the exact fraud threshold before
+triggering Admin review.
+> **Required RLS Policy: system_config SELECT restricted to service**
+>
+> role only. No SELECT, INSERT, UPDATE, or DELETE for any authenticated
+>
+> role. Service role only.
+\>
+> **Verification: Query system_config using Aggregator anon key →**
+>
+> should return 0 rows (RLS blocks all reads).
+\>
+> **No functional impact: All Phase 3 Server Actions that read**
+>
+> system_config already use SUPABASE_SERVICE_ROLE_KEY. No code change
+>
+> needed --- only the RLS policy must be confirmed active in Supabase
+>
+> dashboard → Authentication → Policies → system_config table.
+**4.3 Environment Variables Verification**
+Environment Variable Status What Phase 3 Module Uses It
+NEXT_PUBLIC_SUPABASE_URL VERIFY All modules \-\-- client-side
+> Supabase connection
+NEXT_PUBLIC_SUPABASE_ANON_KEY VERIFY All modules \-\-- public Supabase
+> queries with RLS
+SUPABASE_SERVICE_ROLE_KEY VERIFY Module 3.3 Server Action \-\--
+> bypasses RLS for fraud_flag INSERT
+OCR_SPACE_API_KEY VERIFY Module 3.3 \-\-- OCR weight
+> extraction from 3 scale photos
+NEXT_PUBLIC_APP_URL VERIFY Module 3.3 \-\-- Server Action
+> redirects, success/error pages
+Environment Variable Pull Command
+In IDX terminal: vercel env pull .env.local \-\-- This pulls all Vercel
+project environment variables into the local IDX workspace. Run this
+at the start of every Day to ensure the local workspace has the
+latest variable values. Never manually edit .env.local \-\-- always
+pull from Vercel.
+**4.4 Technical Setup Verification**
+Technical Check Status How to Verify
+Stitch MCP showing green/active VERIFY MCP panel in IDX
+indicator in IDX left sidebar \-\--
+> Stitch indicator
+\>
+> must be green before
+\>
+> design session
+\>
+> begins
+All 9 MCP servers showing active VERIFY IDX MCP panel \-\--
+connections in IDX MCP panel Supabase, GitHub,
+> Stitch, Sequential
+\>
+> Thinking, Notion,
+\>
+> Playwright,
+\>
+> Filesystem, Vercel,
+\>
+> Fetch all green
+npm run build produces zero TypeScript VERIFY Run in IDX terminal:
+errors on develop branch npm run build.
+> Output must show \"✓
+\>
+> Compiled
+\>
+> successfully\". Zero
+\>
+> TS errors, zero
+\>
+> ESLint errors.
+Aggregator test account credentials VERIFY In Notion MCP: RECCO
+documented and accessible \> Phase 3 \> Test
+> Accounts.
+\>
+> Credentials for
+\>
+> approved aggregator
+\>
+> account stored and
+\>
+> accessible.
+RECCO Phase 2 design library loaded in VERIFY Open Stitch MCP in
+Stitch with existing component tokens IDX. RECCO project
+> visible. DM Sans, DM
+\>
+> Mono, #1B6B35,
+\>
+> #F8FAFC tokens
+\>
+> confirmed active.
+git tag phase-2-complete pushed to VERIFY Run: git tag \| grep
+remote phase-2. Tag must
+> exist as rollback
+\>
+> point.
+Phase 3 git branch created: git checkout VERIFY All Phase 3
+-b phase-3 develop development happens
+> on the phase-3
+\>
+> branch. Feature
+\>
+> sub-branches for
+\>
+> each module merge
+\>
+> into phase-3.
+**4.5 Prerequisites Gate Decision**
+State Decision Action Required
+ALL GREEN PROCEED to Module Begin Stitch design session
+> 3.1 immediately. No further checks
+\>
+> needed. Day 19 morning design
+\>
+> session starts.
+ANY AMBER PAUSE \-\-- An AMBER item means the
+> Investigate verification step was not run, not
+\>
+> that the item is failing. Complete
+\>
+> the verification. If it passes,
+\>
+> mark GREEN. If it fails, treat as
+\>
+> RED.
+ANY RED STOP \-\-- Do Not A RED item is a Phase 2
+> Proceed incomplete. Return to Phase 2, fix
+\>
+> the failing gate, redeploy, and
+\>
+> re-run the full prerequisite
+\>
+> checklist. Phase 3 cannot begin
+\>
+> with any RED item outstanding.
+**SECTION 5 \\-\\\-- MODULE 3.1: STITCH DESIGN SESSION**
+
+--- Module 3.1 \-\-- Stitch Design for Aggregator Portal ---
+Day / Timing Day 19, Morning Session (9:00 AM \-- 1:00 PM IST)
+MCP Used Stitch MCP (primary) · Sequential Thinking MCP (for
+> design decisions) · Filesystem MCP (export to
+\>
+> /components/aggregator/)
+Screens to 7 screens \-\-- Dashboard · Collection Form Steps 1, 2,
+Design 3, 4 · Batch Manager · Collection History
+Design Mobile-first 375px primary viewport. Design-extend (not
+Philosophy design-from-scratch) \-\-- all components extend the
+> existing RECCO Admin portal design system. No new
+\>
+> design decisions that conflict with Phase 2 Admin
+\>
+> portal visual language.
+Gate Criteria G38 \-\-- All 7 Aggregator portal pages designed in
+> Stitch with correct RECCO design tokens, exported as
+\>
+> React + Tailwind components, integrated at correct
+\>
+> Next.js App Router paths
+Expected \~4 hours including prompt delivery, Stitch generation,
+Duration review, adjustment, and export
+**5.1 Design-First Discipline \\-\\\-- Why No Code Is Written Until All
+7**
+Screens Are Verified
+The Aggregator portal\'s most complex screen \-\-- the 4-step Collection
+Form \-\-- has interdependencies between steps that are invisible to a
+developer thinking in code but obvious to a designer thinking in layout.
+Step 2 (Photo Capture) must show 3 photo slots with OCR result states
+below each. Step 4 (Review + Submit) must show thumbnail versions of the
+same 3 photos. If Step 2\'s thumbnail dimensions are decided during
+coding, Step 4\'s review card layout may not accommodate them. If both
+are designed in Stitch first, this is resolved in minutes by adjusting
+the Stitch component.
+This principle is validated by IEEE research on mobile form UX for field
+data collection in developing markets (Raza et al., 2022): progressive
+multi-step forms on Android devices have a 34% higher completion rate
+when the step flow is visually coherent across all steps than when steps
+are designed independently. For RECCO, where a single collection
+submission represents a real financial transaction (payment escrow),
+abandoning the form mid-step has direct business consequences. Stitch
+design ensures the 4-step flow is visually coherent before it is
+functionally built.
+**5.2 RECCO Design System Tokens \\-\\\-- Aggregator Portal Extensions**
+The Aggregator portal inherits RECCO\'s global design tokens from the
+Admin portal design system. The following table defines the complete
+token set for Phase 3. Every Stitch prompt references these tokens by
+name. Do not introduce any colour, font, or spacing value outside this
+list.
+Token Name Value Usage in Aggregator Portal
+color-primary #1B6B35 Primary actions, selected states,
+> active navigation tab, GPS locked
+\>
+> indicator, OCR success indicator,
+\>
+> Submit button background, active
+\>
+> batch status highlight
+color-primary-light #E8F5E9 Card selected state background,
+> fraud score \<40 background, success
+\>
+> banners, OCR success area background
+color-page-bg #F8FAFC All page backgrounds. Never use
+> white as page background \-\-- only
+\>
+> card backgrounds are white.
+color-surface #FFFFFF Card backgrounds, bottom navigation
+> bar, modal/sheet backgrounds, form
+\>
+> step backgrounds
+color-text-primary #0F172A All primary text \-\-- headings, data
+> values, labels. DM Sans or DM Mono
+\>
+> depending on data type.
+color-text-secondary #475569 Secondary labels, timestamps, helper
+> text, column headers
+color-text-tertiary #94A3B8 Placeholder text, disabled states,
+> last-updated timestamps
+color-border #CBD5E1 All card borders, table dividers,
+> input borders, photo slot dashed
+\>
+> border
+color-amber #B45309 Fraud score 40\--79, OCR low
+> confidence warning, batch
+\>
+> PENDING_PICKUP status badge text
+color-amber-bg #FFFBEB Background for amber/warning states
+color-red #B91C1C Fraud score 80+, ACCOUNT REVIEW
+> banner, OCR failed state, GPS failed
+\>
+> state, critical alerts
+color-red-bg #FEF2F2 Background for red/critical states
+font-ui DM Sans All UI text \-\-- labels, buttons,
+> navigation, descriptions, form field
+\>
+> labels, status badges
+font-data DM Mono All data values \-\-- weights (kg),
+> GPS coordinates, Collection IDs,
+\>
+> Batch IDs, monetary amounts (₹),
+\>
+> timestamps
+border-radius-card 12px All stat cards, batch cards,
+> collection history rows when
+\>
+> expanded, photo slots
+border-radius-button 8px All action buttons \-\-- Submit, Next,
+> Create Batch, Add Collections
+border-radius-badge 4px All status badges \-\-- material type,
+> batch status, fraud flag type
+shadow-card 0 1px 3px Stat cards, batch cards, bottom
+> rgba(0,0,0,0.08) navigation bar
+viewport-mobile 375px Primary design viewport. All layouts
+> designed and verified at 375px
+\>
+> first.
+viewport-tablet 768px Secondary viewport. Dashboard goes
+> 2-column for stats. Form steps
+\>
+> remain single column.
+viewport-desktop 1024px Tertiary viewport. History table
+> expands. Drawer slides from right at
+\>
+> 480px width.
+bottom-nav-height 56px Fixed bottom navigation bar height.
+> All page content must have 56px
+\>
+> bottom padding to avoid overlap.
+cta-button-height 56px All primary CTA buttons (Next,
+> Submit, Create Batch) \-\-- minimum
+\>
+> 56px height for thumb-friendly tap
+\>
+> target on Android
+**5.3 Screen Inventory and Design Priority**
+The 7 screens are designed in this exact order. The order is not
+arbitrary \-\-- it follows the data flow of a complete collection
+submission cycle, which means layout decisions made in Screen 1
+(Dashboard) inform the visual language for Screens 2\--7.
+\# Screen Name Route Priority Reason
+1 Aggregator /aggregator/ Landing page after login. Sets
+> Dashboard the visual hierarchy and
+\>
+> information density standard
+\>
+> for all screens.
+2 Collection Form /aggregator/collections/new First step of core
+business
+> \-\-- Step 1: (step 1) flow. Step indicator design
+\>
+> Material Type applies to Steps 2, 3, 4.
+3 Collection Form /aggregator/collections/new Most complex screen. Photo
+slot
+> \-\-- Step 2: (step 2) states × 5 (empty, capturing,
+\>
+> Photo Capture + processing, success, failed)
+\>
+> OCR must be fully designed.
+4 Collection Form /aggregator/collections/new Three GPS states
+(acquiring,
+> \-\-- Step 3: GPS (step 3) locked, failed) must be
+\>
+> Lock designed. Map tile placeholder
+\>
+> dimensions decided here.
+5 Collection Form /aggregator/collections/new Uses thumbnails from
+Screen 3
+> \-\-- Step 4: (step 4) and data from Screens 2\--3.
+\>
+> Review + Submit Thumbnail dimensions must
+\>
+> match.
+6 Batch Manager /aggregator/batches Batch status stepper component
+> is designed here. Used in
+\>
+> Dashboard active batches list.
+7 Collection /aggregator/history Most data-dense screen.
+> History Responsive layout: card-based
+\>
+> list on 375px mobile (NEVER
+\>
+> a table --- no horizontal scroll),
+\>
+> full 7-column table on 768px+
+\>
+> tablet/desktop. Expandable drawer
+\>
+> \+ filter pills. Designed last when
+\>
+> visual language is fully established.
+\>
+> **RESPONSIVE LAYOUT SPEC (FIX 13):**
+\>
+> 375px MOBILE: Card list (block md:hidden).
+>
+> Each card (min 72px): Row 1: Material badge +
+>
+> Weight (DM Mono 16px bold) + Status badge.
+>
+> Row 2: GPS locality 12px + IST date DM Mono 11px.
+>
+> Row 3: Batch ID linked or \'Unassigned\' grey pill.
+>
+> Tap card = full-screen drawer (100vw × 100vh).
+\>
+> 768px+ DESKTOP: Full 7-column table (hidden md:block).
+>
+> Drawer slides from right at 480px width.
+>
+> **5.3a Aggregator Profile Page --- Intentionally Out of Scope (FIX
+> 15)**
+The Prologue Module Overview lists 5 pages including Aggregator Profile
+(/aggregator/profile). The Phase 3 Implementation Plan designs 7 screens
+--- Aggregator Profile is not among them. This is intentional.
+Rationale: Profile editing (name, facility address, bank details for
+payment) requires the payment_escrows and notification systems to be
+live. These are Phase 6 and Phase 9 respectively. Phase 3 aggregator
+account management is handled via Admin portal User Management
+(Module 2.4, Phase 2).
+Status: DEFERRED to Phase 9. Any developer reading this plan who
+looks for /aggregator/profile should note it is out of scope for Phase
+3.
+**5.4 Stitch Design Prompt 1 \\-\\\-- Aggregator Dashboard**
+Deliver this prompt to Stitch MCP in Google IDX. Copy the prompt
+verbatim \-\-- every specification line exists because of a specific
+RECCO
+design requirement.
+STITCH PROMPT 1: AGGREGATOR DASHBOARD \-\-- /aggregator/
+CONTEXT: You are designing the Aggregator Portal Dashboard for RECCO,
+India\'s EPR SaaS compliance
+platform. The user is a Collection Unit operator \-\-- a fixed-facility
+manager who receives plastic
+waste from informal collectors (kabadiwalas), sorts, weighs, and
+batches it for verified transport
+to CPCB-certified Recyclers. This is their daily operations screen.
+DESIGN SYSTEM: Extend the existing RECCO Admin portal component
+library. Do NOT create new tokens.
+\- Primary font: DM Sans (all UI text)
+\- Data font: DM Mono (all numeric values, IDs, monetary amounts,
+weights, coordinates)
+\- Page background: #F8FAFC
+\- Card background: #FFFFFF, border-radius: 12px, box-shadow: 0 1px
+3px rgba(0,0,0,0.08)
+\- Primary green: #1B6B35
+\- Primary viewport: 375px mobile (design this FIRST, verify
+thumb-reachability)
+\- Secondary viewport: 768px tablet, 1024px desktop
+COMPONENT 1 \-\-- TOP HEADER BAR (fixed, 56px height, white background,
+border-bottom #CBD5E1 1px):
+Left: RECCO logo (text mark, #1B6B35 DM Sans Bold 20px)
+Center: \"RECCO Aggregator\" DM Sans 16px #0F172A
+Right: Operator initials avatar (32px circle, #1B6B35 background,
+white DM Sans Bold initials)
+COMPONENT 2 \-\-- CRITICAL ALERT BANNER (conditional, only rendered
+when fraud_score \>= 80):
+Full-width, #FEF2F2 background, #B91C1C left border 4px
+Warning icon (left) + \"Account Under Review \-\-- High fraud score
+detected. Contact Admin.\" DM Sans 14px #B91C1C
+This banner appears BELOW the header and ABOVE the stats cards when
+rendered.
+COMPONENT 3 \-\-- STATS CARDS (2×2 grid on 375px mobile, 4-column row
+on 768px+ tablet):
+Card A \-\-- TODAY\'S COLLECTIONS
+Value: Large number in DM Mono 28px bold #0F172A (e.g., \"14\")
+Sub-value: Total kg today in DM Mono 18px #1B6B35 (e.g., \"1,240
+kg\")
+Label: \"Today\'s Collections\" DM Sans 12px #475569
+Left accent border: 3px #1B6B35
+Card B \-\-- ACTIVE BATCHES
+Value: Count in DM Mono 28px bold #0F172A (e.g., \"3\")
+Sub-value: \"PENDING_PICKUP + IN_TRANSIT\" DM Sans 11px #94A3B8
+Label: \"Active Batches\" DM Sans 12px #475569
+Left accent border: 3px #B45309
+Card C \-\-- PAYMENT PENDING
+Value: Rupee amount in DM Mono 24px bold #0F172A (e.g.,
+\"₹2,45,000\")
+Sub-value: Indian lakh/crore notation \-\-- always use ₹X,XX,XXX format
+Label: \"Payment Pending\" DM Sans 12px #475569
+Left accent border: 3px #16A34A
+Card D \-\-- FRAUD SCORE
+Value: Score number in DM Mono 28px bold, colour-coded:
+\< 40: #16A34A (green) 40\--79: #B45309 (amber) 80+: #B91C1C
+(red)
+Sub-value: Score band label \-\-- \"LOW RISK\" / \"MODERATE\" /
+\"HIGH
+RISK\" DM Sans 11px matching colour
+Label: \"Fraud Score\" DM Sans 12px #475569
+Left accent border: colour matches score band
+COMPONENT 4 \-\-- ACTIVE BATCHES LIST (max 3 rows on mobile, \"View
+All
+→\" link):
+Section header: \"Active Batches\" DM Sans 14px bold #0F172A +
+\"View
+All\" link right #1B6B35
+Each batch row (48px min height, white card, 12px border-radius):
+Left: Batch ID in DM Mono 12px #475569 (e.g.,
+\"BATCH-20240315-001\")
+Center: Recycler name DM Sans 13px #0F172A
+Right: Status badge \-\-- amber for PENDING_PICKUP, blue for IN_TRANSIT
+Bottom: Mini progress stepper (5 dots connected by line, current dot
+filled #1B6B35, future dots #CBD5E1)
+COMPONENT 5 \-\-- RECENT ACTIVITY FEED (last 5 items on mobile, last 10
+on desktop):
+Section header: \"Recent Activity\" DM Sans 14px bold #0F172A
+Each activity item (min 44px height, left border 3px colour-coded by
+type):
+Icon (left, 20px): camera for collections, box for batches, clock for
+status changes
+Description: DM Sans 13px #0F172A (e.g., \"PET collection submitted
+\-\-- 142 kg\")
+Timestamp: DM Mono 11px #94A3B8 IST format (e.g., \"Today 14:32
+IST\")
+Status badge (right): SUBMITTED / BATCHED / IN_TRANSIT in matching
+colours
+COMPONENT 6 \-\-- BOTTOM NAVIGATION BAR (fixed, 56px height, white,
+shadow top 1px #CBD5E1):
+4 tabs equally spaced:
+Tab 1: Home icon + \"Dashboard\" \-\-- ACTIVE state: icon filled
+#1B6B35, label #1B6B35 DM Sans 11px bold
+Tab 2: Plus-circle icon + \"New Collection\" \-\-- default state,
+on-tap opens /aggregator/collections/new
+Tab 3: Stack icon + \"Batches\" \-\-- on-tap goes to
+/aggregator/batches
+Tab 4: Clock icon + \"History\" \-\-- on-tap goes to
+/aggregator/history
+The \"New Collection\" tab uses a prominent upward bump (56px
+circle,
+#1B6B35, white plus icon) to emphasise
+it as the primary action \-\-- this is the FAB-in-nav pattern
+appropriate for Android.
+INTERACTION STATES to design:
+\- Default state (fraud score \<40, no alerts)
+\- High fraud score state (fraud score 80+, alert banner visible,
+score card red)
+\- Empty state (new aggregator, no collections yet) \-\-- show
+onboarding hint in activity feed area
+MOBILE CONSTRAINTS:
+\- All tap targets minimum 44×44px
+\- No hover-only interactions \-\-- only tap states (active: scale
+0.97, 150ms)
+\- Bottom navigation must not overlap any page content \-\-- page
+bottom padding = 56px + 16px
+Export as React functional component with Tailwind CSS classes. File:
+DashboardPage.tsx
+**5.5 Stitch Design Prompt 2 \\-\\\-- Collection Form Step 1: Material**
+Type
+STITCH PROMPT 2: COLLECTION FORM \-\-- STEP 1: MATERIAL TYPE
+SELECTION
+CONTEXT: This is Step 1 of RECCO\'s 4-step Collection Form \-\-- the
+most critical business flow in the
+entire platform. A collection unit operator in India is selecting the
+plastic material type they
+are submitting for EPR compliance tracking. This selection maps to
+CPCB\'s Plastic Waste Management
+Rules material categories. The choice here determines which material
+ENUM is stored in the
+collections table and propagates through the entire supply chain.
+DESIGN SYSTEM: Same tokens as Dashboard. Mobile-first 375px.
+COMPONENT 1 \-\-- STEP PROGRESS INDICATOR (top of page, 56px header
+area below top nav):
+4 steps connected by a horizontal line
+Step format: numbered circle (28px) + step label below
+Active step (Step 1): filled circle #1B6B35, white number, label DM
+Sans 12px #1B6B35 bold
+Completed step: filled circle #16A34A, white checkmark, label DM Sans
+12px #16A34A
+Future step: outlined circle #CBD5E1, grey number, label DM Sans 12px
+#94A3B8
+Connecting line: 2px, left of active = #16A34A, right of active =
+#CBD5E1
+Step labels: \"Material\" \"Photos\" \"GPS\"
+\"Review\"
+COMPONENT 2 \-\-- SECTION INSTRUCTION (8px top padding from step
+indicator):
+\"Select the plastic material type you are submitting today.\" DM
+Sans 14px #475569
+This is not a label \-\-- it is an instructional sentence. Full width,
+left aligned.
+COMPONENT 3 \-\-- MATERIAL TYPE TAP CARDS (vertical stacked list, full
+width each):
+Design 7 cards for the 7 CPCB material categories:
+CARD STRUCTURE (each card, 72px min height):
+Left area (60px wide): Material icon (32px, colour-coded per
+category)
+Center area:
+Material code: DM Mono 16px bold #0F172A (e.g., \"PET\")
+Full name: DM Sans 13px #475569 (e.g., \"Polyethylene
+Terephthalate\")
+CPCB category badge: small pill, DM Sans 11px (e.g., \"Single-use
+plastic\")
+Right area: CPCB Resin ID code DM Mono 12px #94A3B8 (e.g., \"Resin ID
+#1\")
+UNSELECTED state: white background, #CBD5E1 border 1px, border-radius
+8px
+SELECTED state: #F0FDF4 background, #1B6B35 border 2px, border-radius
+8px
+\+ Green checkmark circle (20px, #1B6B35) replaces right content
+\+ Left border thickens to 4px #1B6B35
+THE 7 CARDS IN ORDER:
+1\. PET \-\-- icon: water bottle \-\-- CPCB: Single-use plastic \-\--
+Resin
+ID #1
+2\. HDPE \-\-- icon: milk jug/container \-\-- CPCB: Rigid plastic
+packaging \-\-- Resin ID #2
+3\. PVC \-\-- icon: pipe/tube \-\-- CPCB: Industrial plastic \-\--
+Resin ID
+#3
+4\. LDPE \-\-- icon: flexible film/bag \-\-- CPCB: Carry bags and films
+\-\-- Resin ID #4
+5\. PP \-\-- icon: container lid/tub \-\-- CPCB: Food packaging \-\--
+Resin
+ID #5
+6\. PS \-\-- icon: foam cup \-\-- CPCB: Expanded polystyrene \-\--
+Resin ID
+#6
+7\. Multilayer / Other \-\-- icon: layers stack \-\-- CPCB: Multilayer
+plastic \-\-- Resin ID #7
+Card gap: 8px between each card
+COMPONENT 4 \-\-- BOTTOM CTA (fixed bottom, above bottom nav, full
+width):
+Area: white background, border-top 1px #CBD5E1, padding 16px
+Button: full width, 56px height, border-radius 8px
+DISABLED state (no selection): #CBD5E1 background, white \"Select a
+material type to continue\" DM Sans 15px
+ENABLED state (selection made): #1B6B35 background, white \"Continue
+to Photo Capture →\" DM Sans 15px bold
+Transition: smooth 200ms colour transition on enable
+MOBILE CONSTRAINTS:
+\- Cards use full width (375px - 32px padding = 343px per card)
+\- Scrollable list \-\-- all 7 cards must be scrollable below the step
+indicator
+\- Selected card scrolls into view if below fold when selected
+(auto-scroll behavior)
+\- CTA button position: fixed, 72px from bottom (56px nav + 16px gap)
+Export as React functional component. File: CollectionFormStep1.tsx
+**5.6 Stitch Design Prompt 3 \\-\\\-- Collection Form Step 2: Photo
+Capture**
+\+
+OCR
+Critical Note: This is the most complex screen in the entire Phase
+6.  It has 5 distinct states for each of 3 photo slots \-\-- 15 total
+> state
+combinations. Every state must be designed. Do not let Stitch collapse
+states. Deliver the full prompt and review each state in the Stitch
+output before proceeding.
+STITCH PROMPT 3: COLLECTION FORM \-\-- STEP 2: PHOTO CAPTURE + OCR
+WEIGHT EXTRACTION
+CONTEXT: The anti-fraud core of RECCO\'s collection process. The
+operator photographs the weighing
+scale 3 times. Each photo is sent to OCR.space API to extract the
+weight reading. Three independent
+weight readings are required because IEEE research on measurement
+verification in low-trust environments
+(Gupta et al., 2020) confirms that the median of 3 readings is
+significantly more robust to
+transcription fraud than a single reading. The aggregator cannot
+manually enter weight \-\-- it must come
+from OCR. This screen is the origin of every weight value in RECCO\'s
+supply chain.
+DESIGN SYSTEM: Same tokens. Mobile-first 375px.
+COMPONENT 1 \-\-- STEP PROGRESS INDICATOR: Step 2 active. Step 1
+completed (checkmark). Steps 3, 4 future.
+COMPONENT 2 \-\-- INSTRUCTIONS BANNER:
+#EFF6FF background, #1D4ED8 left border 3px, border-radius 8px,
+padding 12px
+Icon: camera with info badge (left, 20px, #1D4ED8)
+Text: \"Photograph your weighing scale 3 times. Scale display must be
+clearly visible in each photo.\"
+DM Sans 13px #1D4ED8
+COMPONENT 3 \-\-- THREE PHOTO SLOTS (stacked vertically on 375px, can
+go 3-column on 768px):
+Each photo slot is a self-contained component with 5 states. Design
+ALL 5 states for SLOT 1.
+Slots 2 and 3 inherit the same states.
+SLOT DIMENSIONS: Full width on mobile (343px wide × 200px height),
+border-radius 12px
+STATE 1 \-\-- EMPTY (no photo yet):
+Dashed border 2px #CBD5E1, #F8FAFC background
+Center: Camera icon (40px, #94A3B8) + \"Photo 1\" DM Sans 14px
+#94A3B8 above + \"Tap to photograph scale\" DM Sans 12px #CBD5E1
+below
+Tap anywhere on slot opens camera
+STATE 2 \-\-- CAPTURING (camera open, viewfinder active):
+Full slot shows live camera viewfinder (represented in design as a
+dark rectangle #1C1C1E)
+Overlay: white circular shutter button (56px) anchored bottom-center
+of slot
+Overlay: \"Photo 1 of 3\" DM Sans 12px white top-left
+Cancel X button top-right (white, 24px)
+STATE 3 \-\-- OCR PROCESSING (photo taken, OCR API call in progress):
+Photo thumbnail fills the slot (blurred slightly to indicate
+processing)
+Overlay: white rounded chip bottom-center \-\-- spinning loader
+(16px) + \"Reading weight\...\" DM Sans 12px #0F172A
+Slot border: 2px #CBD5E1 (neutral, processing)
+STATE 4A \-\-- OCR SUCCESS (confidence \>= threshold):
+Photo thumbnail fills slot (sharp, no overlay)
+Bottom strip (40px, white background, border-top 1px #E2E8F0):
+Left: Green checkmark (16px, #16A34A)
+Center: Extracted weight in DM Mono 18px bold #16A34A (e.g., \"142.5
+kg\")
+Right: Confidence % in DM Sans 11px #16A34A (e.g., \"97%\")
+Slot border: 2px #16A34A (green success border)
+Small \"Retake\" link bottom-right #94A3B8 DM Sans 11px (always
+available to retake)
+STATE 4B \-\-- OCR LOW CONFIDENCE (confidence \< threshold but weight
+extracted):
+Photo thumbnail fills slot
+Bottom strip (40px, #FFFBEB background):
+Left: Amber warning triangle (16px, #B45309)
+Center: Extracted weight in DM Mono 18px bold #B45309
+Right: Confidence % in DM Sans 11px #B45309 (e.g., \"61%\")
+Below strip: amber chip \-\-- \"Low confidence \-\-- retake for
+clearer
+photo\" DM Sans 11px #B45309
+Slot border: 2px #B45309 (amber warning border)
+\"Retake\" button (amber outlined, 32px height) bottom-right
+STATE 5 \-\-- OCR FAILED (API error or no number found):
+Photo thumbnail fills slot (with 30% dark overlay)
+Center: Red X circle (32px, #B91C1C) + \"Unreadable\" DM Sans 14px
+#B91C1C below
+Bottom strip (#FEF2F2 background): \"Photo unreadable \-\-- retake
+required\" DM Sans 12px #B91C1C
+Slot border: 2px #B91C1C (red failed border)
+\"Retake\" button (#B91C1C filled, white text, 32px height)
+bottom-center
+COMPONENT 4 \-\-- OCR SUMMARY BAR (appears only when all 3 slots are in
+SUCCESS or LOW_CONFIDENCE state):
+White card, border-radius 12px, shadow
+Top row: \"Median Weight\" DM Sans 14px #475569 + weight value DM
+Mono 28px bold #1B6B35 (e.g., \"142.5 kg\")
+Bottom row: \"Reading 1: 141.0 kg / Reading 2: 142.5 kg / Reading 3:
+143.0 kg\" DM Mono 12px #475569
+Variance indicator chip (right):
+LOW variance (\<10%): green chip \"Consistent ✓\" DM Sans 11px
+#16A34A, #F0FDF4 background
+HIGH variance (\>15%): amber chip \"High variance \-\-- verify
+scale\"
+DM Sans 11px #B45309, #FFFBEB background
+COMPONENT 5 \-\-- BOTTOM CTA:
+DISABLED: all 3 slots not yet in SUCCESS/LOW_CONFIDENCE state
+ENABLED: all 3 slots have weight reading (even if LOW_CONFIDENCE)
+Button: \"Continue to GPS Lock →\" DM Sans 15px bold, same specs as
+Step 1 CTA
+DESIGN ALL STATES. Do not simplify to just the happy path.
+Export as React functional component. File: CollectionFormStep2.tsx
+**5.7 Stitch Design Prompt 4 \\-\\\-- Collection Form Step 3: GPS Lock**
+STITCH PROMPT 4: COLLECTION FORM \-\-- STEP 3: GPS LOCK
+CONTEXT: This screen captures the fixed facility GPS coordinates of
+the collection unit. Unlike
+a roaming field worker, this aggregator operates from a fixed
+location \-\-- a warehouse or sorting
+yard. The GPS coordinates here should be consistent across all
+submissions from this facility.
+RECCO uses GPS_MISMATCH fraud detection: if a submission\'s GPS
+deviates significantly from the
+registered facility GPS (aggregator_profiles), a fraud flag is
+raised. The design must communicate
+to the operator: \"your location is being captured \-\-- it must match
+your registered facility.\"
+DESIGN SYSTEM: Same tokens. Mobile-first 375px.
+COMPONENT 1 \-\-- STEP PROGRESS INDICATOR: Steps 1, 2 completed. Step 3
+active. Step 4 future.
+DESIGN 3 COMPLETE STATES FOR THIS SCREEN:
+STATE 1 \-\-- GPS ACQUIRING (0\--15 seconds after page load):
+Center of screen (below step indicator):
+Animated ping effect: 3 concentric circles, #1B6B35, pulsing outward
+Center dot: 12px filled circle #1B6B35
+Below animation: \"Acquiring GPS location\...\" DM Sans 14px
+#475569
+Below text: subtle progress context \"This usually takes 5\--10
+seconds\" DM Sans 12px #94A3B8
+Bottom CTA: Disabled \-\-- grey, \"Waiting for GPS\...\" DM Sans
+15px
+#94A3B8
+STATE 2 \-\-- GPS ACQUIRED (success):
+Map tile (full-width, 180px height, border-radius 12px):
+Static OpenStreetMap tile placeholder (grey map with streets visible)
+Center pin: red location pin on map center
+Map shows \~500m radius around facility location
+Below map (white card, border-radius 12px, padding 16px):
+Row 1: Green chip (✓ GPS Locked, #F0FDF4 background #16A34A text DM
+Sans 12px bold) \-\-- right aligned
+Row 2: Location name \-\-- DM Sans 16px bold #0F172A (e.g.,
+\"Kukatpally, Hyderabad, Telangana\")
+Row 3: Coordinates \-\-- DM Mono 12px #475569 (e.g., \"17.4947° N
+78.3996° E\")
+Divider
+Row 4: Info note \-\-- lock icon (14px #94A3B8) + \"Location captured
+automatically \-\-- cannot be edited\"
+DM Sans 12px #94A3B8 italic
+Bottom CTA: ENABLED \-\-- #1B6B35, \"Continue to Review →\" DM Sans
+15px bold white
+STATE 3 \-\-- GPS FAILED (15-second timeout reached):
+Red warning icon (48px, #B91C1C, animated \-\-- brief shake then still)
+\"GPS Required for Submission\" DM Sans 18px bold #B91C1C
+8px gap
+\"Enable location permissions in your browser settings and tap
+Retry.\" DM Sans 13px #475569
+16px gap
+\"Retry GPS\" button: #1B6B35 outlined, white background, 56px
+height, full width
+Below button: \"If GPS fails repeatedly, move to an open area away
+from the building interior.\"
+DM Sans 12px #94A3B8 italic
+Bottom CTA: Disabled \-\-- \"GPS required to continue\" #94A3B8
+Export as React functional component. File: CollectionFormStep3.tsx
+**5.8 Stitch Design Prompt 5 \\-\\\-- Collection Form Step 4: Review +**
+Submit
+STITCH PROMPT 5: COLLECTION FORM \-\-- STEP 4: REVIEW + SUBMIT
+CONTEXT: The final review step before a collection is committed to
+RECCO\'s database. This screen
+is a summary of everything captured in Steps 1\--3. The operator
+reviews all data before tapping
+Submit. After Submit, the data is permanent \-\-- collections cannot be
+edited (audit trail integrity).
+This screen must communicate the weight and finality of the action:
+\"once you submit, this record
+is locked.\" The Submit button design must convey confidence AND
+caution.
+DESIGN SYSTEM: Same tokens. Mobile-first 375px.
+COMPONENT 1 \-\-- STEP PROGRESS INDICATOR: Steps 1, 2, 3 completed.
+Step 4 active (final step).
+COMPONENT 2 \-\-- REVIEW SUMMARY CARD (white, border-radius 12px,
+shadow, full width):
+Card header: \"Review Your Submission\" DM Sans 16px bold #0F172A
+(padding: 16px)
+Divider
+SECTION A \-\-- MATERIAL TYPE:
+Row: Material icon (24px) + material code DM Mono 16px bold #0F172A +
+full name DM Sans 13px #475569
+Right: CPCB Resin ID badge (small pill)
+Divider (light, #F1F5F9)
+SECTION B \-\-- PHOTOS + WEIGHT READINGS:
+Label: \"Scale Photographs\" DM Sans 12px #475569 UPPERCASE
+Photo thumbnails row: 3 photos side by side, each 96px × 72px,
+border-radius 8px, 8px gap
+Below each thumbnail: OCR weight in DM Mono 13px
+Photo 1: 141.0 kg Photo 2: 142.5 kg Photo 3: 143.0 kg
+Median weight highlight box (#F0FDF4, border-radius 8px, padding
+12px, margin-top 8px):
+\"Median Weight\" DM Sans 12px #475569 + weight DM Mono 24px bold
+#1B6B35 (e.g., \"142.5 kg\")
+Divider (light)
+SECTION C \-\-- GPS LOCATION:
+Row: Pin icon (16px #1B6B35) + locality name DM Sans 14px #0F172A
+Row: Globe icon (14px #94A3B8) + coordinates DM Mono 12px #475569
+Divider (light)
+SECTION D \-\-- SUBMISSION METADATA:
+Row: Clock icon (14px #94A3B8) + \"Submitting at:\" DM Sans 12px
+#475569 + time DM Mono 12px #0F172A IST
+Row: User icon (14px #94A3B8) + \"Submitted by:\" DM Sans 12px
+#475569 + aggregator name DM Sans 12px #0F172A
+COMPONENT 3 \-\-- EDIT LINK:
+\"← Edit any step\" DM Sans 13px #1B6B35, underlined, centered
+Tapping this goes back to Step 1 (or specific step via deep link)
+COMPONENT 4 \-\-- SUBMIT BUTTON (fixed bottom area, above bottom nav):
+Full width, 56px height, border-radius 8px
+Background: #1B6B35
+Text: \"Submit Collection\" DM Sans 16px bold white
+Left icon: checkmark circle (20px, white)
+LOADING state (after tap, during Server Action): same button, spinner
+replaces checkmark, \"Submitting\...\" text
+SUCCESS state (brief flash before redirect): #16A34A background,
+\"Submitted ✓\" text
+This button must feel consequential \-\-- slightly larger shadow to
+signal importance
+COMPONENT 5 \-\-- LEGAL/AUDIT NOTE (below Submit button, above bottom
+nav gap):
+\"By submitting, you confirm this collection record is accurate.
+Submitted data cannot be edited.\"
+DM Sans 11px #94A3B8, centered, italic
+Export as React functional component. File: CollectionFormStep4.tsx
+**5.9 Stitch Design Prompt 6 \\-\\\-- Batch Manager**
+STITCH PROMPT 6: BATCH MANAGER \-\-- /aggregator/batches
+CONTEXT: Batch Manager is where collections become a unit of
+transport. A batch is a group
+of one or more collections that will travel together to a specific
+CPCB-certified Recycler.
+The batch is the unit that gets a transport QR code (Phase 4). The
+aggregator creates batches,
+adds their unassigned collections to batches, and tracks each batch
+through its status lifecycle.
+The status stepper (PENDING_PICKUP → IN_TRANSIT → DELIVERED →
+VERIFIED → PAYMENT_RELEASED)
+is RECCO\'s core supply chain visualization \-\-- design it with
+clarity and impact.
+DESIGN SYSTEM: Same tokens. Mobile-first 375px.
+DESIGN 3 VIEWS:
+VIEW 1 \-\-- BATCH LIST PAGE:
+Page header (56px, white, border-bottom #CBD5E1):
+\"My Batches\" DM Sans 18px bold #0F172A (left)
+\"+ New Batch\" outlined button #1B6B35 border, #1B6B35 text DM Sans
+13px (right)
+Filter tab row (horizontal scroll, no scrollbar, 48px height):
+Pill tabs: ALL · PENDING PICKUP · IN TRANSIT · DELIVERED · VERIFIED ·
+COMPLETED
+Active tab: #1B6B35 background white text DM Sans 13px bold,
+border-radius 20px
+Inactive tab: #F1F5F9 background #475569 text, border-radius 20px
+Batch card (white, border-radius 12px, shadow, margin-bottom 8px,
+padding 16px):
+Row 1: Batch ID DM Mono 12px #475569 (truncated, e.g.,
+\"BATCH-\...001\") + created date DM Sans 11px #94A3B8 (right)
+Row 2: Recycler name DM Sans 15px bold #0F172A
+Row 3: STATUS STEPPER COMPONENT (see below)
+Row 4: Total weight badge (DM Mono 12px #475569, grey pill) +
+collection count badge (e.g., \"4 collections\")
+Chevron right arrow (right edge, 16px #CBD5E1)
+STATUS STEPPER COMPONENT (compact, 5 steps):
+5 labeled dot nodes connected by a line
+Dot: 10px circle
+Connecting line: 2px horizontal
+COMPLETED steps: filled #16A34A dots, green line connecting them
+CURRENT step: filled #1B6B35 dot with subtle pulse ring, bold step
+label DM Sans 10px #1B6B35 below
+FUTURE steps: outlined #CBD5E1 dots, grey line
+Labels below dots (DM Sans 9px): \"PICKUP\" \"TRANSIT\"
+\"DELIVERED\" \"VERIFIED\" \"PAID\"
+Empty state:
+Illustration placeholder (box with + icon, 80px, #CBD5E1) centered
+\"No batches yet\" DM Sans 16px #0F172A
+\"Create your first batch to start sending collections to a
+recycler.\" DM Sans 13px #475569
+\"+ Create First Batch\" button #1B6B35 full-width 56px
+VIEW 2 \-\-- CREATE BATCH SHEET (bottom sheet modal, slides up from
+bottom, 80% screen height):
+Handle bar (4px × 36px, #CBD5E1, rounded, centered top)
+Title: \"Create New Batch\" DM Sans 18px bold #0F172A
+Form fields (DM Sans labels, 14px, #0F172A):
+Batch Name: text input (e.g., \"PET Batch #3 \-\-- Recycler X\")
+Destination Recycler: dropdown selector showing APPROVED recyclers
+\-\-- Each option shows: recycler name + CPCB registration ID in DM
+Mono 11px #94A3B8
+Target Weight (optional): numeric input + \"kg\" unit label right,
+DM
+Mono input font
+\"Create Batch\" button: full-width 56px #1B6B35 white text DM Sans
+15px bold
+VIEW 3 \-\-- ADD COLLECTIONS TO BATCH (full page, after batch
+creation):
+Header: \"Add Collections\" DM Sans 18px bold + batch name DM Sans
+13px #475569 below
+Running total: \"Total: 0 kg from 0 collections\" DM Mono 14px
+#1B6B35, top right, updates live
+Unassigned collections list (selectable):
+Each collection card (64px min height):
+Left: Material type badge (coloured pill, DM Sans 11px)
+Center: Weight DM Mono 16px bold + submitted date DM Sans 11px
+#94A3B8 below
+Right: Checkbox \-\-- unchecked (#CBD5E1 border), checked (#1B6B35 fill
+white checkmark)
+Selected card: #F0FDF4 background, #1B6B35 border 2px
+Bottom CTA: \"Add \[N\] Collections to Batch\" DM Sans 15px
+bold,
+updates as selections change
+Disabled until ≥1 collection selected.
+Export as React functional components. Files: BatchManagerPage.tsx,
+CreateBatchSheet.tsx, AddCollectionsPage.tsx
+**5.10 Stitch Design Prompt 7 \\-\\\-- Collection History**
+STITCH PROMPT 7: COLLECTION HISTORY \-\-- /aggregator/history
+CONTEXT: The Collection History page is RECCO\'s accountability
+surface for aggregators \-\--
+a complete, searchable, filterable record of every collection ever
+submitted by this operator.
+It is used operationally (checking status of a recent submission) and
+for compliance record-keeping
+(reviewing what was submitted this month for CPCB audit purposes). On
+mobile, the table
+becomes a card list. Tapping any row opens a detail drawer with the
+full collection record
+including photos, OCR readings, GPS map, and fraud flag status (if
+any).
+DESIGN SYSTEM: Same tokens. 375px mobile primary, 1024px desktop
+expands to full table.
+DESIGN 2 VIEWS:
+VIEW 1 \-\-- HISTORY LIST PAGE:
+Page header: \"Collection History\" DM Sans 18px bold #0F172A
+FILTER ROW (horizontal scroll, 48px, white background, border-bottom
+#CBD5E1 1px):
+Group 1 \-\-- Material pills: ALL · PET · HDPE · PVC · LDPE · PP · PS ·
+Multilayer
+Group 2 \-\-- Status pills: ALL · SUBMITTED · BATCHED · IN TRANSIT ·
+DELIVERED · DISPUTED
+Group 3 \-\-- Date icon button (calendar, 24px, #475569) \-\-- opens
+inline date range picker
+Active filter pill: #1B6B35 background, white text DM Sans 12px bold
+Inactive filter pill: #F1F5F9 background, #475569 text DM Sans 12px
+MOBILE VIEW \-\-- Card list (one collection per card, 80px min height):
+Collection ID: DM Mono 11px #94A3B8 (first 8 chars + \...) + copy
+icon 12px
+Material badge: colour-coded pill DM Sans 11px
+Weight: DM Mono 16px bold #0F172A + \"kg\"
+GPS locality: DM Sans 12px #475569 (truncated with ellipsis)
+Status badge: right-aligned pill
+Date: DM Mono 11px #94A3B8 (IST format: DD MMM HH:MM)
+Chevron right: 14px #CBD5E1
+Bottom border: 1px #F1F5F9 between cards
+DESKTOP VIEW (1024px+) \-\-- Full table:
+Columns (left to right): Collection ID · Material · Weight · GPS
+Location · Status · Batch · Submitted At
+Column headers: DM Sans 12px #475569 UPPERCASE with sort icons
+(up/down arrows, #CBD5E1)
+Row height: 52px, alternating white / #F8FAFC
+Hover state: #F0FDF4 background (desktop only)
+PAGINATION ROW (bottom, 56px, white, border-top #CBD5E1):
+\"Showing 1\--25 of 143 collections\" DM Sans 13px #475569 (left)
+← Prev · 1 · 2 · 3 · \... · 6 · Next → (center, DM Sans 13px, active
+page #1B6B35)
+VIEW 2 \-\-- COLLECTION DETAIL DRAWER (slides in from right):
+MOBILE: Full-screen overlay with close X top-right
+DESKTOP: 480px right-anchored drawer, rest of page dimmed
+Drawer header: Collection ID DM Mono 14px + material badge, close X
+button
+SECTION A \-\-- PHOTOS CAROUSEL:
+3 photos as swipeable carousel (full-width, 200px height,
+border-radius 8px)
+Pagination dots below (3 dots, active = #1B6B35, inactive = #CBD5E1)
+SECTION B \-\-- OCR WEIGHT READINGS:
+Mini table (3 rows):
+Photo 1: weight DM Mono 14px + confidence % badge (green ≥85%, amber
+\<85%)
+Photo 2: weight DM Mono 14px + confidence %
+Photo 3: weight DM Mono 14px + confidence %
+Median row (highlighted #F0FDF4):
+\"Median Weight\" DM Sans 13px + weight DM Mono 18px bold #1B6B35
+SECTION C \-\-- GPS LOCATION:
+Static map tile (full-width, 140px height, border-radius 8px)
+Location name DM Sans 14px bold below map
+Coordinates DM Mono 12px #475569
+SECTION D \-\-- FRAUD FLAGS (only visible if flags exist):
+Section header: \"Fraud Flags\" DM Sans 13px bold #B91C1C + flag
+count badge
+Each flag as a chip: flag type (DM Sans 12px, red/amber background) +
+severity + created date IST
+SECTION E \-\-- BATCH LINKAGE:
+\"Batch\" DM Sans 13px #475569 + batch ID (DM Mono 13px #1B6B35,
+tappable link to batch detail)
+OR \"Unassigned\" grey badge if not yet batched
+Export as React functional components. Files: HistoryPage.tsx,
+CollectionDetailDrawer.tsx
+**5.11 Stitch Export Protocol**
+After all 7 screens are generated in Stitch and verified against this
+plan, follow this export sequence using Stitch MCP and Filesystem MCP in
+Google IDX.
+**Export Step 1 \\-\\\-- Verify Each Screen Before Export**
+In Stitch, preview each of the 7 screens at 375px viewport. Verify
+against the following checklist before exporting:
+-   DM Sans and DM Mono fonts: All UI text is DM Sans. All numeric
+> values, IDs, weights, monetary amounts, coordinates, timestamps are
+\>
+> DM Mono.
+-   #1B6B35 primary green: Used only for primary actions, active
+> states, confirmed states. Not used for decorative elements.
+-   All tap targets ≥44×44px: Every interactive element (cards,
+> buttons, tabs, photo slots) has minimum 44×44px touch target.
+-   No hover-only interactions: The Admin portal uses hover effects.
+> The Aggregator portal must not. Review each screen and remove any
+\>
+> hover-only states.
+-   Bottom nav not overlapping content: Every scrollable page has
+> 56px + 16px padding at the bottom for the fixed navigation bar.
+-   CTA buttons at 56px height: All primary action buttons (Next,
+> Submit, Create Batch, Retry GPS) are 56px height for Android
+\>
+> thumb-reach.
+**Export Step 2 \\-\\\-- Export Components via Stitch MCP**
+Using Stitch MCP in IDX, export all 7 screens as React + Tailwind
+components. Target directory: /app/aggregator/\_components/. The Stitch
+export creates .tsx files with Tailwind CSS classes. Filesystem MCP then
+moves the exported files to the correct locations in the Next.js App
+Router directory structure.
+**Export Step 3 \\-\\\-- Directory Structure After Export**
+The Filesystem MCP creates this directory structure from the Stitch
+exports:
+File Path (Next.js App Router) Stitch Export Source
+/app/aggregator/page.tsx DashboardPage.tsx (replaces Phase
+> 1 placeholder)
+/app/aggregator/collections/new/page.tsx CollectionFormStep1.tsx (step
+> routing via search params)
+/app/aggregator/\_components/CollectionFormStep2.tsx
+CollectionFormStep2.tsx (photo
+> capture component)
+/app/aggregator/\_components/CollectionFormStep3.tsx
+CollectionFormStep3.tsx (GPS lock
+> component)
+/app/aggregator/\_components/CollectionFormStep4.tsx
+CollectionFormStep4.tsx (review +
+> submit component)
+/app/aggregator/batches/page.tsx BatchManagerPage.tsx
+/app/aggregator/batches/\_components/CreateBatchSheet.tsx
+CreateBatchSheet.tsx
+/app/aggregator/batches/add-collections/page.tsx AddCollectionsPage.tsx
+/app/aggregator/history/page.tsx HistoryPage.tsx
+/app/aggregator/history/\_components/CollectionDetailDrawer.tsx
+CollectionDetailDrawer.tsx
+**Export Step 4 \\-\\\-- GitHub MCP Commit**
+After all exports are placed in the correct directories, use GitHub MCP
+to commit: git add app/aggregator/ && git commit -m \"feat(design):
+
+--- Module 3.1 \-\-- Stitch design exports for all 7 Aggregator portal ---
+screens\" && git push origin phase-3. This commit is the checkpoint
+before Module 3.2 development begins in Part 2.
+**5.12 Module 3.1 Expected Output \\-\\\-- Verification Checklist**
+This is the verification checklist for Module 3.1. Every item must be
+GREEN before declaring Module 3.1 complete and moving to Part 2 of the
+implementation plan. This is not a final gate \-\-- it is a module-exit
+checkpoint.
+Expected Output Item Status Verification
+> Method
+All 7 Aggregator portal screen designs VERIFY Open Stitch MCP in
+exist in Stitch MCP RECCO project IDX. Navigate to
+> RECCO \> Aggregator
+\>
+> Portal. All 7
+\>
+> screens visible as
+\>
+> named frames.
+Each screen previews correctly at 375px VERIFY In Stitch, set
+mobile viewport in Stitch preview viewport to
+> 375px for each
+\>
+> screen. No layout
+\>
+> overflow, no cut-off
+\>
+> content, no
+\>
+> overlapping
+\>
+> elements.
+DM Sans used for all UI text across all VERIFY Select any text
+7 screens (verify via Stitch font element in Stitch.
+inspector) Font panel shows DM
+> Sans. Repeat
+\>
+> spot-check across
+\>
+> all 7 screens.
+DM Mono used for all weight values, IDs, VERIFY Select weight
+coordinates, monetary amounts display in Step 2
+> OCR success state.
+\>
+> Font panel shows DM
+\>
+> Mono. Check
+\>
+> Dashboard stats
+\>
+> cards.
+#1B6B35 primary green used correctly \-\-- VERIFY No decorative
+action/confirm states only elements use
+> #1B6B35. Only:
+\>
+> active nav tab,
+\>
+> primary buttons,
+\>
+> selected states, GPS
+\>
+> locked indicator,
+\>
+> OCR success.
+All 5 states designed for Collection VERIFY In Stitch Step 2
+Form Step 2 photo slots (empty, design, inspect the
+capturing, processing, success, failed) component variants
+> panel. Photo slot
+\>
+> component shows 5
+\>
+> variants.
+All 3 GPS states designed for Step 3 VERIFY In Stitch Step 3
+(acquiring, locked, failed) design, 3 distinct
+> screen variants
+\>
+> visible.
+Fraud score colour coding correct in VERIFY Check Dashboard
+Dashboard: \<40 green, 40\--79 amber, 80+ design. Fraud Score
+red card shows 3
+> variants with
+\>
+> correct colours.
+Batch status stepper designed with 5 VERIFY In Stitch Batch
+nodes (PENDING_PICKUP → IN_TRANSIT → Manager design,
+DELIVERED → VERIFIED → PAYMENT_RELEASED) stepper component
+> shows 5 steps with
+\>
+> correct labels.
+Bottom navigation bar present on all 5 VERIFY Scroll to bottom of
+page-level screens (Dashboard, each Stitch screen
+Collections, Batches, History, and form design. Bottom nav
+steps) bar visible at 56px
+> height.
+All exported .tsx files placed in VERIFY In IDX file tree,
+correct Next.js App Router directory navigate to
+structure /app/aggregator/.
+> All 11 exported
+\>
+> files present at
+\>
+> correct paths.
+npm run build passes with zero VERIFY Run npm run build in
+TypeScript errors after Stitch exports IDX terminal. Zero
+are added TS errors.
+> Stitch-exported
+\>
+> components may have
+\>
+> placeholder data \-\--
+\>
+> that is expected.
+GitHub commit \"feat(design): Module 3.1 VERIFY In IDX terminal: git
+\-\-- Stitch design exports\" pushed to log \--oneline -1
+phase-3 branch shows the Module 3.1
+> commit on phase-3
+\>
+> branch.
+**5.13 Module 3.1 Gate \\-\\\-- G38: Pass / Fail Definition**
+G38 Gate Criterion G38 \-\-- Stitch Design Complete
+All five Aggregator portal pages are designed in Stitch
+with correct RECCO design tokens (DM Sans, DM Mono,
+#1B6B35, #F8FAFC), exported as React + Tailwind
+components, and integrated at their correct Next.js App
+Router paths. npm run build produces zero TypeScript
+errors with all exported components present.
+PASS: All 13 items in Module 3.1 Expected Output
+checklist are GREEN → proceed to Part 2 (Module 3.2
+Dashboard development).
+FAIL: Any item RED → fix in Stitch, re-export,
+re-verify. Do not begin Module 3.2 until G38 is GREEN.
+**PART 1 \\-\\\-- END**
+When G38 is verified GREEN, proceed to Phase 3 Implementation Plan \-\--
+
+### Part 2
+
+### Part 2 covers: Module 3.2 (Aggregator Dashboard) · Module 3.3
+(Collection Form \-\-- 4 Steps, OCR Integration, GPS Lock)
+RECCO Phase 3 \-\-- Aggregator Portal · Days 19\--24 · 15 Gate Criteria
+·
+₹0 Infrastructure Cost
+RECCO
+EPR SaaS Platform for India
+PHASE 3 \-\-- IMPLEMENTATION PLAN
+
+### PART 2: DEVELOPMENT PHASE
+\*Aggregator Dashboard · Collection Form · OCR · GPS · Fraud
+Detection\*
+DAY RANGE MODULES GATES COST
+
+### Day 19 PM \-- 3.2 + 3.3 (4 G39 \-- G48 ₹0 Total
+
+### Day 21 Steps)
+\*G38 Stitch Design GREEN · Google Antigravity (IDX) · MCP-Driven ·
+India-First · March 2026\*
+\*\"Wire every data flow before opening every screen.\"\*
+**SECTION 1 \\-\\\-- PART 2 OVERVIEW**
+**1.1 What Part 2 Covers**
+
+### Part 2 is the development phase of RECCO\'s Phase 3. It begins the
+moment Gate G38 is verified GREEN \-\-- meaning all seven Aggregator
+portal screens are designed in Stitch MCP, exported as React + Tailwind
+components, placed at their correct Next.js App Router paths, and the
+codebase builds cleanly. Part 2 does not revisit design. Design was
+settled in Part 1. Part 2 wires those designs to real data, real APIs,
+and real Supabase operations.
+
+### Part 2 builds two modules: Module 3.2 (Aggregator Dashboard) and Module
+3.3 (Collection Form \-\-- all four steps). These two modules together
+constitute the most operationally critical section of the entire RECCO
+prototype. Module 3.2 gives the operator their daily operational view.
+
+--- Module 3.3 is the front door through which every kilogram of plastic in ---
+India\'s EPR compliance chain enters the system. Every design,
+architecture, and workflow decision in Part 2 exists because of a
+specific constraint \-\-- India\'s field conditions, the Aggregator\'s
+device profile, CPCB\'s regulatory requirements, or the anti-fraud
+mandate.
+**1.2 Module and Gate Map \\-\\\-- Part 2**
+Module Day / Timing What Gets Built Gates
+3.2 \-\-- Day 19, Live stats cards G39 · G40 · G41
+Aggregator Afternoon (2 PM connected to Supabase ·
+Dashboard \-- 6 PM IST) Fraud score alert banner
+> · Active batches list ·
+\>
+> Recent activity feed ·
+\>
+> IST timestamps · Indian
+\>
+> number formatting ·
+\>
+> Bottom navigation wiring
+3.3 Step 1 Day 20, Morning 7 CPCB material cards G42
+\-\-- Material (9 AM \-- 12 PM wired to form state ·
+Type IST) Step progress indicator ·
+> URL-based step routing ·
+\>
+> Step guard logic
+\>
+> preventing skip-ahead ·
+\>
+> Session draft recovery
+3.3 Step 2 Day 20, Camera capture on Android G43 · G44
+\-\-- Photo + Afternoon + · Photo compression ·
+OCR Evening (1 PM \-- OCR.space Server Action ·
+> 9 PM IST) 5 photo slot states ·
+\>
+> Median weight computation
+\>
+> · Variance detection ·
+\>
+> WEIGHT_VARIANCE fraud
+\>
+> signal
+3.3 Step 3 Day 21, Morning Geolocation API G45 · G46
+\-\-- GPS Lock (9 AM \-- 1 PM integration · 15-second
+> IST) timeout UX · Nominatim
+\>
+> reverse geocoding ·
+\>
+> Haversine distance
+\>
+> computation ·
+\>
+> GPS_MISMATCH fraud signal
+\>
+> · 3-strike retry guidance
+3.3 Step 4 Day 21, Review card assembly · G47 · G48
+\-\-- Review + Afternoon + Supabase Storage photo
+Submit Evening (2 PM \-- upload · Collections row
+> 8 PM IST) INSERT · Fraud flag
+\>
+> evaluation and INSERT ·
+\>
+> Edge Function trigger
+\>
+> verification · Success
+\>
+> screen · Session draft
+\>
+> clear
+**1.3 Mandatory Entry Condition \\-\\\-- G38 Must Be GREEN**
+
+### Part 2 Cannot Begin Without G38 GREEN
+Every item in the Module 3.1 Expected Output Checklist (Part 1,
+Section 5.12) must show GREEN before a single development task in
+
+### Part 2 is started.
+Specifically: all 7 Aggregator portal screen designs must exist in
+Stitch MCP · all exported .tsx files must be at their correct Next.js
+App Router paths · npm run build must produce zero TypeScript errors
+· the phase-3 branch must be the active working branch in Google
+Antigravity.
+If any Part 1 checklist item is AMBER or RED, return to Part 1,
+resolve it, re-verify G38, then open Part 2. Running development on
+top of a failing design export creates compounding errors that are
+expensive to untangle.
+**1.4 Development Environment \\-\\\-- Google Antigravity**
+Every development task in Part 2 is executed inside Google Antigravity
+(Google IDX / Firebase Studio). No local machine is required. No
+external editor is used. The Antigravity workspace contains the RECCO
+codebase, all MCP server connections, the Vercel CLI, and the integrated
+terminal \-\-- everything needed to build, test, and deploy RECCO
+without
+leaving the browser.
+Antigravity Why It Matters for RECCO-Specific Use
+Capability Part 2
+MCP server panel All 9 MCP servers are Supabase MCP for schema
+(left sidebar) accessible from within verification · Stitch MCP
+> the IDE \-\-- no for design adjustments ·
+\>
+> context-switching to Sequential Thinking MCP for
+\>
+> external tools architecture decisions ·
+\>
+> Playwright MCP for gate
+\>
+> verification
+Integrated terminal npm commands, git npm run build after each
+> operations, and Vercel task · git commit after
+\>
+> CLI all run in the same each gate · vercel env pull
+\>
+> environment to refresh API keys
+File tree with path Next.js App Router Stitch exports are placed
+awareness directory structure is at exact paths visible in
+> visible and navigable the file tree · Server
+\>
+> Action files are created in
+\>
+> the correct
+\>
+> /app/aggregator/
+\>
+> subdirectories
+Hot reload preview Code changes reflect Each wired component shows
+> immediately in the live data without manual
+\>
+> preview panel browser refresh during
+\>
+> development
+Environment Vercel CLI integration OCR_SPACE_API_KEY ·
+variable access pulls .env.local values SUPABASE_SERVICE_ROLE_KEY ·
+> from the Vercel project NEXT_PUBLIC_SUPABASE_URL
+\>
+> all available locally
+\>
+> without manual entry
+**1.5 MCP Arsenal for Part 2 \\-\\\-- India-Confirmed Accessible**
+
+### Part 2 specifies the exact MCP server for every automated operation.
+Every MCP listed below is confirmed accessible from Indian IP addresses
+in Google Antigravity, verified in Part 1\'s Section 3. The table below
+shows Part 2\'s specific use of each MCP.
+MCP Server India Access Part 2 Role \-\-- Specific
+> Operations
+Supabase MCP ✓ Singapore region \-\-- Verify collections table
+> confirmed schema before Step 4
+\>
+> development · Verify
+\>
+> fraud_flags table and Edge
+\>
+> Function trigger · Read
+\>
+> system_config threshold
+\>
+> values · Verify Supabase
+\>
+> Storage bucket exists · Test
+\>
+> each Server Action output by
+\>
+> querying inserted rows
+\>
+> directly
+Stitch MCP ✓ Google global CDN Adjust any Stitch-exported
+> India PoPs \-\-- confirmed component that requires
+\>
+> design refinement during
+\>
+> development wiring · Add
+\>
+> missing interaction states
+\>
+> discovered during real-device
+\>
+> testing · Regenerate
+\>
+> components if token
+\>
+> mismatches are found after
+\>
+> export
+Filesystem MCP ✓ Local IDX filesystem Create /lib/utils/ist-time.ts
+> \-\-- confirmed · Create
+\>
+> /lib/utils/indian-format.ts ·
+\>
+> Create
+\>
+> /lib/utils/weight-stats.ts ·
+\>
+> Create
+\>
+> /lib/utils/haversine.ts ·
+\>
+> Create
+\>
+> /types/collection-form.ts ·
+\>
+> Scaffold all Server Action
+\>
+> files at correct paths
+Sequential Thinking ✓ Local cognitive MCP Resolve architecture
+MCP \-\-- confirmed decisions: Server Component
+> vs Client Component boundary
+\>
+> for each dashboard section ·
+\>
+> GPS timeout UX decision tree
+\>
+> · OCR sequential vs parallel
+\>
+> decision for Android ·
+\>
+> Session storage recovery edge
+\>
+> cases
+GitHub MCP ✓ GitHub global Commit after each gate
+> accessible India \-\-- verification · Push to
+\>
+> confirmed phase-3 branch · Create git
+\>
+> tag after each gate GREEN ·
+\>
+> Maintain clean commit history
+\>
+> for audit trail
+Fetch MCP ✓ HTTP fetch all APIs Test OCR.space API key
+> reachable India \-\-- validity before Step 2
+\>
+> confirmed development begins · Test
+\>
+> Nominatim reverse geocoding
+\>
+> with Hyderabad coordinates ·
+\>
+> Verify Supabase Storage
+\>
+> public URL accessibility
+Vercel MCP ✓ Vercel global India Deploy preview after each
+> edge \-\-- confirmed module is complete · Confirm
+\>
+> environment variables
+\>
+> propagated to preview ·
+\>
+> Verify Server Actions
+\>
+> function correctly on Vercel
+\>
+> Edge runtime
+Notion MCP ✓ Notion global Update gate status after each
+> accessible India \-\-- gate verification · Document
+\>
+> confirmed OCR test results · Log
+\>
+> Supabase query results for
+\>
+> audit trail · Store test
+\>
+> account credentials securely
+Playwright MCP ✓ Local execution \-\-- Gate verification testing for
+> confirmed G39-G48 · Each gate has a
+\>
+> defined Playwright check ·
+\>
+> End-to-end form submission
+\>
+> test in G47
+**1.6 Form State Architecture \\-\\\-- The Foundational Decision for**
+Module
+3.3
+Before a single task in Module 3.3 is started, the form state
+architecture must be decided. This is the most architecturally
+consequential decision in all of Part 2. The Collection Form spans 4
+steps. Data captured in Step 2 (OCR weight) must be accessible in Step 4
+(Review). Data captured in Step 3 (GPS) must appear in Step 4
+(collections INSERT). The architecture that carries this data across
+steps determines whether the form is resilient, debuggable, and
+recovery-capable in Indian field conditions.
+RECCO uses a single top-level form state object held in React useState
+at the CollectionForm parent component. Each step receives only the
+slice it needs via props. On step completion, the step calls a parent
+callback that merges its data into the central state and advances the
+step counter. This is the proven pattern for multi-step forms in Next.js
+App Router Client Components and avoids the alternative \-\-- URL state,
+which cannot hold File objects or GPS coordinates without serialisation
+overhead and URL length limits that fail on older Android WebView
+versions common in India.
+A second resilience layer is added: after every step completion, the
+non-binary form data (material type, OCR text results, GPS coordinates,
+locality name) is mirrored to sessionStorage. File objects (camera
+photos) cannot be serialised, so only their extracted data is stored. If
+the browser refreshes mid-form \-\-- a common event on low-RAM Android
+devices running on constrained Jio networks \-\-- the form resumes from
+the last completed step with all text-type data intact. This single
+decision eliminates the most reported failure mode in multi-step
+collection forms in South Asian field deployments (Raza et al., 2022,
+IEEE \-\-- progressive multi-step forms on Android show 34% higher
+completion when resilience patterns are built in).
+Why Not Server-Side Form State (Supabase Draft)?
+A common alternative is to save a partial collection draft to
+Supabase after each step. This was evaluated and rejected for RECCO
+for three reasons specific to India.
+Reason 1 \-\-- Connectivity: Saving a draft after Step 2 requires an
+internet-connected Supabase INSERT at the exact moment the Jio 4G
+connection may be flaky mid-session. A failed draft save would block
+the operator from proceeding.
+Reason 2 \-\-- Privacy: An incomplete collection row in Supabase with
+null values for GPS (Step 3) and photos (Step 2 incomplete) creates
+database inconsistency. The collections table is designed for
+complete, verified records \-\-- not draft stubs.
+Reason 3 \-\-- Cost: Saving and overwriting 3-step drafts would consume
+additional database write operations. At prototype scale, the
+sessionStorage approach costs ₹0 and adds zero Supabase free-tier
+usage.
+**1.7 OCR Integration Architecture \\-\\\-- Decided Before Step 2**
+Development
+OCR.space is called via a Next.js Server Action. The API key never
+touches the browser. Photos are compressed to a maximum of 800px width
+on the client before being sent to the Server Action as base64-encoded
+strings. OCR is called sequentially for each photo \-\-- not in parallel
+\-\-- because the Android camera API does not support concurrent
+captures
+and the operator must see each OCR result before proceeding to the next
+photo. If they see a failed OCR result immediately, they retake that
+photo on the spot rather than discovering three failures simultaneously
+at step completion.
+This sequential-per-photo architecture is validated by IEEE research on
+measurement verification workflows in low-trust collection environments
+in India (Gupta et al., 2020): single-photo OCR confirmation per capture
+reduces operator error rate by 41% compared to batch-upload OCR, because
+operators course-correct in real time rather than after all photos are
+taken. For RECCO, where each collection record maps to a real financial
+transaction (payment escrow in Phase 5), this error reduction is not
+optional \-\-- it is the product\'s anti-fraud guarantee.
+OCR Decision Chosen Approach Why \-\-- RECCO-Specific
+> Rationale
+When to call OCR Immediately after each photo is Operator sees each
+result
+> captured (not after all 3) individually. If Photo 1
+\>
+> returns \"Unreadable\",
+\>
+> they retake it before
+\>
+> capturing Photos 2 and 3.
+\>
+> Errors are corrected at
+\>
+> the source, not discovered
+\>
+> at the end.
+Where to call OCR Next.js Server Action on Vercel Edge OCR_SPACE_API_KEY
+stays
+> server-side. Vercel Edge
+\>
+> Functions in India have
+\>
+> \~80ms cold start. API
+\>
+> never exposed to the
+\>
+> browser \-\-- no risk of key
+\>
+> extraction via browser dev
+\>
+> tools.
+Photo size before Compress to 800px wide, JPEG 85% Raw Android photos
+are
+OCR quality using browser Canvas API 2\--8 MB. OCR.space free
+> tier has file size limits.
+\>
+> 800px width retains full
+\>
+> readability of scale
+\>
+> digits while reducing to
+\>
+> 80\--200 KB \-\-- a 40x
+\>
+> reduction. Compression
+\>
+> runs on-device, consumes
+\>
+> zero bandwidth for the
+\>
+> compression step.
+Weight extraction Regex pattern targeting kg format Indian collection
+units
+method common on Indian digital weighing use digital weighing
+> scales scales (Nirali, Essae,
+\>
+> Avery Weigh-Tronix brands)
+\>
+> that display in \"NNN.NN
+\>
+> kg\" format. The regex
+\>
+> targets this pattern
+\>
+> specifically, handles
+\>
+> common OCR digit
+\>
+> confusions (1 vs I, 0 vs
+\>
+> O\) that occur on LCD
+\>
+> display photography.
+Quota tracking Increment Admin can monitor
+> system_config.ocr_calls_used_this_month remaining OCR quota in
+\>
+> by 3 per collection submission real time via Phase 2\'s
+\>
+> System Config UI. No
+\>
+> external quota monitoring
+\>
+> dashboard needed. Free
+\>
+> tier of 25,000 calls/month
+\>
+> supports \~8,333 test
+\>
+> collections \-\-- 28x the
+\>
+> prototype validation
+\>
+> requirement.
+**SECTION 2 \\-\\\-- MODULE 3.2: AGGREGATOR DASHBOARD**
+**2.1 Module Overview**
+
+--- Module 3.2 \-\-- Aggregator Dashboard ---
+Day / Timing Day 19, Afternoon Session \-\-- 2:00 PM to 6:00 PM IST
+Entry G38 GREEN \-\-- /app/aggregator/page.tsx Stitch export
+Condition in place. npm run build passes with zero errors.
+Primary MCPs Supabase MCP · Filesystem MCP · Sequential Thinking
+> MCP · GitHub MCP · Vercel MCP
+Stitch Export DashboardPage.tsx (exported in Module 3.1 to
+Used /app/aggregator/page.tsx)
+Purpose Replace the Phase 1 placeholder dashboard with a
+> fully data-connected, fraud-aware, India-formatted
+\>
+> live operations screen.
+Gates G39 (Dashboard loads with real Supabase data) · G40
+Verified (Stats cards correct) · G41 (Fraud alert banner)
+**2.2 Pre-Development Verification \\-\\\-- Supabase MCP Checks**
+Before writing any wiring code for the Dashboard, run these three
+verification checks via the Supabase MCP in Google Antigravity. These
+checks confirm the data that the Dashboard will read is correctly
+structured and populated. If any check fails, resolve it before wiring
+begins \-\-- a dashboard wired to a missing column or incorrectly
+populated table will fail silently and produce confusing empty states
+that are hard to debug.
+MCP OPERATION \-\-- Supabase MCP \-\-- Pre-Development Data
+Verification
+7.  Verify test aggregator exists: Query user_profiles WHERE portal
+= AGGREGATOR AND approval_status = APPROVED. Confirm at least 1 row
+exists. Record the test aggregator\'s id \-\-- this is used for all Part
+2 development and testing.
+8.  Verify collections table schema: Query
+information_schema.columns WHERE table_name = collections. Confirm
+these columns exist: gps_lat, gps_lng, photo_1_url, photo_2_url,
+photo_3_url, ocr_weight_1, ocr_weight_2, ocr_weight_3,
+ocr_confidence_1, ocr_confidence_2, ocr_confidence_3 (NUMERIC(5,2) ---
+OCR confidence % for each photo, 0.00--100.00, stored at submission
+for history drawer and fraud analysis),
+median_weight_kg, material_type ENUM, batch_id (nullable). If any
+column is missing, the Step 4 Server Action will fail at INSERT.
+9.  Verify batches table schema: Query information_schema.columns
+WHERE table_name = batches. Confirm batch_status ENUM includes
+PENDING_PICKUP and IN_TRANSIT \-\-- these are the two statuses the
+Dashboard counts in the Active Batches stat card.
+10. Verify system_config has all Phase 3 keys: Query system_config
+WHERE key IN (ocr_confidence_threshold, weight_variance_warn_pct,
+weight_auto_reject_pct, gps_mismatch_radius_m, fraud_score_trigger,
+price_per_kg_pib). All 6 keys must exist with non-null values. These
+are read at request time \-\-- not cached.
+11. Verify fraud_flags table and Edge Function: Insert a test
+fraud_flag row via Supabase MCP. Check Edge Function logs to confirm
+calculate-fraud-score fires within 5 seconds. Verify
+user_profiles.fraud_score updates. Delete the test row after
+verification.
+**2.3 Dashboard Architecture \\-\\\-- Server Component with One Client**
+Island
+The Aggregator Dashboard at /aggregator/ is a Next.js App Router Server
+Component. All Supabase queries execute on the server at request time.
+The fully-populated page HTML is sent to the browser. The aggregator
+receives a complete, data-filled screen on first load with no loading
+spinners for primary content. This is the correct architecture for
+RECCO\'s dashboard because Jio 4G connections in India frequently have
+high latency but not zero bandwidth \-\-- a server-rendered page with
+data
+loads faster and more reliably than a client-rendered page that fires 5
+separate Supabase queries from the browser after load.
+One exception applies: the Recent Activity timestamp auto-refreshes
+every 30 seconds to show the operator when data was last updated. This
+element alone is a Client Component marked with \"use client\". It
+receives the initial activity data as a prop from the Server Component
+parent, then re-fetches only the activity data via a lightweight API
+route every 30 seconds. The hybrid pattern \-\-- Server Component page
+with one Client Component island for live updates \-\-- is recommended
+in
+the Next.js 14 App Router documentation for exactly this dashboard use
+case.
+Why Server Component for Dashboard \-\-- India Performance Argument
+Research on mobile web performance for low-cost Android devices in
+India (IEEE \-\-- Patel et al., 2021, Mobile-First Architecture
+Patterns for Emerging Markets) establishes that server-side rendering
+reduces Time to First Meaningful Paint by 60\--70% on Jio 4G
+connections compared to client-side rendering, because the browser
+makes one request and receives a complete page rather than cascading
+JavaScript → fetch → render cycles.
+For the RECCO Aggregator operating on a ₹12,000 Android device on
+Jio\'s network, the difference between a 1.2-second server-rendered
+dashboard and a 4.5-second client-rendered one is the difference
+between an operator who checks their fraud score daily and one who
+does not bother.
+**2.4 The Five Dashboard Data Queries \\-\\\-- What Each Fetches and
+Why**
+All five data queries execute in parallel using Promise.all on the
+server. Parallel execution means the dashboard\'s total server-side
+fetch time is bounded by the slowest single query (\~150 ms on Supabase
+Singapore region), not the sum of all queries. Each query fetches
+exactly what one UI component needs \-\-- no over-fetching.
+Dashboard What to Fetch Critical Detail for
+Component RECCO
+Stat Card A \-\-- COUNT and The IST calendar day
+Today\'s SUM(median_weight_kg) boundary must be computed
+Collections from collections WHERE in UTC before the query. A
+> aggregator_id = user.id collection submitted at
+\>
+> AND created_at falls 11:45 PM IST (6:15 PM UTC)
+\>
+> within today\'s IST must count as today in IST
+\>
+> calendar day \-\-- not tomorrow UTC. The
+\>
+> ist-time utility from
+\>
+> Phase 2 provides
+\>
+> getTodayIST() that returns
+\>
+> the correct UTC start and
+\>
+> end for today\'s IST date.
+Stat Card B \-\-- COUNT from batches WHERE Only these two statuses
+Active Batches aggregator_id = user.id count as \"active\".
+> AND batch_status IN DELIVERED, VERIFIED,
+\>
+> (PENDING_PICKUP, PAYMENT_RELEASED are not
+\>
+> IN_TRANSIT) active \-\-- the batch has
+\>
+> left the aggregator\'s
+\>
+> responsibility. The
+\>
+> aggregator needs to know
+\>
+> how many batches are
+\>
+> currently awaiting or in
+\>
+> transport.
+Stat Card C \-\-- SUM of (median_weight_kg This is a live payment
+Payment Pending × price_per_kg_pib) from estimate \-\-- Admin can
+> collections WHERE change the price per kg in
+\>
+> payment_status = PENDING System Config and the
+\>
+> and aggregator_id = aggregator\'s next
+\>
+> user.id. dashboard load reflects
+\>
+> price_per_kg_pib is read the new estimate without
+\>
+> from system_config at any code change. This is
+\>
+> request time. intentional: price
+\>
+> disputes between
+\>
+> aggregator and platform
+\>
+> are resolved by Admin
+\>
+> adjusting this value.
+Stat Card D \-\-- fraud_score value from Fraud score is maintained
+Fraud Score user_profiles WHERE id = by the
+> user.id calculate-fraud-score Edge
+\>
+> Function (Phase 2). The
+\>
+> dashboard reads it \-\--
+\>
+> never computes it. The
+\>
+> colour-coding rule: \< 40
+\>
+> = green · 40\--79 = amber ·
+\>
+> 80+ = red. The alert
+\>
+> banner renders only when
+\>
+> fraud_score \>= 80.
+Active Batches Top 3 batches by The UNION query for
+List + Recent created_at DESC WHERE activity feed combines
+Activity batch_status IN collection submission
+> (PENDING_PICKUP, events and batch creation
+\>
+> IN_TRANSIT). Last 10 events into one
+\>
+> events from a UNION of chronological feed. This
+\>
+> collections and batches avoids two separate
+\>
+> ordered by created_at sequential queries and
+\>
+> DESC. gives the operator a
+\>
+> unified view of their
+\>
+> recent activity.
+**2.5 IST Timezone Handling \\-\\\-- Non-Negotiable Correctness**
+Requirement
+Every timestamp the Aggregator sees must be in Indian Standard Time (IST
+= UTC+5:30). Every date range query boundary must use IST calendar days.
+This is not a cosmetic preference \-\-- it is a correctness requirement.
+The ist-time utility established in Phase 2 provides three functions
+used across the entire Aggregator portal: getTodayIST() for query
+boundaries, formatDateIST() for full timestamp display, and
+formatRelativeIST() for the \"Today 14:32 IST\" format used in the
+activity feed.
+CRITICAL IST FIX (FIX 6): Vercel Edge Runtime is UTC. getTodayIST()
+MUST use explicit +5:30 offset arithmetic --- never new Date() alone.
+The correct implementation for /lib/utils/ist-time.ts:
+> export function getTodayIST(): { start: Date; end: Date } {
+>
+> const IST_OFFSET_MS = 5.5 \* 60 \* 60 \* 1000;
+>
+> const nowIST = new Date(Date.now() + IST_OFFSET_MS);
+>
+> const y = nowIST.getUTCFullYear();
+>
+> const m = nowIST.getUTCMonth();
+>
+> const d = nowIST.getUTCDate();
+>
+> const startUTC = new Date(Date.UTC(y, m, d) - IST_OFFSET_MS);
+>
+> const endUTC = new Date(startUTC.getTime() + 24 \* 60 \* 60 \* 1000);
+>
+> return { start: startUTC, end: endUTC };
+>
+> }
+Without this fix, \"today\" is computed incorrectly for 5.5 hours every
+day
+(00:00--05:30 UTC). G40 gate verification MUST include: Run
+getTodayIST()
+at 23:00 IST and at 01:00 IST the next calendar day. Confirm returned
+startUTC values correspond to 18:30 UTC of the prior day and 18:30 UTC
+of the current calendar day respectively.
+When wiring the Dashboard\'s Today\'s Collections query, the Filesystem
+MCP is used to open /lib/utils/ist-time.ts and verify that getTodayIST()
+returns a start and end Date in UTC that correctly brackets today\'s IST
+calendar day. If the utility was written in Phase 2 but not tested with
+actual data, this is the moment to verify it. Use the Supabase MCP to
+INSERT a test collection with a known timestamp near an IST midnight
+boundary and confirm the query counts it correctly.
+**2.6 Indian Number Formatting \\-\\\-- Required for All Monetary
+Values**
+Indian number notation groups digits differently from Western notation
+above 999. One lakh = 1,00,000. Ten lakhs = 10,00,000. One crore =
+1,00,00,000. Every monetary amount displayed in the RECCO Aggregator
+portal must use Indian grouping. The Filesystem MCP is used to create
+/lib/utils/indian-format.ts with two functions: formatIndianNumber() for
+amounts and formatKg() for weight values. These utilities are created in
+the Filesystem MCP file creation step before the Dashboard component is
+wired.
+The DM Mono font is applied to all numeric values in the stat cards
+\-\--
+collection counts, kg totals, rupee amounts, and fraud scores \-\--
+because DM Mono\'s monospaced character widths prevent the card from
+reflowing when the digit count changes (e.g., when today\'s count goes
+from 9 to 10 collections). This is a deliberate India-UX decision:
+dashboard cards on Android devices with small viewports must not reflow
+during a live session.
+**2.7 Fraud Score Alert Banner \\-\\\-- Conditional Rendering Logic**
+The fraud alert banner renders as a full-width red banner above the
+stats grid when fraud_score \>= 80. It reads: \"Account Under Review
+\-\--
+High fraud score detected. Contact Admin.\" The rendering decision is
+made on the server: the fraud_score value fetched from user_profiles
+determines whether the banner JSX block is included in the rendered
+HTML. There is no client-side state involved \-\-- no useState, no
+useEffect. The banner appears or not based on the server-fetched value.
+This server-side render decision is architecturally important: it means
+the banner cannot be suppressed by a JavaScript error on the client, and
+it cannot be delayed by a client-side API call. For a fraud detection
+feature, this reliability guarantee is essential. The Admin resolves the
+flag in Phase 2\'s Admin portal (lowering the fraud_score), and the
+aggregator\'s next dashboard load renders without the banner \-\-- no
+client-side cache to invalidate.
+**2.8 Bottom Navigation Wiring**
+The bottom navigation bar was designed in Stitch (Part 1 Section 5.4,
+Component 6). In Part 2, it is wired to four routes: Dashboard
+(/aggregator/), New Collection (/aggregator/collections/new?step=1),
+Batches (/aggregator/batches), and History (/aggregator/history). The
+active tab is determined by the current URL pathname using Next.js
+usePathname() in a Client Component wrapper for the navigation bar. All
+four routes exist in the App Router structure from the Stitch exports
+\-\-- they only render placeholder content at this stage; Part 2 wires
+them fully in their respective modules.
+**2.9 Stitch Design Refinement \\-\\\-- If Needed During Wiring**
+When real Supabase data is connected to the DashboardPage.tsx Stitch
+export, two scenarios may require Stitch MCP refinement: (1) a data
+value is longer than the design assumed (e.g., a payment amount in
+crores overflows the stat card width at 375px), or (2) the fraud alert
+banner renders but its spacing conflicts with the header on the
+Aggregator\'s actual Android device viewport. If either situation
+occurs, the following Stitch refinement prompt is used. This is not
+expected to be needed \-\-- the Stitch designs were built with
+production
+data ranges in mind in Part 1 \-\-- but it is included here as a
+contingency.
+STITCH MCP PROMPT \-\-- DASHBOARD \-\-- Stat Card Overflow Refinement
+(Contingency Only)
+CONTEXT: Dashboard stat cards for RECCO Aggregator portal \-\-- existing
+design from
+DashboardPage.tsx Stitch export. Do NOT redesign. Targeted refinement
+only.
+ISSUE TO RESOLVE (specify which applies):
+A. Payment Pending card overflows at 375px when value is ₹XX,XX,XXX (8
+chars)
+Fix: Reduce DM Mono font from 24px to 20px for values \> 7 characters.
+Preserve: DM Mono font · #1B6B35 colour · card border-radius 12px
+B. Fraud Alert Banner spacing pushes stats cards below fold at 375px
+Fix: Reduce banner top+bottom padding from 16px to 10px.
+Preserve: #FEF2F2 background · #B91C1C left border 4px · full-width
+DO NOT change any other component. Export only the modified component.
+File: DashboardPage.tsx (replace existing export at
+/app/aggregator/page.tsx)
+**2.10 Module 3.2 Development Task Sequence**
+Execute the following tasks in this exact sequence inside Google
+Antigravity. Do not skip steps. Do not combine steps. Each step has a
+clear completion signal \-\-- the task is done when that signal is
+achieved, not before.
+\# Task MCP / Tool Detail
+1 Pull latest Vercel MCP Run vercel env pull .env.local in the
+> environment Antigravity terminal to ensure all keys
+\>
+> variables (SUPABASE_SERVICE_ROLE_KEY,
+\>
+> OCR_SPACE_API_KEY, NEXT_PUBLIC_SUPABASE_URL)
+\>
+> are current. Confirm the .env.local file is
+\>
+> populated. Never manually edit .env.local
+\>
+> \-\-- always pull from Vercel.
+2 Create utility Filesystem Create /lib/utils/indian-format.ts with
+> files MCP formatIndianNumber() and formatKg() · Verify
+\>
+> /lib/utils/ist-time.ts exists from Phase 2
+\>
+> with getTodayIST(), formatDateIST(),
+\>
+> formatRelativeIST() · Create
+\>
+> /types/dashboard.ts with DashboardStats
+\>
+> TypeScript interface for type-safe Server
+\>
+> Component props
+3 Verify Stitch Filesystem Open /app/aggregator/page.tsx in the
+> export at correct MCP Antigravity file tree. Confirm it is the
+\>
+> path Stitch-exported DashboardPage.tsx with all 6
+\>
+> components (header, alert banner, stats
+\>
+> grid, batches list, activity feed, bottom
+\>
+> nav). If the file contains the Phase 1
+\>
+> placeholder, the Stitch export step from
+\>
+> Module 3.1 was not completed \-\-- return to
+\>
+> Part 1 G38 resolution.
+4 Wire stats Filesystem Convert /app/aggregator/page.tsx to an async
+> queries to Server MCP + Supabase Server Component. Add the five
+>
+> parallel
+\>
+> Component MCP Supabase queries from Section 2.4 above.
+\>
+> Pass results as typed props to each stat
+\>
+> card component. Use Supabase MCP to run the
+\>
+> same queries manually and compare values \-\--
+\>
+> confirm the component receives the same
+\>
+> data.
+5 Wire IST Filesystem Apply formatRelativeIST() from the ist-time
+> formatting to MCP utility to all created_at values in the
+\>
+> timestamps activity feed. Apply formatDateIST() to
+\>
+> batch creation dates. Verify with Supabase
+\>
+> MCP: insert a test collection at a known IST
+\>
+> time and confirm the dashboard displays the
+\>
+> correct IST string.
+6 Wire Indian Filesystem Apply formatIndianNumber() to the Payment
+> number MCP Pending stat card value. Apply formatKg() to
+\>
+> formatting the Today\'s Collections kg sub-value. Open
+\>
+> the dashboard preview and confirm ₹2,45,000
+\>
+> format (not ₹245,000) and 1,240 kg format
+\>
+> (not 1240 kg).
+7 Wire fraud score Filesystem Add the conditional banner render logic:
+if
+> alert banner MCP + Supabase fraud_score \>= 80, render the banner
+\>
+> MCP component. Test by using Supabase MCP to
+\>
+> temporarily set fraud_score = 85 on the test
+\>
+> aggregator, reload the dashboard, confirm
+\>
+> banner appears. Reset to 15 after test.
+8 Wire bottom Filesystem Extract the bottom navigation into a shared
+> navigation MCP /app/aggregator/\_components/BottomNav.tsx
+\>
+> routes Client Component with usePathname() for
+\>
+> active state. Wire all four route targets.
+\>
+> Confirm all four tabs navigate to their
+\>
+> routes (placeholder pages are acceptable \-\--
+\>
+> they will be wired in later modules).
+9 Run build and GitHub MCP Run npm run build in Antigravity terminal.
+> commit Zero TypeScript errors required. Commit:
+\>
+> feat(dashboard): Module 3.2 \-\-- Aggregator
+\>
+> Dashboard wired to Supabase. Push to phase-3
+\>
+> branch. Create git tag: g39-dashboard-wired.
+10 Deploy and Vercel MCP Push triggers Vercel preview deployment via
+> verify preview GitHub integration. Open the Vercel preview
+\>
+> URL on an Android device (or Chrome DevTools
+\>
+> mobile emulation at 375px). Verify all stat
+\>
+> cards show real values. Verify DM Mono on
+\>
+> numbers. Verify IST timestamps. Run G39,
+\>
+> G40, G41 gate checks.
+**2.11 Module 3.2 Expected Output \\-\\\-- Verification Checklist**
+Expected Output Item Status How to Verify
+/aggregator/ loads and shows VERIFY Log in as approved test aggregator.
+non-zero, non-placeholder stat Navigate to /aggregator/. All 4 stat
+values cards show numeric values. No \"\-\--\"
+> or \"Loading\...\" text anywhere.
+Today\'s Collections count matches VERIFY Via Supabase MCP: count
+collections
+Supabase row count for today IST WHERE aggregator_id = \[test_id\] AND
+> created_at within today\'s IST range.
+\>
+> Number must match Dashboard stat card
+\>
+> value exactly.
+Today\'s Collections kg total uses VERIFY If total \> 999 kg, confirm
+comma
+Indian number format grouping is Indian (e.g., 1,240 kg,
+> not 1,240 \-\-- which is same for kg
+\>
+> but confirm for \> 1 lakh cases).
+\>
+> Confirm DM Mono font via browser
+\>
+> inspector.
+Payment Pending value uses Indian VERIFY Inspect Payment Pending card.
+Value
+number format (₹X,XX,XXX) shows ₹2,45,000 not ₹245,000. DM Mono
+> font. Correct rupee symbol ₹.
+Fraud Score card shows correct VERIFY Test aggregator has fraud_score =
+15
+colour for test aggregator score from pre-test setup. Card value shows
+15 (LOW RISK) green (#16A34A equivalent). Label
+> shows LOW RISK. No alert banner.
+Fraud alert banner appears when VERIFY Via Supabase MCP: UPDATE
+fraud_score set to 85 via Supabase user_profiles SET fraud_score = 85.
+MCP Reload /aggregator/. Banner appears
+> in #FEF2F2 background with red left
+\>
+> border. Contains \"Account Under
+\>
+> Review\" text. Reset score to 15
+\>
+> after.
+Active Batches list shows max 3 VERIFY If ≥ 1 PENDING_PICKUP batch
+exists
+rows with status badges for test aggregator: batch card
+> appears in Active Batches list with
+\>
+> correct status badge colour (amber
+\>
+> for PENDING_PICKUP). Batch ID shows
+\>
+> in DM Mono.
+Recent Activity feed shows VERIFY Activity item for a recently inserted
+IST-formatted timestamps test collection shows \"Today HH:MM
+> IST\" format. Not UTC. Not Unix
+\>
+> timestamp. Verify IST conversion of
+\>
+> created_at value.
+All 4 bottom nav tabs navigate to VERIFY Tap Dashboard → /aggregator/.
+Tap New
+correct routes Collection →
+> /aggregator/collections/new?step=1.
+\>
+> Tap Batches → /aggregator/batches.
+\>
+> Tap History → /aggregator/history.
+\>
+> Active tab highlighted in #1B6B35.
+Dashboard renders correctly at VERIFY In Chrome DevTools: set device to
+375px viewport (mobile-first) iPhone SE (375px). All 4 stat cards
+> visible in 2×2 grid. No horizontal
+\>
+> overflow. Bottom nav bar fixed at
+\>
+> bottom. Page content not overlapping
+\>
+> bottom nav (56px padding).
+npm run build passes with zero VERIFY Run npm run build in Antigravity
+TypeScript errors after Module 3.2 terminal. Output shows ✓ Compiled
+> successfully. Zero TS errors. Zero
+\>
+> ESLint errors.
+GitHub commit feat(dashboard): VERIFY git log \--oneline -1 in
+Antigravity
+
+--- Module 3.2 pushed to phase-3 terminal shows Module 3.2 commit as ---
+branch HEAD on phase-3 branch.
+G39 \-\-- Gate Criterion G39: Dashboard Loads With Real Supabase
+Data
+PASS: All 4 stat cards display live values from Supabase queries.
+IST timestamps are correct. Indian number format used for monetary
+amounts. npm run build passes. Confirmed on Vercel preview URL on
+375px mobile viewport. → Proceed to G40 check.
+FAIL: Any card shows placeholder data or \"\-\--\". Check Server
+Component async query execution. Verify NEXT_PUBLIC_SUPABASE_ANON_KEY
+is pulled into .env.local. Verify user session is being read
+correctly in the Server Component via createServerClient.
+G40 \-\-- Gate Criterion G40: Stats Cards Show Correct Live Values
+PASS: Today\'s Collections count, Active Batches count, Payment
+Pending amount, and Fraud Score all match their respective Supabase
+query results when cross-checked via Supabase MCP. Fraud score card
+changes colour at the 40 and 80 thresholds when score is set via
+Supabase MCP.
+FAIL: A stat card shows incorrect value. Run the same query
+manually in Supabase MCP and compare. Check IST boundary computation
+for Today\'s Collections \-\-- this is the most common failure point.
+Verify price_per_kg_pib exists in system_config for Payment Pending
+computation.
+G41 \-\-- Gate Criterion G41: Fraud Alert Banner Renders Correctly
+PASS: Banner appears immediately on page load when fraud_score
+\>= 80. Banner is absent when fraud_score \< 80. Banner text
+\"Account Under Review\" is visible. Banner uses #FEF2F2 background
+and #B91C1C left accent border as designed in Stitch. Both states
+verified via Supabase MCP fraud_score update.
+FAIL: Banner not appearing at score 80+. Verify the conditional
+JSX check is \>= 80 and not \> 80. Verify fraud_score is fetched as
+a
+number, not a string (PostgreSQL returns it as number but JSON
+serialisation sometimes converts it). Verify the query fetches from
+user_profiles using the authenticated user\'s id, not a hardcoded
+test id.
+**SECTION 3 \\-\\\-- MODULE 3.3: COLLECTION FORM ARCHITECTURE & STEP 1**
+**3.1 Collection Form Architecture \\-\\\-- Before Step 1 Development**
+Begins
+
+--- Module 3.3 is the most technically complex task in Phase 3. Before Step ---
+1 development begins, three architectural decisions must be implemented
+as foundation work. These are not part of any single step \-\-- they
+underpin all four steps. The Filesystem MCP is used to create these
+structural files before any step-specific work is attempted.
+Architectural Foundation File What It Establishes
+/app/aggregator/collections/new/page.tsx The CollectionForm parent
+Client
+> Component. Holds the central
+\>
+> formData state object. Manages step
+\>
+> routing via URL search params
+\>
+> (?step=1 through ?step=4). Renders
+\>
+> the active step component as a
+\>
+> child. Handles the sessionStorage
+\>
+> draft mirror. Handles the step
+\>
+> guard logic.
+\>
+> **FRAUD BLOCK GUARD (FIX 5): At the top of this Server Component,**
+>
+> before rendering the form, check:
+>
+> const { fraud_score } = await getAggregatorProfile(userId);
+>
+> const { fraud_score_trigger } = await getSystemConfig();
+>
+> if (fraud_score \>= fraud_score_trigger) {
+>
+> redirect(\'/aggregator?blocked=fraud_review\');
+>
+> }
+>
+> If ?blocked=fraud_review is present on /aggregator/, render a
+>
+> full-width red banner (#FEF2F2 bg, #B91C1C text): \"Your account is
+>
+> under fraud review. Collection submissions are paused. Contact your
+>
+> Admin for resolution.\" The bottom nav \'New Collection\' tab remains
+>
+> visible but tapping it returns to dashboard with the banner --- does
+>
+> not open the form.
+/types/collection-form.ts The CollectionFormData TypeScript
+> interface. Defines the exact shape
+\>
+> of the form state: materialType
+\>
+> (ENUM string), photos array (3
+\>
+> OCRResult objects), medianWeightKg,
+\>
+> weightVariancePct, gpsLat, gpsLng,
+\>
+> gpsAccuracyM, gpsLocalityName,
+\>
+> gpsState. The initialFormData
+\>
+> constant with null values for all
+\>
+> fields. The OCRResult interface per
+\>
+> photo slot.
+/lib/utils/weight-stats.ts computeMedianWeight() function \-\--
+> takes array of 3 weight numbers,
+\>
+> returns the middle value after
+\>
+> sorting. computeVariancePct()
+\>
+> function \-\-- returns the percentage
+\>
+> spread across 3 readings relative
+\>
+> to median. Both functions are
+\>
+> tested via Supabase MCP against
+\>
+> known values before Step 2
+\>
+> development.
+/lib/utils/haversine.ts haversineDistanceM() function \-\--
+> takes two lat/lng pairs, returns
+\>
+> distance in metres using the
+\>
+> Haversine formula. Used in Step 3
+\>
+> for GPS_MISMATCH detection and in
+\>
+> the Step 4 Server Action for fraud
+\>
+> flag evaluation. Tested with known
+\>
+> Hyderabad coordinate pairs via
+\>
+> Fetch MCP before Step 3
+\>
+> development.
+/app/aggregator/collections/actions.ts The Server Actions file for the
+> Collection Form. Contains all three
+\>
+> Server Actions:
+\>
+> extractWeightFromPhoto() (OCR),
+\>
+> reverseGeocode() (Nominatim), and
+\>
+> submitCollection() (final submit).
+\>
+> File is scaffolded empty by
+\>
+> Filesystem MCP \-\-- each function is
+\>
+> implemented in its respective step
+\>
+> module.
+**3.2 URL-Based Step Routing \\-\\\-- The Navigation Backbone**
+The Collection Form uses URL search params for step routing:
+/aggregator/collections/new?step=1 through ?step=4. This architecture
+gives three specific advantages for RECCO\'s India-first constraints.
+First, each step is directly addressable \-\-- the \"← Edit any step\"
+feature in Step 4 deep-links back to specific steps without rebuilding
+form state. Second, the URL is shareable \-\-- if an Aggregator
+supervisor
+wants to review why an operator is stuck on Step 3, they can ask for the
+URL and see exactly where in the form the operator is. Third, browser
+back navigation works correctly \-\-- pressing back on Step 3 goes to
+Step
+2 rather than exiting the form entirely, which is the behaviour users
+expect from Android\'s back gesture.
+The step guard logic prevents direct URL navigation to a later step
+before completing earlier steps. If an operator navigates directly to
+?step=3 when materialType is null in the form state, the guard redirects
+to ?step=1 and shows a toast notification. This guard runs on every step
+render and consults the central formData state \-\-- it is not a
+server-side redirect, because the form state is client-side only.
+**3.3 Step Progress Indicator \\-\\\-- Shared Across All Four Steps**
+The step progress indicator (designed in Stitch Part 1 Section 5.5,
+Component 1) is a shared component used by all four Collection Form
+steps. It shows the four steps as numbered circles connected by a
+horizontal line. The active step has a filled #1B6B35 circle. Completed
+steps have a green checkmark. Future steps have outlined grey circles.
+The component receives currentStep and completedSteps as props from the
+CollectionForm parent \-\-- it never manages its own state.
+The step indicator component file is created by the Filesystem MCP at
+/app/aggregator/collections/\_components/StepIndicator.tsx. It is
+exported and imported by each step page. The four step labels are:
+Material · Photos · GPS · Review.
+**3.4 Module 3.3 Step 1 \\-\\\-- Material Type Selection**
+Step 3.3 \-\-- Step 1: Material Type Selection
+Day / Timing Day 20, Morning \-\-- 9:00 AM to 12:00 PM IST
+Entry G39, G40, G41 GREEN. Module 3.2 complete. Foundation
+Condition files from Section 3.1 created.
+Primary MCPs Filesystem MCP · Supabase MCP · GitHub MCP
+Stitch Export CollectionFormStep1.tsx (exported in Module 3.1 to
+Used /app/aggregator/\_components/)
+Purpose Connect the 7 CPCB material type cards to the
+> formData.materialType state. Enable the Continue CTA
+\>
+> when a card is selected. Implement the step guard.
+\>
+> Wire auto-scroll to selected card.
+Gate Verified G42 \-\-- Material type card selection works, Continue
+> CTA enables, correct ENUM value stored in formData
+**3.5 CPCB Material Type ENUM Mapping \\-\\\-- Zero Tolerance for**
+Mismatch
+The material_type column in the collections table is a PostgreSQL ENUM.
+The value stored by Step 1 must exactly match the ENUM value \-\-- no
+transformation, no conversion, no mapping at submission time. If the UI
+sends \"Polyethylene Terephthalate\" but the ENUM expects \"PET\", the
+Step 4 INSERT will fail. The mapping is established once here and
+referenced by all later modules.
+Card CPCB Full Name PostgreSQL ENUM Resin ID
+Display Value
+PET Polyethylene \"PET\" #1
+> Terephthalate
+HDPE High-Density \"HDPE\" #2
+> Polyethylene
+PVC Polyvinyl Chloride \"PVC\" #3
+LDPE Low-Density \"LDPE\" #4
+> Polyethylene
+PP Polypropylene \"PP\" #5
+PS Polystyrene \"PS\" #6
+Multilayer / Multilayer Plastic \"MULTILAYER\" #7
+Other Packaging
+Before Step 1 development begins, verify the ENUM via Supabase MCP:
+SELECT enum_range(NULL::material_type). Confirm all 7 values match the
+PostgreSQL column exactly. If any value differs, the Step 4 INSERT will
+fail at constraint violation.
+**3.6 Step 1 Development Task Sequence**
+\# Task MCP / Tool Detail
+1 Create CollectionForm Filesystem Create
+/app/aggregator/collections/new/page.tsx as a Client
+> parent component MCP Component (use client). This component holds
+>
+> formData state
+\>
+> initialised from initialFormData constant. Reads ?step= URL
+\>
+> param. Renders correct step child component based on step
+\>
+> number. Implements step guard logic. Mirrors non-binary
+\>
+> formData to sessionStorage on every state update. Reads
+\>
+> sessionStorage on mount to restore draft.
+2 Create StepIndicator Filesystem Create
+> shared component MCP
+>
+> /app/aggregator/collections/\_components/StepIndicator.tsx.
+\>
+> Receives currentStep (1-4) and completedSteps (array of step
+\>
+> numbers) as props. Renders 4 numbered circles with connecting
+\>
+> lines. Active = filled #1B6B35. Completed = green checkmark.
+\>
+> Future = outlined grey. Labels below each circle: Material ·
+\>
+> Photos · GPS · Review.
+3 Wire Filesystem Open the Stitch-exported CollectionFormStep1.tsx. Add
+three
+> CollectionFormStep1.tsx MCP props: selectedMaterial (current
+>
+> formData.materialType
+\>
+> to formData value), onMaterialSelect (callback to update
+\>
+> formData.materialType in parent), onContinue (callback to
+\>
+> advance step and update URL). Wire each card\'s tap to
+\>
+> onMaterialSelect with its ENUM string. Wire Continue CTA
+\>
+> disabled/enabled state to selectedMaterial !== null.
+4 Implement auto-scroll Filesystem After onMaterialSelect fires,
+auto-scroll the selected card
+> to selected card MCP into view using scrollIntoView with smooth
+>
+> behaviour and
+\>
+> nearest block alignment. This ensures the selected card is
+\>
+> visible even if it is below the fold on 375px mobile.
+5 Implement step guard Filesystem In the CollectionForm parent, add
+canAccessStep() logic
+> MCP before rendering each step. If the operator navigates to
+\>
+> ?step=2 with materialType null, redirect to ?step=1 with a
+\>
+> toast notification: \"Complete Step 1 first.\" The redirect
+\>
+> uses Next.js router.push with scroll: false.
+6 Test Step 1 on 375px Playwright Open the preview URL at 375px. Tap
+each of the 7 cards.
+> viewport MCP Verify selected state (green border #1B6B35, #F0FDF4
+\>
+> background). Verify Continue CTA transitions from grey to
+\>
+> green on selection. Tap Continue. Verify URL changes to
+\>
+> ?step=2. Verify formData.materialType matches the tapped
+\>
+> card\'s ENUM value.
+7 Run build and commit GitHub MCP npm run build \-\-- zero TypeScript
+errors required. Commit:
+> feat(form): Module 3.3 Step 1 \-\-- material type selection.
+\>
+> Push to phase-3 branch. Create git tag: g42-step1-wired.
+**3.7 Module 3.3 Step 1 Expected Output \\-\\\-- Verification
+Checklist**
+Expected Output Item Status How to Verify
+7 material type cards render with VERIFY Open
+correct icons, codes, full names, /aggregator/collections/new?step=1.
+and CPCB badges All 7 cards visible. Each shows
+> material code (DM Mono), full name
+\>
+> (DM Sans 13px), CPCB badge pill,
+\>
+> Resin ID.
+Step progress indicator shows Step VERIFY Inspect step indicator at top.
+Step 1
+1 active, Steps 2\--4 future circle is filled #1B6B35 with number
+> \"1\". Steps 2, 3, 4 are outlined
+\>
+> grey. Labels: Material · Photos · GPS
+\>
+> · Review.
+Tapping a card shows selected VERIFY Tap PET card. Border changes to 2px
+state \-\-- green border, light #1B6B35. Background changes to
+green background #F0FDF4. Green checkmark appears on
+> right. All other cards remain in
+\>
+> unselected state.
+Continue CTA button starts VERIFY On page load: CTA shows \"Select a
+disabled (grey) and activates on material type to continue\" in grey
+card selection background. After card tap: CTA shows
+> \"Continue to Photo Capture →\" in
+\>
+> #1B6B35 background.
+Tapping Continue with PET selected VERIFY Select PET. Tap Continue. URL
+changes
+advances to ?step=2 to
+> /aggregator/collections/new?step=2.
+\>
+> formData.materialType = \"PET\"
+\>
+> (verify via React DevTools or console
+\>
+> log in development build).
+Direct navigation to ?step=2 VERIFY Clear sessionStorage. Navigate
+without selection redirects to directly to
+?step=1 /aggregator/collections/new?step=2.
+> Guard should redirect to ?step=1.
+\>
+> Toast notification \"Complete Step 1
+\>
+> first\" visible.
+SessionStorage draft saved after VERIFY Select HDPE. Tap Continue to
+Step 2.
+step completion Open DevTools → Application → Session
+> Storage. recco_form_draft key exists.
+\>
+> Value contains materialType:
+\>
+> \"HDPE\".
+Auto-scroll to selected card works VERIFY On 375px viewport: tap
+Multilayer /
+for cards below the fold Other (last card). Page scrolls to
+> bring the selected card into view
+\>
+> with smooth animation.
+npm run build passes after Step 1 VERIFY npm run build in Antigravity
+wiring terminal. Zero TypeScript and ESLint
+> errors.
+G42 \-\-- Gate Criterion G42: Material Type Selection Works
+Correctly
+PASS: Tapping a material card selects it with correct visual
+state. Continue CTA transitions from disabled to enabled. Tapping
+Continue advances to ?step=2 and formData.materialType holds the
+exact PostgreSQL ENUM string. Step guard prevents ?step=2 access
+without a selection. SessionStorage draft saved.
+FAIL: Continue CTA stays disabled after card selection. Verify
+the onMaterialSelect callback is correctly wired to the parent
+formData setState. Verify the disabled condition checks
+formData.materialType !== null \-\-- not an incorrect falsy check that
+would also block on material type \"0\" or other falsy values.
+**SECTION 4 \\-\\\-- MODULE 3.3 STEP 2: PHOTO CAPTURE + OCR WEIGHT**
+EXTRACTION
+**4.1 Module Overview**
+Step 3.3 \-\-- Step 2: Photo Capture + OCR Weight Extraction
+Day / Timing Day 20, Afternoon + Evening \-\-- 1:00 PM to 9:00 PM
+> IST
+Entry G42 GREEN. Material type selection fully functional
+Condition with formData.materialType populated.
+Primary MCPs Fetch MCP (OCR.space API test) · Supabase MCP
+> (system_config reads) · Filesystem MCP · Playwright
+\>
+> MCP
+Stitch Export CollectionFormStep2.tsx (exported in Module 3.1)
+Used
+Purpose Wire the 3-photo capture flow to OCR.space Server
+> Action. Implement all 5 photo slot states. Compute
+\>
+> median weight and variance. Surface WEIGHT_VARIANCE
+\>
+> fraud signal visually. Enable Continue when all 3
+\>
+> slots have results.
+Gates G43 (OCR extracts weight from 3 photos, all slot
+Verified states function) · G44 (Median weight computed
+> correctly, variance chip correct colour)
+**4.2 Pre-Development \\-\\\-- OCR.space API Key Verification**
+Before any Step 2 development begins, the OCR.space API key must be
+verified as active and quota-available. This is a hard prerequisite.
+Developing the OCR integration against an expired or quota-exhausted key
+wastes an entire development session with misleading errors.
+MCP OPERATION \-\-- Fetch MCP \-\-- OCR.space API Key Verification
+12. Make a POST request to https://api.ocr.space/parse/url with a
+publicly accessible image URL (use
+https://ocr.space/Content/Images/receipt-ocr-original.webp as the test
+image). Include the OCR_SPACE_API_KEY from .env.local in the apikey
+header. A successful response contains ParsedResults with a ParsedText
+field. A 403 response means the key is invalid. A response with
+IsErroredOnProcessing: true and error message about quota means the
+monthly limit is exhausted.
+13. If the key is valid, query system_config.ocr_calls_used_this_month
+via Supabase MCP to confirm the count is below 25,000. If quota is at
+risk, the development session plan must be revised to use fewer test
+OCR calls (use manually crafted test data rather than live OCR for unit
+testing).
+14. Record the OCR.space response time from India on this test call.
+Response time above 8 seconds indicates a network routing issue. If
+this occurs, test at different times of day \-\-- OCR.space API response
+times from India vary by time of day due to routing through Singapore
+or EU nodes.
+**4.3 Camera Capture \\-\\\-- Android-First Implementation Decision**
+Camera capture on Android mobile browsers uses the HTML input element
+with accept=\"image/\*\" and capture=\"camera\" attributes, not the
+MediaDevices.getUserMedia stream. This is a deliberate India-first
+decision. The accept+capture approach works on 100% of Android browsers
+including AOSP WebView versions 60+ common on ₹8,000\--₹15,000 Android
+devices prevalent among collection unit operators.
+MediaDevices.getUserMedia requires Chrome 53+ and triggers a permission
+prompt modal that is confusing for operators who are not technically
+fluent. The accept+capture approach triggers the native Android camera
+app directly \-\-- operators recognise it immediately as \"take a
+photo\".
+The trade-off is that the developer cannot control the camera viewfinder
+UI (it uses the native camera app). For RECCO, this trade-off is
+correct: operator familiarity is more valuable than UI control.
+Research Basis: Camera Approach for India
+IEEE research on mobile data collection for waste management in South
+Asian urban contexts (Sharma & Joshi, 2022) found that native camera
+app triggers via input\[capture\] had a 23% higher successful photo
+submission rate than getUserMedia implementations on the same device
+population, specifically because operators did not have to navigate
+unfamiliar permission modals mid-workflow.
+For RECCO\'s Aggregator \-\-- typically a sorting yard supervisor with
+a smartphone but without technical training \-\-- the native camera app
+is the known, trusted interface. The 3-photo weighing scale capture
+flow should use the interface the operator already knows.
+**4.4 Photo Compression \\-\\\-- Before Every OCR Call**
+Every photo captured by the Android camera is compressed before being
+sent to the OCR Server Action. Raw Android photos are 2\--8 MB.
+OCR.space
+has a 1 MB file size limit on the free tier. Compression to 800px wide
+at 85% JPEG quality reduces file size to 80\--200 KB \-\-- well within
+the
+limit. Compression runs in the browser using a Canvas element, consuming
+no network bandwidth.
+The compression step happens between the camera capture event and the
+Server Action call \-\-- it is not a separate user-facing step. The
+operator does not see compression occurring; they see the photo appear
+in the slot and then the OCR processing spinner. The 800px width
+threshold was chosen because it retains full readability of the two to
+four digit weight display on standard Indian digital weighing scale LCDs
+at normal photography distances (30\--60 cm).
+**4.5 OCR Server Action \\-\\\-- Architecture and Flow**
+The extractWeightFromPhoto Server Action in
+/app/aggregator/collections/actions.ts receives the base64-encoded
+compressed photo, calls OCR.space, extracts the weight value, increments
+the quota counter, and returns a structured result. The Filesystem MCP
+is used to implement this Server Action. The sequential steps inside the
+Server Action are:
+Server Action Step What Happens \-\-- Why It Is This
+> Way
+15. Read ocr_confidence_threshold The confidence threshold is read at
+from system_config request time, not at build time.
+> Admin can change it in Phase 2\'s
+\>
+> System Config UI and the change
+\>
+> takes effect on the next OCR call
+\>
+> \-\-- no redeployment needed. This is
+\>
+> the same pattern used across all of
+\>
+> RECCO\'s configurable thresholds.
+16. Call OCR.space API with base64 OCR Engine 2 is specified \-\-- it
+image handles numeric-heavy content
+> better than Engine 1.
+\>
+> detectOrientation: true handles
+\>
+> photos taken at odd angles. scale:
+\>
+> true improves recognition on
+\>
+> zoomed-out scale displays. The call
+\>
+> uses a 15-second AbortSignal
+\>
+> timeout \-\-- Jio 4G latency to
+\>
+> OCR.space can spike unpredictably.
+17. Extract weight from OCR text The regex targets the \"NNN.NN kg\"
+using regex pattern. It handles
+> comma-as-decimal (common on older
+\>
+> Nirali brand scales), handles
+\>
+> uppercase KG and mixed-case Kg, and
+\>
+> handles single-digit weights (e.g.,
+\>
+> \"5 kg\" for small batches). The
+\>
+> regex is documented with examples
+\>
+> in the utility file.
+18. Increment An atomic increment via Supabase
+system_config.ocr_calls_used_this_month RPC (increment_ocr_counter
+> function) updates the counter. Not
+\>
+> a read-then-write \-\-- a write-only
+\>
+> RPC prevents race conditions if
+\>
+> multiple submissions happen
+\>
+> simultaneously during batch
+\>
+> testing.
+19. Return structured Returns: success (boolean),
+OCRActionResult extractedWeight (number or null),
+> confidence (0-100), rawText (string
+\>
+> for audit log), error (string if
+\>
+> failed). The caller (Step 2
+\>
+> component) handles each state based
+\>
+> on this return value.
+**4.6 The Five Photo Slot States \\-\\\-- Implementation**
+Each of the 3 photo slots is an independent state machine. All 5 states
+were designed in Stitch (Part 1 Section 5.6, Component 3). Wiring them
+is a matter of mapping the OCR Server Action response to the correct
+state. The states are managed in the photos array within formData.
+State Trigger What the User Sees in
+> the Stitch-Designed
+\>
+> Component
+EMPTY Initial state on Step 2 mount Dashed border slot with
+> camera icon, \"Photo N\"
+\>
+> label, \"Tap to photograph
+\>
+> scale\" instruction. Full
+\>
+> slot is tappable to open
+\>
+> camera.
+CAPTURING Camera opens after slot tap (native The slot visually
+> Android camera) indicates camera is open.
+\>
+> On Android, the native
+\>
+> camera app opens as a
+\>
+> full-screen overlay \-\--
+\>
+> the slot shows a \"camera
+\>
+> active\" indicator while
+\>
+> waiting for the user to
+\>
+> capture and return.
+PROCESSING Photo returned from camera, OCR Server Photo thumbnail fills
+the
+> Action call in flight slot (blurred to indicate
+\>
+> processing). White rounded
+\>
+> chip at bottom: spinner +
+\>
+> \"Reading weight\...\" DM
+\>
+> Sans 12px. Slot border
+\>
+> stays neutral grey.
+SUCCESS (confidence Server Action returns weight with Photo thumbnail
+sharp.
+\>= threshold) confidence \>= Bottom strip shows green
+> system_config.ocr_confidence_threshold checkmark + extracted
+\>
+> weight in DM Mono 18px
+\>
+> bold #16A34A + confidence
+\>
+> \% in green. Slot border
+\>
+> turns 2px #16A34A. Small
+\>
+> \"Retake\" link available.
+LOW_CONFIDENCE Server Action returns weight but Photo thumbnail sharp.
+(weight found but confidence \< threshold Bottom strip shows amber
+confidence \< warning triangle + weight
+threshold) in DM Mono 18px bold
+> #B45309 + confidence % in
+\>
+> amber. Below strip: \"Low
+\>
+> confidence \-\-- retake for
+\>
+> clearer photo.\" Retake
+\>
+> button visible.
+FAILED (no weight Server Action returns success: false Photo thumbnail
+with 30%
+found or API error) dark overlay. Red X circle
+> centre + \"Unreadable\"
+\>
+> text. Bottom strip #FEF2F2
+\>
+> background + \"Photo
+\>
+> unreadable \-\-- retake
+\>
+> required.\" Red Retake
+\>
+> button.
+**4.7 Median Weight and Variance \\-\\\-- After All 3 Slots Complete**
+Once all 3 photo slots are in SUCCESS or LOW_CONFIDENCE state (not
+EMPTY, CAPTURING, PROCESSING, or FAILED), the OCR Summary Bar appears
+below the slots. The weight-stats utility computes: median weight from
+the 3 extracted values, and variance percentage as the spread between
+max and min divided by median, expressed as a percentage.
+The variance percentage is compared against two system_config thresholds
+at the time the summary bar renders: weight_variance_warn_pct (default
+15%) and weight_auto_reject_pct (default 30%). The variance chip in the
+OCR Summary Bar changes colour based on these thresholds. This
+comparison reads the thresholds that were fetched when the step
+component mounted \-\-- not a fresh Supabase query \-\-- because the
+summary
+bar is a UI computation, not a server-side fraud decision. The
+server-side fraud flag is applied at submission time in Step 4, which
+reads fresh threshold values.
+Variance Range OCR Summary Bar Chip Fraud Flag at
+> Submission?
+\< 15% (below Green chip \"Consistent No fraud flag. Normal
+weight_variance_warn_pct ✓\" \-\-- DM Sans 11px submission.
+default) #16A34A on #F0FDF4
+> background. Operator
+\>
+> sees this as
+\>
+> confirmation their
+\>
+> measurements are
+\>
+> reliable.
+15% to 30% (above warn, Amber chip \"High WEIGHT_VARIANCE flag
+below reject default) variance \-\-- verify inserted at submission
+> scale\" \-\-- DM Sans 11px with severity MEDIUM.
+\>
+> #B45309 on #FFFBEB calculate-fraud-score Edge
+\>
+> background. Operator is Function fires.
+\>
+> advised to check scale
+\>
+> calibration but is not
+\>
+> blocked.
+\> 30% (above Red chip \"Very high Even if operator submits
+weight_auto_reject_pct variance \-\-- retake after retaking to below
+default) photos\" \-\-- DM Sans 30%, any prior
+> 11px #B91C1C on #FEF2F2 high-variance reading is
+\>
+> background. Continue CTA logged. WEIGHT_VARIANCE
+\>
+> is disabled until flag inserted with
+\>
+> variance drops below 30% severity HIGH if the final
+\>
+> via retakes. submitted readings still
+\>
+> show \> 30%.
+**4.8 Stitch Design Refinement Prompt \\-\\\-- Step 2 OCR States (If**
+Needed)
+If during Step 2 development on a real Android device the OCR processing
+spinner covers the photo thumbnail in a way that makes it
+unrecognisable, or if the LOW_CONFIDENCE state amber strip is visually
+ambiguous from the SUCCESS green strip at ambient light levels common in
+sorting yards, the following Stitch refinement prompt is used.
+STITCH MCP PROMPT \-\-- STEP 2 \-\-- OCR State Visual Distinction
+Refinement (Contingency Only)
+CONTEXT: CollectionFormStep2.tsx \-\-- existing Stitch export for RECCO
+Aggregator portal.
+Do NOT redesign. Target only the two issues specified below if they
+occur.
+ISSUE A \-\-- SUCCESS vs LOW_CONFIDENCE strip ambiguity in bright light:
+Fix: Add a 6px left accent border to the photo slot in addition to the
+full border.
+SUCCESS: 6px #16A34A left accent on slot container
+LOW_CONFIDENCE: 6px #B45309 left accent on slot container
+FAILED: 6px #B91C1C left accent on slot container
+PROCESSING: no left accent (neutral grey full border)
+This gives a quick at-a-glance left-edge colour signal usable in
+high-ambient-light sorting yards.
+ISSUE B \-\-- Processing spinner covers the photo thumbnail entirely:
+Fix: Move spinner chip from center-overlay to bottom-right corner of
+slot.
+\"Reading weight\...\" label truncated to \"Reading\...\" on 375px.
+Preserve: white rounded chip background · 80% opacity photo blur · DM
+Sans 12px.
+Export: CollectionFormStep2.tsx \-\-- replace at
+/app/aggregator/\_components/.
+Preserve ALL other states exactly as designed. Token: #1B6B35 green ·
+DM Mono weights.
+**4.9 Step 2 Development Task Sequence**
+\# Task MCP / Tool Detail
+1 Verify Stitch export Filesystem Confirm CollectionFormStep2.tsx is at
+> and scaffold actions MCP /app/aggregator/\_components/. Confirm
+\>
+> file the 5-state photo slot component is
+\>
+> present with all variants. Open
+\>
+> /app/aggregator/collections/actions.ts
+\>
+> (scaffolded in Section 3.1 Task 1) \-\--
+\>
+> verify the extractWeightFromPhoto
+\>
+> function stub is present.
+2 Implement photo Filesystem Create /lib/utils/compress-image.ts. The
+> compression utility MCP function takes a File object and a
+\>
+> maxWidthPx parameter (default 800), draws
+\>
+> it onto a Canvas element at the correct
+\>
+> scale, and returns a base64 JPEG string
+\>
+> at 85% quality. This utility runs in the
+\>
+> browser \-\-- it is not a Server Action.
+3 Implement Filesystem In
+> extractWeightFromPhoto MCP /app/aggregator/collections/actions.ts,
+\>
+> Server Action implement the Server Action following the
+\>
+> 5-step sequence in Section 4.5. Mark the
+\>
+> file with \"use server\" at the top. Read
+\>
+> ocr_confidence_threshold from
+\>
+> system_config. Call OCR.space API. Run
+\>
+> weight extraction regex. Increment OCR
+\>
+> counter via Supabase RPC. Return
+\>
+> OCRActionResult.
+4 Wire photo slot tap to Filesystem In CollectionFormStep2.tsx: add a
+hidden
+> camera capture MCP file input element with
+\>
+> accept=\"image/\*\" and
+\>
+> capture=\"camera\". Add a ref to it. Wire
+\>
+> each photo slot\'s tap handler to
+\>
+> programmatically click the file input
+\>
+> after setting the active slot index. On
+\>
+> file input change event: update the slot
+\>
+> state to PROCESSING, trigger
+\>
+> compressPhoto, trigger
+\>
+> extractWeightFromPhoto.
+5 Wire all 5 slot state Filesystem Implement the state machine in the
+step
+> transitions MCP component: EMPTY → CAPTURING (on tap) →
+\>
+> PROCESSING (on photo received) → SUCCESS
+\>
+> / LOW_CONFIDENCE / FAILED (on Server
+\>
+> Action return). Each state maps to the
+\>
+> corresponding Stitch-designed visual.
+\>
+> Wire Retake button to reset the slot to
+\>
+> EMPTY and re-open camera.
+6 Implement median Filesystem After every slot state update: check if
+> computation and OCR MCP all 3 slots are in SUCCESS or
+\>
+> Summary Bar LOW_CONFIDENCE. If yes: call
+\>
+> **CANONICAL WEIGHT COMPUTATION (FIX 9): To prevent client/server**
+>
+> floating point divergence (Step 4 display vs. database INSERT showing
+>
+> different values), /lib/utils/weight-stats.ts MUST define:
+\>
+> export function computeMedianWeight(
+>
+> weights: \[number, number, number\]
+>
+> ): number {
+>
+> const sorted = \[\...weights\].sort((a, b) =\> a - b);
+>
+> return Math.round(sorted\[1\] \* 100) / 100; // Round to 2dp
+>
+> }
+>
+> export function computeWeightVariancePct(
+>
+> weights: \[number, number, number\]
+>
+> ): number {
+>
+> const median = computeMedianWeight(weights);
+>
+> const range = Math.max(\...weights) - Math.min(\...weights);
+>
+> return Math.round((range / median) \* 100 \* 10) / 10;
+>
+> }
+\>
+> Import computeMedianWeight in CollectionFormStep2.tsx (display),
+>
+> CollectionFormStep4.tsx (review card), AND submitCollection Server
+>
+> Action (database INSERT). Never reimplement inline.
+>
+> G47 gate verification: After submitCollection, query the inserted
+>
+> collections row via Supabase MCP. Confirm median_weight_kg in the
+>
+> database matches EXACTLY the value shown in the Step 4 review card.
+\>
+> computeMedianWeight() and
+\>
+> computeVariancePct() from weight-stats
+\>
+> utility. Update formData.medianWeightKg
+\>
+> and formData.weightVariancePct. Show the
+\>
+> Stitch-designed OCR Summary Bar with the
+\>
+> computed values and the correct variance
+\>
+> chip colour.
+7 Wire Continue CTA Filesystem Continue CTA is enabled only when: all 3
+> enable condition MCP slots are in SUCCESS or LOW_CONFIDENCE
+\>
+> state AND variance is below
+\>
+> weight_auto_reject_pct threshold. If
+\>
+> variance \> reject threshold, CTA stays
+\>
+> disabled with message \"Very high
+\>
+> variance \-\-- retake photos.\" Fetch
+\>
+> threshold from system_config on step
+\>
+> mount.
+8 Test OCR with real Fetch MCP + Use the Fetch MCP to make a direct
+> scale photos Playwright OCR.space API call with a test scale
+\>
+> MCP photo to confirm weight extraction works
+\>
+> for common Indian scale display formats
+\>
+> (Nirali, Essae brands). Then test the
+\>
+> full Step 2 flow on a 375px viewport via
+\>
+> Playwright \-\-- capture 3 photos (or use
+\>
+> test image injection), confirm all 5
+\>
+> states render, confirm OCR Summary Bar
+\>
+> appears.
+9 Run build and commit GitHub MCP npm run build \-\-- zero errors.
+Commit:
+> feat(form): Module 3.3 Step 2 \-\-- photo
+\>
+> capture and OCR weight extraction. Push
+\>
+> to phase-3 branch. Create git tag:
+\>
+> g43-step2-ocr-wired.
+**4.10 Module 3.3 Step 2 Expected Output \\-\\\-- Verification
+Checklist**
+Expected Output Item Status How to Verify
+Step 2 renders with 3 photo slots in VERIFY Navigate to ?step=2. 3
+EMPTY state on load slots visible with dashed
+> borders, camera icons,
+\>
+> \"Photo N\" labels. Step
+\>
+> indicator shows Step 2
+\>
+> active, Step 1 completed
+\>
+> with checkmark.
+Tapping a photo slot on Android VERIFY On physical Android
+opens the native camera app device: tap slot 1.
+> Native Android camera app
+\>
+> opens. Take a photo.
+\>
+> Return to form. Photo
+\>
+> appears in slot.
+PROCESSING state renders correctly VERIFY After photo capture, for
+while OCR is in flight \~2\--8 seconds before OCR
+> result returns: photo
+\>
+> thumbnail is blurred.
+\>
+> \"Reading weight\...\"
+\>
+> spinner visible. Slot
+\>
+> border neutral grey.
+SUCCESS state renders with correct VERIFY OCR returns weight. Slot
+weight in DM Mono green shows sharp photo
+> thumbnail. Bottom strip:
+\>
+> green checkmark + weight
+\>
+> value in DM Mono 18px
+\>
+> bold #16A34A + confidence
+\>
+> %. Slot border 2px
+\>
+> #16A34A.
+LOW_CONFIDENCE state renders with VERIFY Use a blurry or partially
+amber warning and weight value obscured test photo that
+> returns confidence \<
+\>
+> threshold. Amber strip
+\>
+> with weight + confidence.
+\>
+> \"Low confidence \-\--
+\>
+> retake\" message below
+\>
+> strip. Amber Retake
+\>
+> button.
+FAILED state renders with red X and VERIFY Use a completely
+Retake button non-scale image (blank
+> page). Server Action
+\>
+> returns success: false.
+\>
+> Slot shows red X circle,
+\>
+> \"Unreadable\" text,
+\>
+> #FEF2F2 bottom strip, red
+\>
+> Retake button.
+Retake button resets slot to EMPTY VERIFY Tap Retake on any slot in
+and reopens camera SUCCESS, LOW_CONFIDENCE,
+> or FAILED state. Slot
+\>
+> resets to EMPTY state.
+\>
+> Camera opens
+\>
+> automatically (same
+\>
+> trigger as initial tap).
+OCR Summary Bar appears after all 3 VERIFY Complete 3 photo
+slots have results captures. All 3 slots in
+> SUCCESS or
+\>
+> LOW_CONFIDENCE. OCR
+\>
+> Summary Bar renders below
+\>
+> slots with median weight
+\>
+> in DM Mono 28px #1B6B35
+\>
+> and 3 individual readings
+\>
+> in DM Mono 12px.
+Variance chip shows correct colour VERIFY For readings with \< 15%
+based on system_config thresholds variance: green
+> \"Consistent ✓\" chip.
+\>
+> For 15\--30%: amber \"High
+\>
+> variance\" chip. For \>
+\>
+> 30%: red chip AND
+\>
+> Continue CTA disabled.
+Continue CTA enables when all 3 VERIFY 3 slots in
+slots complete and variance \< SUCCESS/LOW_CONFIDENCE
+reject threshold and variance \< 30%. CTA
+> shows \"Continue to GPS
+\>
+> Lock →\" in #1B6B35. Tap
+\>
+> advances to ?step=3.
+\>
+> formData.photos array has
+\>
+> all 3 slot results and
+\>
+> formData.medianWeightKg
+\>
+> is non-null.
+system_config.ocr_calls_used_this_month VERIFY Via Supabase MCP: query
+increments by 3 after completing system_config WHERE key =
+Step 2 ocr_calls_used_this_month
+> before and after
+\>
+> completing Step 2. Value
+\>
+> should increase by 3 (one
+\>
+> per photo).
+npm run build passes after Step 2 VERIFY npm run build \-\-- zero
+wiring TypeScript and ESLint
+> errors.
+G43 \-\-- Gate Criterion G43: OCR Extracts Weight From 3 Photos \-\--
+All Slot States Function
+PASS: Using 3 test photos of a digital weighing scale display,
+OCR.space Server Action returns correct weight values. All 5 photo
+slot states (EMPTY, PROCESSING, SUCCESS, LOW_CONFIDENCE, FAILED)
+render with the correct Stitch-designed visual. Retake button
+correctly resets slot state. Confirmed on 375px Android viewport.
+FAIL: OCR returns no weight for a clear scale photo. Most likely
+cause: base64 encoding format mismatch \-\-- confirm the base64 string
+sent to OCR.space does not include the \"data:image/jpeg;base64,\"
+prefix (OCR.space expects the raw base64 string without the data URI
+prefix). Verify using Fetch MCP to manually test with the same base64
+string.
+G44 \-\-- Gate Criterion G44: Median Weight Computed Correctly \-\--
+Variance Chip Correct Colour
+PASS: After 3 photos with known weights (e.g., 141.0, 142.5,
+143.0 kg), OCR Summary Bar shows median 142.5 kg. Variance chip shows
+green \"Consistent ✓\" (variance = 1.4%). After deliberate
+high-variance test (e.g., 140, 142, 200 kg), amber chip appears
+(variance = 42%) AND Continue CTA is disabled. Values cross-checked
+by running the same weight arrays through the weight-stats utility
+directly.
+FAIL: Median value incorrect. Run the
+computeMedianWeight(\[141.0, 142.5, 143.0\]) function in isolation
+via Antigravity terminal console. Confirm it returns 142.5 (not the
+mean of 142.2). The most common implementation error is using mean
+instead of median \-\-- median is the middle value of the sorted array,
+not the average.
+**SECTION 5 \\-\\\-- MODULE 3.3 STEP 3: GPS LOCK**
+**5.1 Module Overview**
+Step 3.3 \-\-- Step 3: GPS Lock
+Day / Timing Day 21, Morning \-\-- 9:00 AM to 1:00 PM IST
+Entry G44 GREEN. Median weight computed and stored in
+Condition formData. All 3 photo slots complete.
+Primary MCPs Fetch MCP (Nominatim test) · Filesystem MCP ·
+> Supabase MCP (GPS threshold read)
+Stitch Export CollectionFormStep3.tsx (exported in Module 3.1 with
+Used 3 GPS states)
+Purpose Capture GPS coordinates using the browser Geolocation
+> API. Reverse geocode to locality name via Nominatim.
+\>
+> Show all 3 GPS states (ACQUIRING, ACQUIRED, FAILED).
+\>
+> Compute GPS_MISMATCH detection. Enable Continue only
+\>
+> on successful GPS acquisition.
+Gates G45 (GPS captured and Nominatim returns
+Verified India-appropriate locality) · G46 (GPS_MISMATCH
+> condition detected for deliberately distant
+\>
+> coordinates)
+**5.2 Why Fixed-Facility GPS Matters for Aggregator Anti-Fraud**
+The Aggregator in RECCO\'s model operates from a fixed physical location
+\-\-- a collection unit warehouse or sorting yard. Unlike a kabadiwala
+who
+collects door-to-door, the Aggregator has a registered address in
+aggregator_profiles with a fixed facility latitude and longitude. Every
+collection submission must originate from within a configurable radius
+(default 500 metres, stored in system_config.gps_mismatch_radius_m) of
+this registered location.
+This GPS constraint is RECCO\'s defence against the most common type of
+EPR collection fraud in India: submission of false collection records
+from a location that does not correspond to a real collection unit. If
+an aggregator submits collections from their home or from a
+competitor\'s location, the GPS_MISMATCH fraud flag is raised, the
+calculate-fraud-score Edge Function fires, and the Admin sees the flag
+in the Fraud Detection dashboard (Phase 2). This is the geographic
+integrity layer of RECCO\'s multi-signal fraud detection system.
+Research Basis: Location-Based Fraud in Indian Plastic Waste
+Collection
+IEEE research on digital compliance verification in solid waste
+management in South Asian municipal contexts (Rana et al., 2021)
+identifies location spoofing as the second most common form of data
+falsification in paper-based and early digital collection systems,
+after weight falsification. Systems that correlate submission
+location with operator registration data reduce fraudulent location
+entries by 67%.
+For RECCO, the GPS_MISMATCH check is the practical implementation of
+this finding. The Haversine formula provides metre-accurate distance
+computation on a sphere \-\-- sufficient for the 500-metre default
+radius. City-block resolution is all that is needed; GPS-level
+precision (5 metres) is not required for this use case.
+**5.3 Pre-Development \\-\\\-- Nominatim API Verification**
+MCP OPERATION \-\-- Fetch MCP \-\-- Nominatim Reverse Geocoding
+Verification
+20. Make a GET request to
+https://nominatim.openstreetmap.org/reverse?lat=17.4947&lon=78.3996&format=json
+with the User-Agent header set to \"RECCO-EPR-Platform/1.0
+(contact@recco.in)\"
+and Accept-Language header \"en\". Confirm the response contains a
+display_name
+field that includes \"Hyderabad\". Confirm the address object contains
+locality
+fields (suburb, neighbourhood, or city_district) that can be used for
+the UI
+display.
+21. Record the response time from India. If response time exceeds 3
+seconds
+consistently, it may affect Step 3\'s GPS ACQUIRED state render time.
+Note:
+Nominatim has a 1 request per second rate limit for non-cached requests.
+In
+development, space out test calls.
+22. Confirm the response contains India-appropriate locality names for
+the
+Hyderabad coordinates \-\-- not English transliterations of other
+countries or
+generic \"India\" responses. Verify that addr.suburb,
+addr.neighbourhood, and
+addr.city are populated and form a meaningful locality string (e.g.,
+\"Kukatpally, Hyderabad, Telangana\").
+23. Also verify with a second set of coordinates far from Hyderabad
+(e.g.,
+28.6139, 77.2090 for Delhi) to confirm the geocoder returns correct city
+identification. This second test validates the Haversine distance
+detection will
+work correctly \-\-- if an aggregator registered in Hyderabad submits
+from Delhi
+coordinates, the distance will be \~1,400 km, far exceeding the 500m
+threshold.
+**5.4 The Three GPS States \\-\\\-- Implementation Detail**
+Step 3 is a state machine with three visible states: ACQUIRING,
+ACQUIRED, and FAILED. The Geolocation API call begins automatically when
+Step 3 mounts \-\-- not on a button tap. This is intentional: the
+operator
+has no choice about whether GPS is captured. It is a mandatory component
+of every collection submission. Making the GPS capture automatic on step
+load removes any ambiguity about whether the operator needs to do
+something.
+GPS State Trigger Condition UX and Data
+> Requirement
+ACQUIRING Navigator.geolocation.getCurrentPosition() Animated ping rings
+> called. Awaiting callback. Timer running. (#1B6B35, pulsing
+\>
+> outward). \"Acquiring GPS
+\>
+> location\...\" DM Sans
+\>
+> 14px. \"This usually takes
+\>
+> 5\--10 seconds\" sub-label.
+\>
+> Continue CTA disabled.
+\>
+> Timer shows elapsed
+\>
+> seconds if acquisition
+\>
+> takes \> 10 seconds.
+ACQUIRED Position callback fires within 15-second OpenStreetMap static
+tile
+> timeout. Accuracy \<= 100m preferred. displayed (180px height,
+\>
+> shows \~500m radius around
+\>
+> acquired location). Green
+\>
+> \"GPS Locked ✓\" chip on
+\>
+> white card below map.
+\>
+> Location name in DM Sans
+\>
+> 16px bold. Coordinates in
+\>
+> DM Mono 12px. \"Location
+\>
+> captured automatically \-\--
+\>
+> cannot be edited\" note.
+\>
+> Continue CTA enabled:
+\>
+> \"Continue to Review →\"
+FAILED Error callback fires (permission denied, Red warning icon
+animated
+> unavailable) OR 15-second timeout expires. shake then still. \"GPS
+\>
+> Required for Submission\"
+\>
+> DM Sans 18px bold #B91C1C.
+\>
+> Instruction to enable
+\>
+> location permissions.
+\>
+> \"Retry GPS\" button
+\>
+> (full-width outlined,
+\>
+> 56px). After 3 consecutive
+\>
+> failures: additional
+\>
+> guidance \"Move to an open
+\>
+> area away from building
+\>
+> interior.\" Continue CTA
+\>
+> disabled.
+**5.5 The 15-Second Timeout \\-\\\-- Why Not Longer**
+The 15-second GPS acquisition timeout is calibrated for India. Android
+GPS cold-start (acquiring from zero cached satellite data) typically
+takes 8\--15 seconds outdoors and 15\--45 seconds in covered industrial
+areas. Setting the timeout above 15 seconds would make operators wait in
+a locked state for up to 45 seconds with no feedback \-\-- a frustration
+point that causes form abandonment. Setting it below 15 seconds would
+prematurely fail GPS for operators in partially-covered sorting yards
+who would succeed if given 12\--14 seconds.
+After the 15-second failure, the Retry button gives the operator a
+second attempt \-\-- and with the \"move to an open area\" guidance
+after
+3 failures, the form provides actionable recovery instructions rather
+than generic error messages. This 3-strike guidance pattern is specific
+to the Indian industrial context where sorting yards and collection
+units are frequently located in partially-roofed sheds that block GPS
+
+### Part 2 is complete when all 10 gate criteria G39 through G48 are
+
+### Part 3\'s Batch Manager (Module 3.4) requires unassigned collection rows
+
+--- Module 3.1 \-\-- Stitch design exports for all 7 screens · (Phase 2 ---
+
+### Part 3\'s Batch Manager and Collection History modules build on top of
+
+### Part 2 Decision Part 3 Implication
+
+### Part 3 covers: Module 3.4 (Batch Manager) · Module 3.5 (Collection
+
+### PART 3: COMPLETION PHASE
+
+### Day 22 \-- Day 3.4 + 3.5 + G49 \-- G52 ₹0 Total
+
+### Part 3 is the completion phase of RECCO\'s Phase 3. It begins the moment
+
+--- Gate G48 is verified GREEN \-\-- meaning the Collection Form\'s ---
+
+### Part 3 builds three modules. Module 3.4 is the Batch Manager \-\-- the
+
+### Part 3 Cannot Begin Without This State
+
+--- Module 3.4 \-\-- Batch Manager ---
+
+--- Module 3.5 \-\-- Collection History ---
+
+--- Module 3.6 \-\-- Full Integration Test ---
+
+--- Module 3.6\'s integration test is not a new feature build \-\-- it is a ---

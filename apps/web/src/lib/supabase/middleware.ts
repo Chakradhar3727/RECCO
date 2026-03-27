@@ -23,22 +23,22 @@ export async function updateSession(request: NextRequest) {
                     return request.cookies.get(name)?.value;
                 },
                 set(name: string, value: string, options: CookieOptions) {
-                    request.cookies.set({ name, value, ...options });
-                    response = NextResponse.next({
-                        request: {
-                            headers: request.headers,
-                        },
-                    });
-                    response.cookies.set({ name, value, ...options });
+                    const isHttps = request.headers.get("x-forwarded-proto") === "https";
+                    const secureOpt = options.secure ?? isHttps;
+                    
+                    // Update request cookies so later calls in this request see it
+                    request.cookies.set({ name, value, ...options, secure: secureOpt });
+                    // Only assign response once if it hasn't been instantiated correctly
+                    // But in our setup, `response` is already created before the client
+                    // so we just mutate response.cookies
+                    response.cookies.set({ name, value, ...options, secure: secureOpt });
                 },
                 remove(name: string, options: CookieOptions) {
-                    request.cookies.set({ name, value: "", ...options });
-                    response = NextResponse.next({
-                        request: {
-                            headers: request.headers,
-                        },
-                    });
-                    response.cookies.set({ name, value: "", ...options });
+                    const isHttps = request.headers.get("x-forwarded-proto") === "https";
+                    const secureOpt = options.secure ?? isHttps;
+                    
+                    request.cookies.set({ name, value: "", ...options, secure: secureOpt });
+                    response.cookies.set({ name, value: "", ...options, secure: secureOpt });
                 },
             },
         }

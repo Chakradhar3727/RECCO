@@ -12,6 +12,6 @@ export default async function PiboPage() {
     if (user) {
         redirect('/pibo/dashboard');
     } else {
-        redirect('/pibo/login');
+        redirect('/login');
     }
 }

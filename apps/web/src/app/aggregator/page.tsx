@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 
 /**
- * /aggregator root — redirects to the aggregator login page.
+ * /aggregator root — redirects to the aggregator dashboard.
  */
 export default function AggregatorRootPage() {
-    redirect("/aggregator/login");
+    redirect("/aggregator/dashboard");
 }

@@ -35,16 +35,20 @@ async function getComplianceData() {
             .in('key', ['epr_annual_deadline', 'platform_fee_percent', 'weight_variance_threshold_amber', 'weight_variance_threshold_red']),
 
         admin.from('aggregator_profiles')
-            .select('approval_status'),
+            .select('approval_status')
+            .not('user_id', 'is', null),
 
         admin.from('recycler_facilities')
-            .select('approval_status'),
+            .select('approval_status')
+            .not('user_id', 'is', null),
 
         admin.from('pibo_entities')
-            .select('approval_status'),
+            .select('approval_status')
+            .not('user_id', 'is', null),
 
         admin.from('pro_organisations')
-            .select('approval_status'),
+            .select('approval_status')
+            .not('user_id', 'is', null),
 
         admin.from('epr_certificates')
             .select('lab_status, trust_score, weight_mt'),

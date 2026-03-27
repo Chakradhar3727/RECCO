@@ -87,12 +87,39 @@ export async function middleware(request: NextRequest) {
   // ── 3. Auth pages — redirect logged-in users to their dashboard ─
   if (isAuthPage(pathname)) {
     if (user) {
-      // If user is already logged in, redirect to portal root
-      // Try to determine which portal from the URL
-      const portal = getPortalFromPath(pathname);
-      if (portal) {
-        return NextResponse.redirect(new URL(`/${portal}`, request.url));
+      const urlPortal = getPortalFromPath(pathname);
+      let actualPortal = urlPortal;
+
+      try {
+        const adminClient = createAdminSupabaseClient();
+        const { data } = await adminClient
+          .from("user_profiles")
+          .select("portal_role")
+          .eq("id", user.id)
+          .single();
+
+        if (data?.portal_role) {
+          const roleMap: Record<string, string> = {
+            ADMIN: "admin",
+            AGGREGATOR: "aggregator",
+            RECYCLER: "recycler",
+            PIBO: "pibo",
+            PRO: "pro",
+          };
+          actualPortal = roleMap[data.portal_role] || actualPortal;
+        }
+      } catch (err) {
+        // Ignore DB error, fallback to urlPortal
       }
+
+      // Only redirect if they are visiting THEIR OWN portal's login page,
+      // or a generic login page.
+      if (actualPortal === urlPortal || pathname === "/login") {
+        return NextResponse.redirect(new URL(`/${actualPortal}/dashboard`, request.url));
+      }
+      
+      // If they are visiting a DIFFERENT portal's login page (e.g. Aggregator visiting /admin/login),
+      // allow the page to render so they can log in as the other user.
     }
     return response;
   }

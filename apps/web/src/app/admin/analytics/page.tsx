@@ -181,19 +181,22 @@ export default async function AnalyticsPage() {
 
             {/* ── Stat Strip (Stitch Top Metric Row) ─────────────────── */}
             <div className="stitch-grid-3">
-                <div className="stitch-metric-card" style={{ borderLeft: '4px solid var(--recco-green-700)' }}>
+                <div className="stitch-metric-card group">
+                    <div className="absolute left-0 top-0 bottom-0 w-[4px] rounded-l-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ backgroundColor: 'var(--recco-green-700)' }} />
                     <div className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-2">Revenue Aggregated</div>
                     <div className="text-3xl font-bold font-mono" style={{ color: 'var(--recco-navy-900)' }}>
                         {formatINR(data.kpi.totalRevenue + data.kpi.collectionRevenue)}
                     </div>
                 </div>
-                <div className="stitch-metric-card" style={{ borderLeft: '4px solid var(--recco-navy-900)' }}>
+                <div className="stitch-metric-card group">
+                    <div className="absolute left-0 top-0 bottom-0 w-[4px] rounded-l-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ backgroundColor: 'var(--recco-navy-900)' }} />
                     <div className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-2">Active Logistics Nodes</div>
                     <div className="text-3xl font-bold font-mono" style={{ color: 'var(--recco-navy-900)' }}>
                         {data.kpi.activeEntities}
                     </div>
                 </div>
-                <div className="stitch-metric-card" style={{ borderLeft: `4px solid ${data.kpi.disputeRate > 10 ? 'var(--recco-red-700)' : 'var(--recco-green-700)'}` }}>
+                <div className="stitch-metric-card group">
+                    <div className="absolute left-0 top-0 bottom-0 w-[4px] rounded-l-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ backgroundColor: data.kpi.disputeRate > 10 ? 'var(--recco-red-700)' : 'var(--recco-green-700)' }} />
                     <div className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-2">SLA Breach % (30 Days)</div>
                     <div className="flex items-end gap-3">
                         <div className="text-3xl font-bold font-mono" style={{ color: data.kpi.disputeRate > 10 ? 'var(--recco-red-700)' : 'var(--recco-navy-900)' }}>

@@ -1,0 +1,65 @@
+
+> @recco/web@0.1.0 dev
+> next dev
+
+  Ôû▓ Next.js 14.2.3
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ Ô£ô Starting...
+npm error code ENOWORKSPACES
+npm error This command does not support workspaces.
+npm error A complete log of this run can be found in: C:\Users\chakr\AppData\Local\npm-cache\_logs\2026-03-13T15_30_12_920Z-debug-0.log
+ Ô£ô Ready in 3.5s
+ Ôùï Compiling /src/middleware ...
+ Ô£ô Compiled /src/middleware in 584ms (464 modules)
+ Ôùï Compiling /admin ...
+ Ô£ô Compiled /admin in 4.3s (972 modules)
+ GET /admin 307 in 4974ms
+ Ô£ô Compiled in 666ms (284 modules)
+ GET /admin 307 in 136ms
+ Ôùï Compiling /admin/login ...
+ Ô£ô Compiled /admin/login in 1353ms (1401 modules)
+ GET /admin/login 200 in 1547ms
+ Ôùï Compiling /admin/dashboard ...
+ Ô£ô Compiled /admin/dashboard in 1614ms (1764 modules)
+(node:3780) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+ HEAD /admin/dashboard 307 in 1935ms
+ Ôùï Compiling /admin ...
+ Ô£ô Compiled /admin in 819ms (688 modules)
+ HEAD /admin 307 in 1530ms
+ Ô£ô Compiled in 566ms (464 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (133kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'D:\RECCO-MVP\apps\web\.next\cache\webpack\edge-server-development\2.pack.gz_' -> 'D:\RECCO-MVP\apps\web\.next\cache\webpack\edge-server-development\2.pack.gz'
+ Ô£ô Compiled /admin/login in 361ms (666 modules)
+ GET /admin/login 200 in 565ms
+ Ô£ô Compiled in 1535ms (683 modules)
+ Ô£ô Compiled in 556ms (683 modules)
+ Ô£ô Compiled in 2.5s (683 modules)
+ Ô£ô Compiled in 1677ms (683 modules)
+ Ô£ô Compiled in 1038ms (683 modules)
+ Ô£ô Compiled in 744ms (683 modules)
+ [AuthApiError: Invalid Refresh Token: Refresh Token Not Found] {
+  __isAuthError: true,
+  name: 'AuthApiError',
+  status: 400,
+  code: 'refresh_token_not_found'
+}
+ Ôùï Compiling /aggregator/dashboard ...
+ Ô£ô Compiled /aggregator/dashboard in 1713ms (1344 modules)
+ GET /aggregator/dashboard 307 in 2362ms
+ Ôùï Compiling /aggregator/login ...
+ Ô£ô Compiled /aggregator/login in 1141ms (1788 modules)
+ GET /aggregator/login 200 in 1479ms
+ Ôùï Compiling /_not-found ...
+ Ô£ô Compiled /_not-found in 15.8s (1791 modules)
+ GET /icons/icon-192x192.png 404 in 21591ms
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: RangeError: Failed to allocate memory
+ Ôùï Compiling /aggregator/collections ...
+ Ô£ô Compiled /aggregator/collections in 4.8s (1812 modules)
+ GET /aggregator/collections 307 in 5803ms
+ GET /aggregator/login 200 in 202ms
+ GET /icons/icon-192x192.png 404 in 61ms
+ POST /aggregator/login 200 in 3241ms
+ GET /icons/icon-192x192.png 404 in 73ms

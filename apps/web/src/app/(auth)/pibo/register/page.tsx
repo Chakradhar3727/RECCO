@@ -207,9 +207,9 @@ export default function PiboRegisterPage() {
                         <div className="space-y-5">
                             <div>
                                 <h2 className="text-lg font-semibold text-recco-gray-800 mb-1">Verify Email</h2>
-                                <p className="text-sm text-recco-gray-500">Enter the 8-digit code sent to <strong>{email}</strong></p>
+                                <p className="text-sm text-recco-gray-500">Enter the 6-digit code sent to <strong>{email}</strong></p>
                             </div>
-                            <OtpPinInput length={8} onComplete={handleOtpComplete} error={error || undefined} disabled={loading} label="Verification Code" isOtp />
+                            <OtpPinInput length={6} onComplete={handleOtpComplete} error={error || undefined} disabled={loading} label="Verification Code" isOtp />
                             <button onClick={() => setShowOtp(false)} className={btnSecondary}>Back</button>
                         </div>
                     )}

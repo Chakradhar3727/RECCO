@@ -279,11 +279,11 @@ export default function AdminLoginPage() {
                                     Step 3 of 3
                                 </h2>
                                 <p className="text-sm text-recco-gray-500">
-                                    Enter the 8-digit code sent to <strong>{email}</strong>
+                                    Enter the 6-digit code sent to <strong>{email}</strong>
                                 </p>
                             </div>
                             <OtpPinInput
-                                length={8}
+                                length={6}
                                 onComplete={handleOtpComplete}
                                 error={error || undefined}
                                 disabled={loading}

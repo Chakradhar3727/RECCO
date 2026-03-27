@@ -17,8 +17,8 @@ import React, { useRef, useState, useCallback, useEffect } from "react";
  */
 
 interface OtpPinInputProps {
-    /** Number of digits: 4 for PIN, 6 or 8 for OTP */
-    length: 4 | 6 | 8;
+    /** Number of digits: 4 for PIN or OTP, 6 for extended OTP */
+    length: 4 | 6;
     /** Callback when all digits are entered */
     onComplete: (code: string) => void;
     /** Error message to display below the input */

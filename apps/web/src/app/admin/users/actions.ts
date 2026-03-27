@@ -167,10 +167,17 @@ async function enrichUsersWithEntityNames(admin: any, profiles: any[]): Promise<
         fullName: p.full_name || p.email,
         portalRole: p.portal_role,
         fraudScore: p.fraud_score || 0,
-        isApproved: p.is_approved || false,
+        isApproved: p.portal_role === 'ADMIN' ? true : (p.is_approved || false),
         createdAt: p.created_at,
-        approvalStatus: approvalMap.get(p.id) || null,
-        entityName: entityNameMap.get(p.id) || null,
+        approvalStatus: p.portal_role === 'ADMIN' ? 'APPROVED' : (approvalMap.get(p.id) || null),
+        entityName: p.portal_role === 'ADMIN' ? 'System Administrator' : (entityNameMap.get(p.id) || null),
+        portals: p.portal_role === 'ADMIN' ? ['ADMIN'] : Array.from(new Set([
+            p.portal_role,
+            aggRes.data?.some((a: any) => a.id === p.id) ? 'AGGREGATOR' : null,
+            recRes.data?.some((r: any) => r.owner_id === p.id) ? 'RECYCLER' : null,
+            piboRes.data?.some((pb: any) => pb.id === p.id) ? 'PIBO' : null,
+            proRes.data?.some((pr: any) => pr.id === p.id) ? 'PRO' : null
+        ].filter(Boolean)))
     }));
 }
 
