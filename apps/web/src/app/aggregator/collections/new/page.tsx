@@ -11,6 +11,8 @@ import StepProgressIndicator from '@/app/aggregator/collections/new/_components/
 // ── Form State Type ──────────────────────────────────────────────────
 export interface PhotoSlot {
   state: 'EMPTY' | 'CAPTURING' | 'PROCESSING' | 'SUCCESS' | 'LOW_CONFIDENCE' | 'FAILED';
+  /** Purpose of this photo slot */
+  purpose: 'WEIGHT' | 'MATERIAL';
   imageBase64?: string;
   extractedWeight?: number;
   confidence?: number;
@@ -20,15 +22,21 @@ export interface PhotoSlot {
   sha256?: string;
   /** Perceptual hash for near-duplicate detection */
   phash?: string;
+  /** AI-detected material type (only for MATERIAL purpose) */
+  detectedMaterial?: string;
+  /** AI confidence for material detection */
+  materialConfidence?: number;
 }
 
 export interface CollectionFormData {
   // Step 1
   materialTypes: string[];
-  // Step 2
+  // Step 2 — Photo 1 & 2: weight OCR, Photo 3: AI material identification
   photos: [PhotoSlot, PhotoSlot, PhotoSlot];
   medianWeightKg: number | null;
   weightVariancePct: number | null;
+  aiDetectedMaterial: string | null;
+  aiMaterialConfidence: number | null;
   // Step 3
   gpsLat: number | null;
   gpsLng: number | null;
@@ -39,13 +47,16 @@ export interface CollectionFormData {
   submissionId: string | null;
 }
 
-const EMPTY_PHOTO: PhotoSlot = { state: 'EMPTY' };
+const EMPTY_WEIGHT_PHOTO: PhotoSlot = { state: 'EMPTY', purpose: 'WEIGHT' };
+const EMPTY_MATERIAL_PHOTO: PhotoSlot = { state: 'EMPTY', purpose: 'MATERIAL' };
 
 const INITIAL_FORM_DATA: CollectionFormData = {
   materialTypes: [],
-  photos: [{ ...EMPTY_PHOTO }, { ...EMPTY_PHOTO }, { ...EMPTY_PHOTO }],
+  photos: [{ ...EMPTY_WEIGHT_PHOTO }, { ...EMPTY_WEIGHT_PHOTO }, { ...EMPTY_MATERIAL_PHOTO }],
   medianWeightKg: null,
   weightVariancePct: null,
+  aiDetectedMaterial: null,
+  aiMaterialConfidence: null,
   gpsLat: null,
   gpsLng: null,
   gpsAccuracy: null,
@@ -107,9 +118,11 @@ function NewCollectionFormInner() {
     if (step <= 1) return true;
     if (step === 2) return formData.materialTypes.length > 0;
     if (step === 3) {
-      return formData.medianWeightKg !== null && formData.photos.every(
-        p => p.state === 'SUCCESS' || p.state === 'LOW_CONFIDENCE'
-      );
+      const weightPhotos = formData.photos.slice(0, 2);
+      const materialPhoto = formData.photos[2];
+      return formData.medianWeightKg !== null &&
+        weightPhotos.every(p => p.state === 'SUCCESS' || p.state === 'LOW_CONFIDENCE') &&
+        (materialPhoto.state === 'SUCCESS' || materialPhoto.state === 'LOW_CONFIDENCE');
     }
     if (step === 4) return formData.gpsLat !== null && formData.gpsLng !== null;
     return false;
@@ -124,7 +137,7 @@ function NewCollectionFormInner() {
 
   const completedSteps = [
     formData.materialTypes.length > 0,
-    formData.medianWeightKg !== null,
+    formData.medianWeightKg !== null && formData.photos[2].state !== 'EMPTY',
     formData.gpsLat !== null,
     formData.submissionId !== null,
   ];

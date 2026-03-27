@@ -23,3 +23,21 @@ export function computeWeightVariancePct(weights: [number, number, number]): num
   const range = Math.max(...weights) - Math.min(...weights);
   return Math.round((range / median) * 100 * 10) / 10;
 }
+
+/**
+ * Compute the average of exactly 2 weight readings, rounded to 2 decimal places.
+ */
+export function computeAverageWeight(weights: [number, number]): number {
+  return Math.round(((weights[0] + weights[1]) / 2) * 100) / 100;
+}
+
+/**
+ * Compute the difference percentage between 2 weight readings.
+ * DiffPct = |w1 - w2| / average * 100, rounded to 1 decimal place.
+ */
+export function computeWeightDiffPct(weights: [number, number]): number {
+  const avg = computeAverageWeight(weights);
+  if (avg === 0) return 0;
+  const diff = Math.abs(weights[0] - weights[1]);
+  return Math.round((diff / avg) * 100 * 10) / 10;
+}

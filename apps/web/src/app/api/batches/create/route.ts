@@ -75,8 +75,7 @@ export async function POST(request: NextRequest) {
     const { error: updateError } = await supabase
       .from('collections')
       .update({
-        status: 'IN_BATCH',
-        batch_id: batch.id,
+        status: 'IN_BATCH'
       })
       .in('id', collectionIds)
       .eq('aggregator_id', profile.id);
@@ -84,6 +83,34 @@ export async function POST(request: NextRequest) {
     if (updateError) {
       console.error('Collection update error:', updateError);
     }
+
+    // Insert into batch_collections junction table
+    const { error: bridgeError } = await supabase
+      .from('batch_collections')
+      .insert(
+        collectionIds.map(id => ({
+          batch_id: batch.id,
+          collection_id: id
+        }))
+      );
+
+    if (bridgeError) {
+      console.error('Batch collections bridge error:', bridgeError);
+    }
+
+    // ── Module 3.8 / G62: Insert batch reconciliation log entry ──────
+    await supabase.from('batch_reconciliation_log').insert({
+      batch_id: batch.id,
+      aggregator_id: profile.id,
+      aggregator_claimed_kg: totalWeight,
+      reconciliation_status: 'AWAITING_RECYCLER_CONFIRMATION',
+    });
+
+    // Insert batch transport event for audit trail
+    await supabase.from('batch_transport_events').insert({
+      batch_id: batch.id,
+      event_type: 'BATCH_CREATED',
+    });
 
     return NextResponse.json({ id: batch.id, batchNumber: batch.batch_number, status: 'success' });
   } catch (err) {

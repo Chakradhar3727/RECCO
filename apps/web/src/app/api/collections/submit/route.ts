@@ -19,7 +19,11 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { materialType, photos, medianWeightKg, weightVariancePct, gpsLat, gpsLng, locationName } = body;
+    const {
+      materialType, photos, medianWeightKg, weightVariancePct,
+      gpsLat, gpsLng, locationName,
+      aiDetectedMaterial, aiMaterialConfidence, sessionId,
+    } = body;
 
     // Validate required fields
     if (!materialType || !medianWeightKg || gpsLat == null || gpsLng == null) {
@@ -46,7 +50,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Insert collection — materialType may contain comma-separated values for multi-material collections
+    // Determine if AI agrees with manual material selection
+    const aiMaterialMatch = aiDetectedMaterial && materialType
+      ? materialType.includes(aiDetectedMaterial)
+      : null;
+
+    // Insert collection with all integrity fields
     const { data: collection, error: insertError } = await supabase
       .from('collections')
       .insert({
@@ -54,10 +63,21 @@ export async function POST(request: NextRequest) {
         material_type: materialType,
         ocr_weight_1: photos?.[0]?.extractedWeight ?? null,
         ocr_weight_2: photos?.[1]?.extractedWeight ?? null,
-        ocr_weight_3: photos?.[2]?.extractedWeight ?? null,
+        ocr_weight_3: null, // Photo 3 is now material ID, not weight
+        ai_detected_material: aiDetectedMaterial ?? null,
+        ai_material_confidence: aiMaterialConfidence ?? null,
+        ai_material_match: aiMaterialMatch,
         median_weight: medianWeightKg,
         gps_lat: gpsLat,
         gps_lng: gpsLng,
+        gps_locality: locationName ?? null,
+        photo_1_hash: photos?.[0]?.sha256 ?? null,
+        photo_2_hash: photos?.[1]?.sha256 ?? null,
+        photo_3_hash: photos?.[2]?.sha256 ?? null,
+        photo_1_phash: photos?.[0]?.phash ?? null,
+        photo_2_phash: photos?.[1]?.phash ?? null,
+        photo_3_phash: photos?.[2]?.phash ?? null,
+        collection_session_id: sessionId ?? null,
         status: 'AVAILABLE_FOR_BATCHING',
       })
       .select('id')
@@ -80,6 +100,21 @@ export async function POST(request: NextRequest) {
           variance_pct: weightVariancePct,
           weights: photos?.map((p: { extractedWeight: number }) => p.extractedWeight),
           median: medianWeightKg,
+        },
+      });
+    }
+
+    // ── Extension A: Insert MATERIAL_TYPE_MISMATCH fraud flag if AI disagrees ─
+    if (aiMaterialMatch === false && (aiMaterialConfidence ?? 0) >= 70) {
+      await supabase.from('fraud_flags').insert({
+        entity_id: user.id,
+        flag_type: 'MATERIAL_TYPE_MISMATCH',
+        severity: 'MEDIUM',
+        evidence_data: {
+          collection_id: collection.id,
+          manual_selection: materialType,
+          ai_detected: aiDetectedMaterial,
+          ai_confidence: aiMaterialConfidence,
         },
       });
     }

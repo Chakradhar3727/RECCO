@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import type { CollectionFormData } from '../page';
 import { MATERIAL_TYPES } from '@/lib/constants/material-types';
 import { formatWeightKg } from '@/lib/utils/format-indian';
-import { ArrowLeft, Send, Loader2, CheckCircle2, MapPin, Camera, Package, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Send, Loader2, CheckCircle2, MapPin, Camera, Package, AlertTriangle, Scale, Sparkles } from 'lucide-react';
 
 interface Step4Props {
   formData: CollectionFormData;
@@ -30,10 +30,19 @@ export default function CollectionFormStep4({ formData, updateFormData, onBack, 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           materialType: formData.materialTypes.join(', '),
+          aiDetectedMaterial: formData.aiDetectedMaterial,
+          aiMaterialConfidence: formData.aiMaterialConfidence,
+          sessionId: typeof sessionStorage !== 'undefined'
+            ? sessionStorage.getItem('recco_session_id') ?? undefined
+            : undefined,
           photos: formData.photos.map(p => ({
             extractedWeight: p.extractedWeight,
             confidence: p.confidence,
             imageBase64: p.imageBase64,
+            purpose: p.purpose,
+            detectedMaterial: p.detectedMaterial,
+            sha256: p.sha256,
+            phash: p.phash,
           })),
           medianWeightKg: formData.medianWeightKg,
           weightVariancePct: formData.weightVariancePct,
@@ -78,12 +87,12 @@ export default function CollectionFormStep4({ formData, updateFormData, onBack, 
       <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-1">Review & Submit</h2>
       <p className="text-sm text-gray-500 mb-4 md:mb-6">Verify all details before submitting</p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-24 md:mb-8">
-        {/* Material Type Card */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-24 md:mb-8">
+        {/* Material Type (Manual Selection) Card */}
         <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm flex flex-col justify-center">
           <div className="flex items-center gap-2 mb-3">
             <Package size={18} className="text-emerald-700" />
-            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Material Types</span>
+            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Material Types (Selected)</span>
           </div>
           <div className="flex flex-wrap gap-2">
             {selectedMaterials.map(mat => (
@@ -98,17 +107,49 @@ export default function CollectionFormStep4({ formData, updateFormData, onBack, 
           </div>
         </div>
 
+        {/* AI Material Detection Card */}
+        <div className="bg-white rounded-xl border border-blue-100 p-4 shadow-sm flex flex-col justify-center">
+          <div className="flex items-center gap-2 mb-3">
+            <Sparkles size={18} className="text-blue-700" />
+            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">AI Material Detection</span>
+          </div>
+          {formData.aiDetectedMaterial ? (() => {
+            const aiMat = MATERIAL_TYPES.find(m => m.value === formData.aiDetectedMaterial);
+            return (
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">{aiMat?.icon ?? '♻️'}</span>
+                  <div>
+                    <p className="text-lg font-bold text-blue-800">{aiMat?.label ?? formData.aiDetectedMaterial}</p>
+                    <p className="text-xs text-blue-500">{formData.aiMaterialConfidence}% confidence</p>
+                  </div>
+                </div>
+                {formData.materialTypes.length > 0 && !formData.materialTypes.includes(formData.aiDetectedMaterial) && (
+                  <div className="mt-2 bg-amber-50 border border-amber-300 rounded-lg p-2 flex items-start gap-2">
+                    <AlertTriangle size={14} className="text-amber-600 flex-shrink-0 mt-0.5" />
+                    <p className="text-[11px] text-amber-700">
+                      <strong>Mismatch</strong> with manual selection — please verify
+                    </p>
+                  </div>
+                )}
+              </div>
+            );
+          })() : (
+            <p className="text-sm text-gray-400">—</p>
+          )}
+        </div>
+
         {/* Weight Card */}
         <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm flex flex-col justify-center">
           <div className="flex items-center gap-2 mb-3">
-            <Camera size={18} className="text-emerald-700" />
-            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">OCR Weight</span>
+            <Scale size={18} className="text-emerald-700" />
+            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">OCR Weight (2 Photos)</span>
           </div>
           <p className="text-3xl font-bold text-emerald-800 font-mono">
             {formData.medianWeightKg !== null ? formatWeightKg(formData.medianWeightKg) : '—'}
           </p>
           <div className="flex flex-wrap items-center gap-2 mt-2 text-xs text-gray-500 font-mono">
-            {formData.photos.map((p, i) => (
+            {formData.photos.slice(0, 2).map((p, i) => (
               <span key={i} className="bg-gray-50 px-1.5 py-0.5 rounded">#{i + 1}: {p.extractedWeight?.toFixed(1) ?? '—'}</span>
             ))}
           </div>
@@ -122,7 +163,7 @@ export default function CollectionFormStep4({ formData, updateFormData, onBack, 
         </div>
 
         {/* GPS Card */}
-        <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm flex flex-col justify-center md:col-span-2 lg:col-span-1">
+        <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm flex flex-col justify-center">
           <div className="flex items-center gap-2 mb-3">
             <MapPin size={18} className="text-emerald-700" />
             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Location</span>

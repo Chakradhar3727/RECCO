@@ -13,6 +13,7 @@ interface BatchTabsProps {
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
   CREATED: { label: 'Created', color: 'text-amber-700', bg: 'bg-amber-100' },
   AWAITING_ACKNOWLEDGMENT: { label: 'Awaiting Ack', color: 'text-orange-700', bg: 'bg-orange-100' },
+  PENDING_PICKUP: { label: 'Pending Pickup', color: 'text-emerald-700', bg: 'bg-emerald-100' },
   RESCHEDULED: { label: 'Rescheduled', color: 'text-yellow-700', bg: 'bg-yellow-100' },
   ACKNOWLEDGED: { label: 'Acknowledged', color: 'text-sky-700', bg: 'bg-sky-100' },
   PICKED_UP: { label: 'Picked Up', color: 'text-teal-700', bg: 'bg-teal-100' },
@@ -70,8 +71,8 @@ export default function BatchTabs({ activeBatches, completedBatches }: BatchTabs
               bg: 'bg-gray-100',
             };
 
-            // Use batch_qr_payload or id prefix as batch identifier
-            const batchLabel = batch.batch_qr_payload ?? `BATCH-${batch.id?.substring(0, 6).toUpperCase()}`;
+            // Use batch_number if available, otherwise fallback
+            const batchLabel = batch.batch_number ?? batch.batch_qr_payload ?? `BATCH-${batch.id?.substring(0, 6).toUpperCase()}`;
 
             return (
               <div key={batch.id} className="bg-white rounded-xl border border-gray-100 p-4 hover:border-emerald-200 transition-colors">
@@ -85,10 +86,20 @@ export default function BatchTabs({ activeBatches, completedBatches }: BatchTabs
                   </span>
                 </div>
 
-                {/* Collection count if available */}
-                {batch.collection_count && (
-                  <p className="text-xs text-gray-500 mb-2">{batch.collection_count} collections</p>
-                )}
+                {/* Metrics */}
+                <div className="flex items-center gap-3 mb-3">
+                  {batch.collection_count && (
+                    <div className="flex items-center gap-1.5 text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-md">
+                      <Package size={12} className="text-gray-400" />
+                      <span>{batch.collection_count} collections</span>
+                    </div>
+                  )}
+                  {batch.total_weight && (
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md">
+                      <span>{formatWeightKg(batch.total_weight)}</span>
+                    </div>
+                  )}
+                </div>
 
                 {/* Footer */}
                 <div className="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-50">

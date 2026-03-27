@@ -137,22 +137,26 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
         // Pending approvals — aggregators
         admin.from('aggregator_profiles')
             .select('id', { count: 'exact', head: true })
-            .eq('approval_status', 'PENDING_ADMIN_REVIEW'),
+            .eq('approval_status', 'PENDING_ADMIN_REVIEW')
+            .not('user_id', 'is', null),
 
         // Pending approvals — recyclers
         admin.from('recycler_facilities')
             .select('id', { count: 'exact', head: true })
-            .eq('approval_status', 'PENDING_ADMIN_REVIEW'),
+            .eq('approval_status', 'PENDING_ADMIN_REVIEW')
+            .not('user_id', 'is', null),
 
         // Pending approvals — PIBOs
         admin.from('pibo_entities')
             .select('id', { count: 'exact', head: true })
-            .eq('approval_status', 'PENDING_ADMIN_REVIEW'),
+            .eq('approval_status', 'PENDING_ADMIN_REVIEW')
+            .not('user_id', 'is', null),
 
         // Pending approvals — PROs
         admin.from('pro_organisations')
             .select('id', { count: 'exact', head: true })
-            .eq('approval_status', 'PENDING_ADMIN_REVIEW'),
+            .eq('approval_status', 'PENDING_ADMIN_REVIEW')
+            .not('user_id', 'is', null),
 
         // Fraud alerts by severity (unresolved)
         admin.from('fraud_flags')

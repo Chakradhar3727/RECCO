@@ -370,10 +370,10 @@ export default async function AggregatorDashboardPage() {
                       <span>Log Collection</span>
                       <ArrowRight size={16} className="text-gray-400" />
                    </Link>
-                   <button className="w-full flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors font-medium text-sm text-gray-700 text-left">
+                   <a href="/api/reports/aggregator-summary" download className="w-full flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors font-medium text-sm text-gray-700 text-left">
                       <span>Generate Report</span>
                       <ArrowRight size={16} className="text-gray-400" />
-                   </button>
+                   </a>
                 </div>
              </div>
           </div>

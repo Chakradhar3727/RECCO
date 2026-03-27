@@ -77,9 +77,9 @@ export default function CreateBatchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24 md:pb-8">
+    <div className="min-h-screen bg-gray-50 pb-[180px] md:pb-8">
       {/* Header */}
-      <div className="bg-emerald-800 text-white px-4 md:px-8 pt-6 pb-5 md:pb-8 rounded-b-3xl md:rounded-b-none">
+      <div className="bg-emerald-900 text-white px-4 md:px-8 pt-6 pb-5 md:pb-8 rounded-b-3xl md:rounded-b-none">
         <div className="flex items-center gap-3">
           <button onClick={() => router.back()} className="hover:bg-emerald-700 p-1.5 md:p-2 rounded-lg transition-colors">
             <ArrowLeft size={20} className="md:w-6 md:h-6" />
@@ -102,7 +102,7 @@ export default function CreateBatchPage() {
             <p className="text-gray-500 text-sm">No available collections for batching</p>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl md:p-6 md:shadow-sm md:border md:border-gray-100 relative pb-[90px] md:pb-0">
+          <div className="bg-white rounded-2xl md:p-6 md:shadow-sm md:border md:border-gray-100 relative pb-[160px] md:pb-[100px]">
             <p className="text-sm text-gray-500 mb-4 px-1">
               Select collections to group into a batch ({collections.length} available)
             </p>
@@ -121,7 +121,7 @@ export default function CreateBatchPage() {
               {selectedIds.size === collections.length ? 'Deselect All' : 'Select All'}
             </button>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               {collections.map(c => {
                 const isSelected = selectedIds.has(c.id);
                 return (
@@ -134,19 +134,19 @@ export default function CreateBatchPage() {
                         : 'border-gray-100 bg-white hover:border-emerald-200'
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className={`w-5 h-5 md:w-6 md:h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-4 md:gap-5 flex-1 min-w-0">
+                        <div className={`shrink-0 w-6 h-6 md:w-7 md:h-7 rounded-md border-2 flex items-center justify-center transition-colors ${
                           isSelected ? 'bg-emerald-600 border-emerald-600' : 'border-gray-300'
                         }`}>
                           {isSelected && <Check size={14} className="text-white" />}
                         </div>
-                        <div>
-                          <p className="text-sm md:text-base font-bold text-gray-900">{c.material_type ?? 'Mixed'}</p>
-                          <p className="text-xs md:text-sm text-gray-400 mt-0.5">{formatRelativeTime(c.created_at)}</p>
+                        <div className="min-w-0 flex-1 ml-1">
+                          <p className="text-sm md:text-base font-bold text-gray-900 truncate">{c.material_type?.replace(/_/g, ' ') ?? 'Mixed'}</p>
+                          <p className="text-xs md:text-sm text-gray-400 mt-0.5 truncate">{formatRelativeTime(c.created_at)}</p>
                         </div>
                       </div>
-                      <span className="text-sm md:text-base font-black text-emerald-700 font-mono bg-white px-2 py-1 rounded-md border border-emerald-100">
+                      <span className="shrink-0 text-sm md:text-base font-black text-emerald-700 font-mono bg-white px-2 py-1 rounded-md border border-emerald-100">
                         {formatWeightKg(Number(c.median_weight))}
                       </span>
                     </div>

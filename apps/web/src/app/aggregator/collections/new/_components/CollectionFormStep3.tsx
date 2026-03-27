@@ -111,13 +111,16 @@ export default function CollectionFormStep3({ formData, updateFormData, onNext, 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           {/* Map tile placeholder */}
           <div className="bg-emerald-50 rounded-2xl h-44 md:h-full min-h-[176px] flex items-center justify-center border border-emerald-200 overflow-hidden shadow-sm">
-            <img
-              src={`https://staticmap.openstreetmap.de/staticmap.php?center=${formData.gpsLat},${formData.gpsLng}&zoom=15&size=600x400&markers=${formData.gpsLat},${formData.gpsLng},ol-marker`}
-              alt="Collection location map"
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-              }}
+            <iframe
+              title="Collection Location Map"
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              scrolling="no"
+              marginHeight={0}
+              marginWidth={0}
+              src={`https://www.openstreetmap.org/export/embed.html?bbox=${formData.gpsLng! - 0.005},${formData.gpsLat! - 0.005},${formData.gpsLng! + 0.005},${formData.gpsLat! + 0.005}&layer=mapnik&marker=${formData.gpsLat},${formData.gpsLng}`}
+              className="w-full h-full border-0"
             />
           </div>
 
