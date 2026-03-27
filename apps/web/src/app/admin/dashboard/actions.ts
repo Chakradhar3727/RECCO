@@ -132,7 +132,7 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
         // Batches in transit
         admin.from('batches')
             .select('id', { count: 'exact', head: true })
-            .eq('batch_status', 'IN_TRANSIT'),
+            .eq('status', 'IN_TRANSIT'),
 
         // Pending approvals — aggregators
         admin.from('aggregator_profiles')
@@ -203,35 +203,41 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
 // ─── Transport Stats ─────────────────────────────────────────────────
 export async function getTransportStats(): Promise<TransportStats> {
     const admin = createServiceRoleClient();
-    const todayIST = getTodayISTMidnight().toISOString();
 
     const [pickupRes, transitRes, deliveryRes, staleRes] = await Promise.all([
-        admin.from('batch_transport_events')
-            .select('id', { count: 'exact', head: true })
-            .eq('event_type', 'PICKUP')
-            .gte('created_at', todayIST),
-
+        // Batches Picked Up
         admin.from('batches')
             .select('id', { count: 'exact', head: true })
-            .eq('batch_status', 'IN_TRANSIT'),
+            .eq('status', 'IN_TRANSIT')
+            .not('picked_up_at', 'is', null),
 
-        admin.from('batch_transport_events')
-            .select('id', { count: 'exact', head: true })
-            .eq('event_type', 'DELIVERY')
-            .gte('created_at', todayIST),
-
-        // Stale > 72hrs: IN_TRANSIT batches with pickup > 72 hours ago
+        // Batches In Transit
         admin.from('batches')
             .select('id', { count: 'exact', head: true })
-            .eq('batch_status', 'IN_TRANSIT')
-            .lt('created_at', new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString()),
+            .eq('status', 'IN_TRANSIT'),
+
+        // Batches Delivered (ARRIVED status)
+        admin.from('batches')
+            .select('id', { count: 'exact', head: true })
+            .eq('status', 'ARRIVED'),
+
+        // Transit > 72 Hours (From fraud_flags JOIN batches)
+        // Since we can't easily do a pure inner join with count via supabase-js without complex PostgREST syntax,
+        // we can fetch the distinct batch_ids from fraud_flags and filter by status
+        admin.from('fraud_flags')
+            .select('batch_id, batches!inner(status)')
+            .eq('flag_type', 'TRANSIT_TIME')
+            .eq('batches.status', 'IN_TRANSIT')
     ]);
+
+    // Distinct batch IDs for stale flags
+    const staleBatchIds = new Set(staleRes.data?.map(f => f.batch_id) || []);
 
     return {
         pickedUp: pickupRes.count || 0,
         inTransit: transitRes.count || 0,
         delivered: deliveryRes.count || 0,
-        stale72hrs: staleRes.count || 0,
+        stale72hrs: staleBatchIds.size,
     };
 }
 

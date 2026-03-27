@@ -8,9 +8,14 @@
         "deploy": "hardhat run scripts/deploy.ts --network amoy"
     },
     "devDependencies": {
-        "@nomicfoundation/hardhat-toolbox": "^7.0.0",
+        "@nomicfoundation/hardhat-ethers": "^4.0.6",
+        "@nomicfoundation/hardhat-toolbox": "^6.1.2",
         "@types/node": "^25.3.2",
+        "dotenv": "^17.3.1",
+        "ethers": "^6.16.0",
         "hardhat": "^3.1.10",
+        "hardhat-ethers": "^1.0.1",
         "typescript": "^5"
-    }
+    },
+    "type": "module"
 }

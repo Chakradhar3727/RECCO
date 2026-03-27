@@ -1,5 +1,5 @@
 import { HardhatUserConfig } from "hardhat/config";
-import "@nomicfoundation/hardhat-toolbox";
+import "@nomicfoundation/hardhat-ethers";
 
 // P8: Use short paths on Windows to avoid ENAMETOOLONG errors.
 // Run with: npx hardhat compile

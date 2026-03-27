@@ -2,96 +2,143 @@
   - Environments: .env.local
 
    Creating an optimized production build ...
-<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (133kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (140kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
  Ô£ô Compiled successfully
    Linting and checking validity of types ...
+
+./src/app/admin/disputes/[id]/components.tsx
+139:33  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+271:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/shared/camera-upload.tsx
+80:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/shared/ocr-uploader.tsx
+86:29  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/shared/qr-scanner.tsx
+35:8  Warning: React Hook useCallback has a missing dependency: 'tick'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
    Collecting page data ...
-   Generating static pages (0/56) ...
-   Generating static pages (14/56) 
-   Generating static pages (28/56) 
-   Generating static pages (42/56) 
- Ô£ô Generating static pages (56/56)
+   Generating static pages (0/71) ...
+Report generation error: n [Error]: Dynamic server usage: Route /api/reports/aggregator-summary couldn't be rendered statically because it used cookies. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at l (D:\RECCO-MVP\apps\web\.next\server\chunks\4522.js:1:37248)
+    at v (D:\RECCO-MVP\apps\web\.next\server\chunks\9545.js:1:1796)
+    at p (D:\RECCO-MVP\apps\web\.next\server\app\api\admin\keep-alive\route.js:1:2229)
+    at u (D:\RECCO-MVP\apps\web\.next\server\app\api\reports\aggregator-summary\route.js:1:1090)
+    at D:\RECCO-MVP\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:34672
+    at D:\RECCO-MVP\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (D:\RECCO-MVP\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (D:\RECCO-MVP\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (D:\RECCO-MVP\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (D:\RECCO-MVP\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854) {
+  description: "Route /api/reports/aggregator-summary couldn't be rendered statically because it used cookies. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+   Generating static pages (17/71) 
+   Generating static pages (35/71) 
+(node:2360) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+   Generating static pages (53/71) 
+ Ô£ô Generating static pages (71/71)
    Finalizing page optimization ...
    Collecting build traces ...
 
-Route (app)                              Size     First Load JS
-Ôöî Ôùï /                                    191 B          99.1 kB
-Ôö£ Ôùï /_not-found                          875 B          87.9 kB
-Ôö£ Ôùï /admin/analytics                     267 B          87.3 kB
-Ôö£ Ôùï /admin/approvals                     267 B          87.3 kB
-Ôö£ Ôùï /admin/audit-log                     268 B          87.3 kB
-Ôö£ Ôùï /admin/blockchain                    268 B          87.3 kB
-Ôö£ Ôùï /admin/compliance                    270 B          87.3 kB
-Ôö£ Ôùï /admin/config                        267 B          87.3 kB
-Ôö£ Ôùï /admin/dashboard                     267 B          87.3 kB
-Ôö£ Ôùï /admin/disputes                      267 B          87.3 kB
-Ôö£ ãÆ /admin/disputes/[id]                 267 B          87.3 kB
-Ôö£ Ôùï /admin/fraud                         267 B          87.3 kB
-Ôö£ Ôùï /admin/login                         3.7 kB         90.7 kB
-Ôö£ Ôùï /admin/notifications                 268 B          87.3 kB
-Ôö£ Ôùï /admin/transactions                  267 B          87.3 kB
-Ôö£ Ôùï /admin/users                         268 B          87.3 kB
-Ôö£ ãÆ /admin/users/[id]                    269 B          87.3 kB
-Ôö£ Ôùï /aggregator/batches                  268 B          87.3 kB
-Ôö£ ãÆ /aggregator/batches/[id]             268 B          87.3 kB
-Ôö£ ãÆ /aggregator/batches/[id]/qr          270 B          87.3 kB
-Ôö£ Ôùï /aggregator/batches/new              267 B          87.3 kB
-Ôö£ Ôùï /aggregator/collections              268 B          87.3 kB
-Ôö£ ãÆ /aggregator/collections/[id]         267 B          87.3 kB
-Ôö£ Ôùï /aggregator/collections/new          267 B          87.3 kB
-Ôö£ Ôùï /aggregator/dashboard                267 B          87.3 kB
-Ôö£ Ôùï /aggregator/login                    3.09 kB        90.1 kB
-Ôö£ Ôùï /aggregator/payments                 268 B          87.3 kB
-Ôö£ Ôùï /aggregator/profile                  267 B          87.3 kB
-Ôö£ Ôùï /aggregator/register                 3.31 kB        90.3 kB
-Ôö£ ãÆ /api/auth/callback                   0 B                0 B
-Ôö£ Ôùï /auth/admin/login                    2.17 kB          96 kB
-Ôö£ Ôùï /auth/admin/register                 2.32 kB        96.1 kB
-Ôö£ Ôùï /auth/aggregator/login               2.22 kB          96 kB
-Ôö£ Ôùï /auth/aggregator/register            2.42 kB        96.2 kB
-Ôö£ Ôùï /auth/pibo/login                     2.17 kB          96 kB
-Ôö£ Ôùï /auth/pibo/register                  2.37 kB        96.1 kB
-Ôö£ Ôùï /auth/pro/login                      2.16 kB        95.9 kB
-Ôö£ Ôùï /auth/pro/register                   2.36 kB        96.1 kB
-Ôö£ Ôùï /auth/recycler/login                 2.33 kB        96.1 kB
-Ôö£ Ôùï /auth/recycler/register              2.53 kB        96.3 kB
-Ôö£ ãÆ /delivery/[facilityId]               267 B          87.3 kB
-Ôö£ Ôùï /payment                             2.13 kB        89.1 kB
-Ôö£ Ôùï /pibo/certificates                   267 B          87.3 kB
-Ôö£ Ôùï /pibo/dashboard                      269 B          87.3 kB
-Ôö£ Ôùï /pibo/form1                          267 B          87.3 kB
-Ôö£ Ôùï /pibo/form1/submit                   267 B          87.3 kB
-Ôö£ Ôùï /pibo/login                          3.21 kB        90.2 kB
-Ôö£ Ôùï /pibo/marketplace                    270 B          87.3 kB
-Ôö£ ãÆ /pickup/[batchId]                    267 B          87.3 kB
-Ôö£ Ôùï /pro/clients                         270 B          87.3 kB
-Ôö£ ãÆ /pro/clients/[id]                    268 B          87.3 kB
-Ôö£ Ôùï /pro/dashboard                       268 B          87.3 kB
-Ôö£ Ôùï /pro/form1                           268 B          87.3 kB
-Ôö£ Ôùï /pro/login                           3.27 kB        90.3 kB
-Ôö£ Ôùï /pro/marketplace                     267 B          87.3 kB
-Ôö£ Ôùï /pro/pool                            267 B          87.3 kB
-Ôö£ Ôùï /recycler/batches                    267 B          87.3 kB
-Ôö£ ãÆ /recycler/batches/[id]               268 B          87.3 kB
-Ôö£ ãÆ /recycler/batches/[id]/acknowledge   268 B          87.3 kB
-Ôö£ ãÆ /recycler/batches/[id]/certificate   268 B          87.3 kB
-Ôö£ ãÆ /recycler/batches/[id]/cp2           267 B          87.3 kB
-Ôö£ ãÆ /recycler/batches/[id]/cp3           267 B          87.3 kB
-Ôö£ ãÆ /recycler/batches/[id]/intake        270 B          87.3 kB
-Ôö£ ãÆ /recycler/batches/[id]/lab           267 B          87.3 kB
-Ôö£ Ôùï /recycler/dashboard                  267 B          87.3 kB
-Ôö£ Ôùï /recycler/facility-qr                267 B          87.3 kB
-Ôö£ Ôùï /recycler/login                      3.3 kB         90.3 kB
-Ôö£ Ôùï /recycler/marketplace                267 B          87.3 kB
-Ôö£ Ôùï /recycler/payments                   267 B          87.3 kB
-Ôöö ãÆ /verify/[certId]                     267 B          87.3 kB
-+ First Load JS shared by all            87 kB
-  Ôö£ chunks/1dd3208c-8ae678ba7dad1c5a.js  53.6 kB
-  Ôö£ chunks/286-7871efcf2cdee28f.js       31.5 kB
-  Ôöö other shared chunks (total)          1.9 kB
+Route (app)                                Size     First Load JS
+Ôöî Ôùï /                                      192 B          99.5 kB
+Ôö£ Ôùï /_not-found                            879 B          88.2 kB
+Ôö£ ãÆ /admin                                 239 B          87.6 kB
+Ôö£ ãÆ /admin/analytics                       2.84 kB         207 kB
+Ôö£ ãÆ /admin/approvals                       239 B          87.6 kB
+Ôö£ ãÆ /admin/audit-log                       210 B          94.4 kB
+Ôö£ ãÆ /admin/blockchain                      2.68 kB        96.8 kB
+Ôö£ ãÆ /admin/compliance                      239 B          87.6 kB
+Ôö£ ãÆ /admin/config                          1.95 kB        89.3 kB
+Ôö£ ãÆ /admin/dashboard                       3.8 kB          149 kB
+Ôö£ ãÆ /admin/disputes                        210 B          94.4 kB
+Ôö£ ãÆ /admin/disputes/[id]                   4.26 kB        98.4 kB
+Ôö£ ãÆ /admin/fraud                           4.96 kB        92.3 kB
+Ôö£ Ôùï /admin/login                           3.89 kB        91.2 kB
+Ôö£ ãÆ /admin/notifications                   210 B          94.4 kB
+Ôö£ ãÆ /admin/transactions                    9.36 kB         271 kB
+Ôö£ ãÆ /admin/users                           210 B          94.4 kB
+Ôö£ ãÆ /admin/users/[id]                      4.23 kB        98.4 kB
+Ôö£ ãÆ /aggregator                            239 B          87.6 kB
+Ôö£ ãÆ /aggregator/batches                    2.58 kB        96.7 kB
+Ôö£ ãÆ /aggregator/batches/[id]               12.8 kB         112 kB
+Ôö£ ãÆ /aggregator/batches/[id]/qr            238 B          87.6 kB
+Ôö£ ãÆ /aggregator/batches/create             3.23 kB        90.6 kB
+Ôö£ ãÆ /aggregator/batches/new                238 B          87.6 kB
+Ôö£ ãÆ /aggregator/collections                2.64 kB        96.8 kB
+Ôö£ ãÆ /aggregator/collections/[id]           210 B          94.4 kB
+Ôö£ ãÆ /aggregator/collections/new            38 kB           133 kB
+Ôö£ ãÆ /aggregator/dashboard                  210 B          94.4 kB
+Ôö£ Ôùï /aggregator/forgot-pin                 3.22 kB        90.6 kB
+Ôö£ Ôùï /aggregator/login                      3.15 kB        90.5 kB
+Ôö£ ãÆ /aggregator/payments                   239 B          87.6 kB
+Ôö£ ãÆ /aggregator/profile                    239 B          87.6 kB
+Ôö£ Ôùï /aggregator/register                   3.49 kB        90.8 kB
+Ôö£ ãÆ /api/admin/dashboard-poll              0 B                0 B
+Ôö£ ãÆ /api/admin/keep-alive                  0 B                0 B
+Ôö£ ãÆ /api/admin/session-status              0 B                0 B
+Ôö£ ãÆ /api/admin/verify-otp                  0 B                0 B
+Ôö£ ãÆ /api/aggregator/complete-registration  0 B                0 B
+Ôö£ ãÆ /api/ai/identify-material              0 B                0 B
+Ôö£ ãÆ /api/auth/callback                     0 B                0 B
+Ôö£ ãÆ /api/auth/signout                      0 B                0 B
+Ôö£ ãÆ /api/batches/available-collections     0 B                0 B
+Ôö£ ãÆ /api/batches/create                    0 B                0 B
+Ôö£ ãÆ /api/check-db                          0 B                0 B
+Ôö£ ãÆ /api/collections/submit                0 B                0 B
+Ôö£ ãÆ /api/ocr/extract-weight                0 B                0 B
+Ôö£ ãÆ /api/reports/aggregator-summary        0 B                0 B
+Ôö£ Ôùï /api/test-cookie                       0 B                0 B
+Ôö£ ãÆ /api/test-headers                      0 B                0 B
+Ôö£ ãÆ /delivery/[facilityId]                 0 B                0 B
+Ôö£ Ôùï /payment                               2.16 kB        89.5 kB
+Ôö£ ãÆ /pibo                                  239 B          87.6 kB
+Ôö£ ãÆ /pibo/certificates                     239 B          87.6 kB
+Ôö£ ãÆ /pibo/dashboard                        239 B          87.6 kB
+Ôö£ ãÆ /pibo/form1                            239 B          87.6 kB
+Ôö£ ãÆ /pibo/form1/submit                     239 B          87.6 kB
+Ôö£ Ôùï /pibo/login                            2.16 kB        89.5 kB
+Ôö£ ãÆ /pibo/marketplace                      239 B          87.6 kB
+Ôö£ Ôùï /pibo/register                         4.88 kB        92.2 kB
+Ôö£ ãÆ /pickup/[batchId]                      239 B          87.6 kB
+Ôö£ ãÆ /pro                                   239 B          87.6 kB
+Ôö£ ãÆ /pro/clients                           239 B          87.6 kB
+Ôö£ ãÆ /pro/clients/[id]                      239 B          87.6 kB
+Ôö£ ãÆ /pro/dashboard                         239 B          87.6 kB
+Ôö£ ãÆ /pro/form1                             239 B          87.6 kB
+Ôö£ Ôùï /pro/login                             2.23 kB        89.6 kB
+Ôö£ ãÆ /pro/marketplace                       239 B          87.6 kB
+Ôö£ ãÆ /pro/pool                              239 B          87.6 kB
+Ôö£ Ôùï /pro/register                          5.45 kB        92.8 kB
+Ôö£ ãÆ /recycler                              239 B          87.6 kB
+Ôö£ ãÆ /recycler/batches                      239 B          87.6 kB
+Ôö£ ãÆ /recycler/batches/[id]                 239 B          87.6 kB
+Ôö£ ãÆ /recycler/batches/[id]/acknowledge     239 B          87.6 kB
+Ôö£ ãÆ /recycler/batches/[id]/certificate     236 B          87.6 kB
+Ôö£ ãÆ /recycler/batches/[id]/cp2             239 B          87.6 kB
+Ôö£ ãÆ /recycler/batches/[id]/cp3             239 B          87.6 kB
+Ôö£ ãÆ /recycler/batches/[id]/intake          239 B          87.6 kB
+Ôö£ ãÆ /recycler/batches/[id]/lab             239 B          87.6 kB
+Ôö£ ãÆ /recycler/dashboard                    239 B          87.6 kB
+Ôö£ ãÆ /recycler/facility-qr                  239 B          87.6 kB
+Ôö£ Ôùï /recycler/login                        2.31 kB        89.6 kB
+Ôö£ ãÆ /recycler/marketplace                  239 B          87.6 kB
+Ôö£ ãÆ /recycler/payments                     239 B          87.6 kB
+Ôö£ Ôùï /recycler/register                     6.66 kB          94 kB
+Ôö£ ãÆ /transport/scan                        0 B                0 B
+Ôöö ãÆ /verify/[certId]                       239 B          87.6 kB
++ First Load JS shared by all              87.3 kB
+  Ôö£ chunks/1dd3208c-cbf681ca7d4c4f58.js    53.6 kB
+  Ôö£ chunks/286-49cb3042c39af548.js         31.6 kB
+  Ôöö other shared chunks (total)            2.06 kB
 
 
-ãÆ Middleware                             73.3 kB
+ãÆ Middleware                               78.1 kB
 
 Ôùï  (Static)   prerendered as static content
 ãÆ  (Dynamic)  server-rendered on demand
